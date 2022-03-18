@@ -46,7 +46,7 @@ app.get('/getCalendar', (req, response) => {
   let token: string = req.headers.authorization.split(' ')[1];
   console.log(token);
 
-  request.get('https://graph.microsoft.com/v1.0/me/events?$select=lastModifiedDateTime,subject,body,bodyPreview,organizer,attendees,start,end,location&$filter=lastModifiedDateTime%20ge%' + lastLookup, { json: true }, (err, res, body) => {
+  request.get('https://graph.microsoft.com/v1.0/me/events?$select=subject,body,start,end&$filter=lastModifiedDateTime%20ge%' + lastLookup, { json: true }, (err, res, body) => {
     if (err) { return console.log(err); }
     if (!body.value) {
       response.send("error");
@@ -59,7 +59,14 @@ app.get('/getCalendar', (req, response) => {
         wordWrap: false,
       })
 
-      responseJson.events.push(event);
+      let jsonElement = {
+        'id': body.value[i].id,
+        'description': body.value[i].subject + ': ' + event,
+        'startTime': body.value[i].start.dateTime,
+      }
+
+      responseJson.events.push(jsonElement);
+      console.log(responseJson);
     }
     response.send(responseJson);
   }).auth(null, null, true, token)
