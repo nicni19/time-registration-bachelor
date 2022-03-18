@@ -1,12 +1,15 @@
 import express from 'express';
+import { Core } from './common/core';
+
 const app = express();
 const port = 3000;
 const request = require('request');
 const { htmlToText } = require('html-to-text');
 app.use(express.json());
+let core: Core = new Core();
 
 app.get('/', (req, res) => {
-  res.send('Hello World!');
+  res.send(core.sayHello());
 });
 
 app.get('/getCalendar', (req, response) => {
