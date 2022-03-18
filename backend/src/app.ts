@@ -7,8 +7,39 @@ app.use(express.json());
 
 let lastLookup: string = '202022-01-16T01:03:21.347Z';
 
-app.get('/', (req, res) => {
-  res.send('Hello World!');
+app.get('/getLogElements', (req, res) => {
+  /*
+  core.insertGraphElementsToDB(token)
+
+  logElements = core.fetchLogElements(userID, params)
+
+  res.send(logElements)
+  */
+
+  res.send('Log elements');
+});
+
+app.post('/insertLogElements', (req, res) => {
+  /*
+  core.insertLogElementsIntoDB
+
+  res.send('success')
+  */
+  res.send('Log elements inserted');
+});
+
+app.get('/getTimerRuns', (req, res) => {
+  /*
+  core.fetchTimerRuns
+  */
+  res.send('Timer runs');
+});
+
+app.post('/insertTimerRun', (req, res) => {
+  /*
+  core.insertTimerRun
+  */
+  res.send('Timer run inserted');
 });
 
 app.get('/getCalendar', (req, response) => {
@@ -32,8 +63,6 @@ app.get('/getCalendar', (req, response) => {
     }
     response.send(responseJson);
   }).auth(null, null, true, token)
-
-  
 });
 
 app.listen(port, () => {
