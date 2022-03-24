@@ -80,7 +80,7 @@ export class LogElement{
     }
 
     public setDescription(description:string){
-        this.description 
+        this.description = description;
     }
 
     public getStartTimestamp():bigint{

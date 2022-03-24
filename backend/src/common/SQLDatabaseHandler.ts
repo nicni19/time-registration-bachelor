@@ -8,5 +8,13 @@ export class SQLDatabaseHandler implements IDatabaseHandler{
         return "Hello!";
     }
 
+    getPreferences(id: String): {} {
+        return {};
+    }
+
+    getLogElements(queryArguments: String[]) {
+        return ["Hello World"];
+    }
+
     
 }
