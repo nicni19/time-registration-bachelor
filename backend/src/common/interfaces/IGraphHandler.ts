@@ -3,5 +3,6 @@ import { IDatabaseHandler } from "./IDatabaseHandler";
 
 export interface IGraphHandler {
 
-    updateDatabase(databaseHandler: IDatabaseHandler, authToken: String):{};
+    //todo: Should be void; Return type added for testing
+    updateDatabase(databaseHandler: IDatabaseHandler, authToken: String): any;
 }
