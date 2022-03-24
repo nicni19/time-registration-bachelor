@@ -9,7 +9,7 @@ app.use(express.json());
 let core: Core = new Core();
 
 app.get('/', (req, res) => {
-  res.send(core.sayHello());
+  res.send("Hello world");
 });
 
 app.get('/getCalendar', (req, response) => {

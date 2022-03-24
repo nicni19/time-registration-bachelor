@@ -11,8 +11,4 @@ export class Core{
 
     }
 
-    sayHello(){
-        console.log(this.databaseHandler.sayHello());
-        return this.databaseHandler.sayHello();
-    }
 }
