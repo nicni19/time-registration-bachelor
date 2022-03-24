@@ -10,6 +10,11 @@ let core: Core = new Core();
 
 let lastLookup: string = '202022-01-16T01:03:21.347Z';
 
+app.get('/authTest', (req, res) => {
+  core.authTest();
+  res.send('Test complete');
+});
+
 app.get('/getLogElements', (req, res) => {
   /*
   core.insertGraphElementsToDB(token)
