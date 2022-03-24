@@ -59,10 +59,16 @@ app.get('/getCalendar', (req, response) => {
         wordWrap: false,
       })
 
+      let startTime = ((body.value[i].end.dateTime).replace(/-/g,'/'));
+      console.log(startTime);
+      let dateTime = new Date(startTime.replace('T', ' '));
+      console.log(dateTime.valueOf());
+      
       let jsonElement = {
         'id': body.value[i].id,
         'description': body.value[i].subject + ': ' + event,
         'startTime': body.value[i].start.dateTime,
+        'duration': dateTime.valueOf() 
       }
 
       responseJson.events.push(jsonElement);
