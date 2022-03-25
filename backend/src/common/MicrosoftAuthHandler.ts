@@ -5,25 +5,37 @@ const request = require('request');
 
 export class MicrosoftAuthHandler implements IAuthHandler{
     
+    /**
+     * Compares the userID of the request with the userID fetched from Microsoft Graph in order to confirm identity
+     * @param userID
+     * @param authToken Microsoft Graph access token
+     * @returns Returns true if the userIDs are a match
+     */
     async authenticate(userID: string, authToken?: string): Promise<boolean> {
-        
-        console.log(this.authenticateElectricBoogaloo(userID,authToken));
-        return false;
-        
-    }
+        let returnVal:boolean = false;
 
-    async authenticateElectricBoogaloo(userID: string, authToken?: string){
         return await new Promise((resolve,reject) => {
             request.get('https://graph.microsoft.com/v1.0/me/',  {json: true }, (err, res, body) => {
-                if(userID == body.id){
-                    resolve(true);
-                }else{
-                    reject(false);
+                if(!body){
+                    reject(returnVal);
                 }
-            }).auth(null,null,true,authToken);
-        })
-    }
+                
+                if(userID == body.id){
+                    returnVal = true;
+                }else{
+                    returnVal = false;
+                }
 
+                if(err){
+                    reject(console.log(err));
+                }
+                resolve(returnVal);
+                
+            }).auth(null,null,true,authToken);
+        }).then(() => {
+            return returnVal;
+        }).catch(()=>{return new Promise((resolve)=>{resolve(false)})});  
+    }
 
 
     authorize(userID: string, action: Actions): boolean {

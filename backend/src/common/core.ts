@@ -12,13 +12,18 @@ export class Core{
     
     constructor(){};
 
+    async authenticateUser(userID:string,token:string){
+        return await this.authHandler.authenticate(userID,token);
+    }
+
     insertLogElement(){
 
     }
     
 
-    authTest(){
-        console.log(this.authHandler.authenticate(graphTest.id,graphTest.token));
+    async authTest(){
+        return await this.authHandler.authenticate(graphTest.id,graphTest.token);
     }
+
 
 }
