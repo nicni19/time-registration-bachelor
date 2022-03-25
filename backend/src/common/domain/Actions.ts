@@ -1,0 +1,2 @@
+
+export enum Actions{GetLogsForCurrentUser, InsertLogForCurrentUser, GetTimerRunsForCurrentUser, InsertTimerRunForCurrentUser, DeleteLogElementForCurrentUser, DeleteTimerRunForCurrentUser, GetAllLogs}

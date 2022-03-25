@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { json } from 'express';
 import { Core } from './common/core';
 const app = express();
 const port = 3000;
@@ -6,7 +6,46 @@ const request = require('request');
 const { htmlToText } = require('html-to-text');
 app.use(express.json());
 
-const core = new Core();
+const core: Core = new Core();
+let lastLookup: string = '202022-01-16T01:03:21.347Z';
+
+
+app.use(async (req,res,next)=>{
+  //TODO: Undooo jank
+  let requestAuthenticated:boolean = false;
+  let requestJSON = JSON.parse(JSON.stringify(req.headers));
+
+  //Respons with a 401 if the token or userID is missing
+  if(!req.headers.authorization || !req.headers.userid){
+    res.status(401);
+    res.send({'Message':'Token or userID missing'})
+    return;
+  }else{
+    //If the token and userID is present, the request is authenticated.
+    requestAuthenticated = await core.authenticateUser(requestJSON.userid,(requestJSON.authorization.split(' ')[1]));
+  }
+  console.log("USER AUTHENTICATED: " + requestAuthenticated);
+
+  if(await requestAuthenticated == true){
+    next();
+  }else{
+    res.status(401);
+    res.send(false);
+  }
+});
+
+app.get('/authTest', async (req, res) => {
+  let resVal:boolean = await core.authTest()
+
+  if(await resVal == true){
+    res.status(200);
+    res.send(await resVal);
+  }else{
+    res.status(401);
+    res.send(await resVal);
+  }
+  
+});
 
 app.get('/getLogElements', (req, res) => {
   /*
