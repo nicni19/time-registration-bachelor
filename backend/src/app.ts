@@ -1,14 +1,14 @@
 import express, { json } from 'express';
 import { Core } from './common/core';
-
 const app = express();
 const port = 3000;
 const request = require('request');
 const { htmlToText } = require('html-to-text');
 app.use(express.json());
 
-let core: Core = new Core();
+const core: Core = new Core();
 let lastLookup: string = '202022-01-16T01:03:21.347Z';
+
 
 app.use(async (req,res,next)=>{
   //TODO: Undooo jank
@@ -82,40 +82,22 @@ app.post('/insertTimerRun', (req, res) => {
   res.send('Timer run inserted');
 });
 
-app.get('/getCalendar', (req, response) => {
+app.get('/getCalendar/:id', async (req, res) => {
+  res.setHeader('Content-Type', 'application/json');
+  if (!req.headers.authorization) {
+    res.status(401);
+    res.send({'Message': 'Auth token missing'});
+    return;
+  }
   let token: string = req.headers.authorization.split(' ')[1];
   console.log(token);
+  let username: string = req.headers.authorization.split(' ')[3];
+  console.log(username);
 
-  request.get('https://graph.microsoft.com/v1.0/me/events?$select=subject,body,start,end&$filter=lastModifiedDateTime%20ge%' + lastLookup, { json: true }, (err, res, body) => {
-    if (err) { return console.log(err); }
-    if (!body.value) {
-      response.send("error");
-      return console.log(body);
-    }
-    let responseJson = {'events': []};
-
-    for (let i = 0; i < body.value.length; i++) {
-      let event: string = htmlToText(body.value[i].body.content, {
-        wordWrap: false,
-      })
-
-      let startTime = ((body.value[i].end.dateTime).replace(/-/g,'/'));
-      console.log(startTime);
-      let dateTime = new Date(startTime.replace('T', ' '));
-      console.log(dateTime.valueOf());
-      
-      let jsonElement = {
-        'id': body.value[i].id,
-        'description': body.value[i].subject + ': ' + event,
-        'startTime': body.value[i].start.dateTime,
-        'duration': dateTime.valueOf() 
-      }
-
-      responseJson.events.push(jsonElement);
-      console.log(responseJson);
-    }
-    response.send(responseJson);
-  }).auth(null, null, true, token)
+  let jsonResponse = await core.graphUpdate(username, token);
+  
+  res.status(200);
+  res.send(jsonResponse);
 });
 
 app.listen(port, () => {
