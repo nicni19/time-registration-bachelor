@@ -56,7 +56,6 @@ app.get('/getCalendar/:id', async (req, res) => {
   console.log(username);
 
   let jsonResponse = await core.graphUpdate(username, token);
-  console.log(jsonResponse);
   
   res.status(200);
   res.send(jsonResponse);

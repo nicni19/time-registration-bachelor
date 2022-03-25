@@ -24,7 +24,8 @@ export class GraphCalendarHandler implements IGraphHandler {
             request.get('https://graph.microsoft.com/v1.0/me/events?$select=subject,body,start,end&$filter=lastModifiedDateTime%20ge%' + lastLookup, { json: true }, (err, res, body) => {
             if (err) { return console.log(err); }
             if (!body.value) {
-            return body
+                reject(body);
+                return body;
             }
             
 

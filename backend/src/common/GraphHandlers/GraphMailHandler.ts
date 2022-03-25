@@ -22,9 +22,14 @@ export class GraphMailHandler implements IGraphHandler {
             request.get('https://graph.microsoft.com/v1.0/me/messages?$select=subject,toRecipients&$filter=lastModifiedDateTime%20ge%' + lastLookup, { json: true }, (err, res, body) => {
             if (err) { return console.log(err); }
             if (!body.value) {
-                console.log(body)
-                return body
+                console.log(body);
+                let errMes: string = body.error.message;
+                reject(errMes);
+                return;
             }
+
+            console.log("valid: ")
+            console.log(body);
             
 
             for (let i = 0; i < body.value.length; i++) {
