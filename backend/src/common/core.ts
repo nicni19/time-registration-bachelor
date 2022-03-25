@@ -22,14 +22,12 @@ export class Core{
         //Todo: Get preferences from database
         let prefArray = ['mail','calendar'];
 
-        let jsonResponse = {
-        }
+        let jsonFile = require('data.json');
+
+        let jsonResponse = {}
         
         for (let i: number = 0; i < prefArray.length; i++) {
-            console.log(prefArray[i]);
-            let resp = await this.graphMap.get(prefArray[i]).updateDatabase(this.databaseHandler, authToken);
-            jsonResponse[prefArray[i]] = resp;
-            console.log(resp);
+            jsonResponse[prefArray[i]] = await this.graphMap.get(prefArray[i]).updateDatabase(this.databaseHandler, authToken);
         }
 
         return jsonResponse;

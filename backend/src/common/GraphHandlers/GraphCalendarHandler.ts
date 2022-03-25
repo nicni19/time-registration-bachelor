@@ -13,14 +13,15 @@ export class GraphCalendarHandler implements IGraphHandler {
     }
     
     async updateDatabase(databaseHandler: IDatabaseHandler, authToken: String): Promise<any>{
-        return this.fetchCalendarEvents(authToken);   
+        return await this.fetchCalendarEvents(authToken);   
     }
 
     async fetchCalendarEvents(authToken: String): Promise<any> {
         let lastLookup: string = '202022-01-16T01:03:21.347Z';
         let responseJson = {'events': []};
 
-        request.get('https://graph.microsoft.com/v1.0/me/events?$select=subject,body,start,end&$filter=lastModifiedDateTime%20ge%' + lastLookup, { json: true }, (err, res, body) => {
+        return await new Promise((resolve,reject) => {
+            request.get('https://graph.microsoft.com/v1.0/me/events?$select=subject,body,start,end&$filter=lastModifiedDateTime%20ge%' + lastLookup, { json: true }, (err, res, body) => {
             if (err) { return console.log(err); }
             if (!body.value) {
             return body
@@ -43,10 +44,13 @@ export class GraphCalendarHandler implements IGraphHandler {
             }
 
             responseJson.events.push(jsonElement);
-            console.log(responseJson);
-            return responseJson;
             }
+            resolve(responseJson);
         }).auth(null, null, true, authToken)
+        }).then(() => {
+            return responseJson;
+        });
+        
     }
 
 }
