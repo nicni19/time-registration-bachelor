@@ -5,27 +5,30 @@ export class LogElement{
     private type:string;
     private customer:string;
     private description:string;
-    private startTimestamp:bigint;
-    private duration:bigint;
+    private startTimestamp:number;
+    private duration:number;
     private internalTask:boolean;
     private unpaid:boolean;
     private ritNum:number;
     private caseNum:string;
     private caseTaskNum:number;
-
+    private calendarid: number;
+    private mailid: number;
 
     constructor( 
         userID: string, 
         type: string, 
         customer: string, 
         description: string, 
-        startTimestamp: bigint, 
-        duration: bigint, 
+        startTimestamp: number, 
+        duration: number, 
         internalTask: boolean, 
         unpaid: boolean, 
         ritNum: number, 
         caseNum: string, 
         caseTaskNum: number,
+        calendarid: number,
+        mailid: number,
         id?: number,
     ) {
         this.id = id
@@ -40,6 +43,8 @@ export class LogElement{
         this.ritNum = ritNum
         this.caseNum = caseNum
         this.caseTaskNum = caseTaskNum
+        this.calendarid = calendarid
+        this.mailid = mailid
     };
     
     
@@ -83,19 +88,19 @@ export class LogElement{
         this.description = description;
     }
 
-    public getStartTimestamp():bigint{
+    public getStartTimestamp():number{
         return this.startTimestamp;
     }
 
-    public setStartTimestamp(start:bigint){
+    public setStartTimestamp(start:number){
         this.startTimestamp = start;
     }
 
-    public getDuration():bigint{
+    public getDuration():number{
         return this.duration;
     }
 
-    public setDuration(duration:bigint){
+    public setDuration(duration:number){
         this.duration = duration;
     }
 
@@ -133,5 +138,19 @@ export class LogElement{
 
     public getCaseTaskNum():number{
         return this.caseTaskNum;
+    }
+
+    public getCalendarid(): number {
+        return this.calendarid;
+    }
+    public setCalendarid(value: number) {
+        this.calendarid = value;
+    }
+
+    public getMailid(): number {
+        return this.mailid;
+    }
+    public setMailid(value: number) {
+        this.mailid = value;
     }
 }

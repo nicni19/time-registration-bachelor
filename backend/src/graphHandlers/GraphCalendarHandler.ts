@@ -1,6 +1,7 @@
 import express from "express";
-import { IDatabaseHandler } from "../interfaces/IDatabaseHandler";
-import { IGraphHandler } from "../interfaces/IGraphHandler";
+import { LogElement } from "../common/domain/LogElement";
+import { IDatabaseHandler } from "../common/interfaces/IDatabaseHandler";
+import { IGraphHandler } from "../common/interfaces/IGraphHandler";
 const request = require('request');
 const { htmlToText } = require('html-to-text');
 
@@ -12,13 +13,13 @@ export class GraphCalendarHandler implements IGraphHandler {
 
     }
     
-    async updateDatabase(databaseHandler: IDatabaseHandler, authToken: String): Promise<any>{
-        return await this.fetchCalendarEvents(authToken);   
+    async updateDatabase(databaseHandler: IDatabaseHandler, authToken: string, userID: string): Promise<any>{
+        return await this.fetchCalendarEvents(authToken, userID);   
     }
 
-    async fetchCalendarEvents(authToken: String): Promise<any> {
+    async fetchCalendarEvents(authToken: string, userID: string): Promise<any> {
         let lastLookup: string = '202022-01-16T01:03:21.347Z';
-        let responseJson = {'events': []};
+        let logElements: LogElement[] = [];
 
         return await new Promise((resolve,reject) => {
             request.get('https://graph.microsoft.com/v1.0/me/events?$select=subject,body,start,end&$filter=lastModifiedDateTime%20ge%' + lastLookup, { json: true }, (err, res, body) => {
@@ -27,7 +28,6 @@ export class GraphCalendarHandler implements IGraphHandler {
                 reject(body);
                 return body;
             }
-            
 
             for (let i = 0; i < body.value.length; i++) {
             let event: string = htmlToText(body.value[i].body.content, {
@@ -36,20 +36,16 @@ export class GraphCalendarHandler implements IGraphHandler {
 
             let startTime = ((body.value[i].end.dateTime).replace(/-/g,'/'));
             let dateTime = new Date(startTime.replace('T', ' '));
-            
-            let jsonElement = {
-                'id': body.value[i].id,
-                'description': body.value[i].subject + ': ' + event,
-                'startTime': body.value[i].start.dateTime,
-                'duration': dateTime.valueOf() 
-            }
+            let description = body.value[i].subject + ': ' + event;
 
-            responseJson.events.push(jsonElement);
+            let logElement: LogElement = new LogElement(userID, 'Calendar', null, description, startTime, dateTime.valueOf(), null, null, null, null, null, body.value[i].id, null);
+            logElements.push(logElement);
+
             }
-            resolve(responseJson);
+            resolve(logElements);
         }).auth(null, null, true, authToken)
         }).then(() => {
-            return responseJson;
+            return logElements;
         });
         
     }

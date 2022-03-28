@@ -2,14 +2,15 @@ import { LogElement } from "../common/domain/LogElement";
 import { TimerRun } from "../common/domain/TimerRun";
 import { IDatabaseHandler } from "../common/interfaces/IDatabaseHandler";
 
-let conf = require('./config/mysqlconifg.js');
-let mysql = require('mysql');
-let con;
+//let conf = require('./config/mysqlconifg.js');
+//let mysql = require('mysql');
+//let con;
 
 export class SQLDatabaseHandler implements IDatabaseHandler{ 
 
     
     constructor(){
+        /*
         con = mysql.createConnection({
             host: conf.host,
             user: conf.user,
@@ -20,6 +21,7 @@ export class SQLDatabaseHandler implements IDatabaseHandler{
             if (err) throw err;
             console.log("Connected!");
           });
+          */
     }
     insertLogElement(logArray: LogElement[]) {
         throw new Error("Method not implemented.");
