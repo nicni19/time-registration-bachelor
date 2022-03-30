@@ -30,16 +30,18 @@ export class GraphCalendarHandler implements IGraphHandler {
             }
 
             for (let i = 0; i < body.value.length; i++) {
-            let event: string = htmlToText(body.value[i].body.content, {
-                wordWrap: false,
-            })
+                let event: string = htmlToText(body.value[i].body.content, {
+                    wordWrap: false,
+                })
 
-            let startTime = ((body.value[i].end.dateTime).replace(/-/g,'/'));
-            let dateTime = new Date(startTime.replace('T', ' '));
-            let description = body.value[i].subject + ': ' + event;
+                let startTimeString = ((body.value[i].start.dateTime).replace(/-/g,'/'));
+                let startTime = new Date(startTimeString.replace('T', ' ')).getTime();
+                let endTime = new Date((body.value[i].end.dateTime).replace('T', ' ')).getTime();
+                let duration: number = endTime - startTime;
+                let description = body.value[i].subject + ': ' + event;
 
-            let logElement: LogElement = new LogElement(userID, 'Calendar', null, description, startTime, dateTime.valueOf(), null, null, null, null, null, body.value[i].id, null);
-            logElements.push(logElement);
+                let logElement: LogElement = new LogElement(userID, 'Calendar', null, description, startTime, duration, null, null, null, null, null, body.value[i].id, null);
+                logElements.push(logElement);
 
             }
             resolve(logElements);
