@@ -8,9 +8,10 @@ const { htmlToText } = require('html-to-text');
 
 export class GraphCalendarHandler implements IGraphHandler {
     graphUrl: string;
+    lastLookup: string;
 
     constructor(){
-
+        this.lastLookup = '2022-01-16T01:03:21.347Z';
     }
     
     async updateDatabase(databaseHandler: IDatabaseHandler, authToken: string, userID: string): Promise<any>{
@@ -18,11 +19,11 @@ export class GraphCalendarHandler implements IGraphHandler {
     }
 
     async fetchCalendarEvents(authToken: string, userID: string): Promise<any> {
-        let lastLookup: string = '202022-01-16T01:03:21.347Z';
         let logElements: LogElement[] = [];
+        console.log(this.lastLookup);
 
         return await new Promise((resolve,reject) => {
-            request.get("https://graph.microsoft.com/v1.0/me/events?$select=subject,body,start,end&$filter=lastModifiedDateTime%20ge%" + lastLookup + "%20and%20categories/any(s:s%20ne%20'PRIVATE')", { json: true }, (err, res, body) => {
+            request.get("https://graph.microsoft.com/v1.0/me/events?$select=subject,body,start,end&$filter=lastModifiedDateTime%20ge%20" + this.lastLookup + "%20and%20categories/any(s:s%20ne%20'PRIVATE')", { json: true }, (err, res, body) => {
             if (err) { return console.log(err); }
             if (!body.value) {
                 reject(body);
@@ -47,9 +48,10 @@ export class GraphCalendarHandler implements IGraphHandler {
             resolve(logElements);
         }).auth(null, null, true, authToken)
         }).then(() => {
+            let newLookup: Date = new Date(Date.now());
+            this.lastLookup = newLookup.toISOString();
             return logElements;
-        });
-        
+        });       
     }
 
 }
