@@ -22,7 +22,7 @@ export class GraphCalendarHandler implements IGraphHandler {
         let logElements: LogElement[] = [];
 
         return await new Promise((resolve,reject) => {
-            request.get('https://graph.microsoft.com/v1.0/me/events?$select=subject,body,start,end&$filter=lastModifiedDateTime%20ge%' + lastLookup, { json: true }, (err, res, body) => {
+            request.get("https://graph.microsoft.com/v1.0/me/events?$select=subject,body,start,end&$filter=lastModifiedDateTime%20ge%" + lastLookup + "%20and%20categories/any(s:s%20ne%20'PRIVATE')", { json: true }, (err, res, body) => {
             if (err) { return console.log(err); }
             if (!body.value) {
                 reject(body);
