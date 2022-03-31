@@ -35,7 +35,7 @@ export class Core{
     }
 
     azureTest(){
-        return this.azureDatabase.query();
+        return this.azureDatabase.testQuery();
     }
 
 
