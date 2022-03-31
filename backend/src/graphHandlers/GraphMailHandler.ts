@@ -1,5 +1,5 @@
-import { IDatabaseHandler } from "../interfaces/IDatabaseHandler";
-import { IGraphHandler } from "../interfaces/IGraphHandler";
+import { IDatabaseHandler } from "../common/interfaces/IDatabaseHandler";
+import { IGraphHandler } from "../common/interfaces/IGraphHandler";
 const request = require('request');
 
 export class GraphMailHandler implements IGraphHandler {

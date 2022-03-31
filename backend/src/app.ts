@@ -11,6 +11,12 @@ let lastLookup: string = '202022-01-16T01:03:21.347Z';
 
 
 app.use(async (req,res,next)=>{
+  //Test ting
+  let returnVal = await core.azureTest();
+  console.log(returnVal);
+  res.send(returnVal);
+
+  /*
   //TODO: Undooo jank
   let requestAuthenticated:boolean = false;
   let requestJSON = JSON.parse(JSON.stringify(req.headers));
@@ -32,6 +38,7 @@ app.use(async (req,res,next)=>{
     res.status(401);
     res.send(false);
   }
+  */
 });
 
 app.get('/authTest', async (req, res) => {
