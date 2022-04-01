@@ -104,7 +104,11 @@ export class AzureSQLDatabaseHandler implements IDatabaseHandler{
     throw new Error('Method not implemented.');
     
   }
-
+  /**
+   * 
+   * @param queryArguments TODO: Currently only supports user_id as query parameter..
+   * @returns a JSON element containing all fetched elements
+   */
   async getLogElements(queryArguments: String[]) {
     let queryString = this.squel.select().from('log_elements').where("user_id = " + "'" + queryArguments[0].toString() + "'").toString();
     console.log(queryString);
@@ -138,8 +142,6 @@ export class AzureSQLDatabaseHandler implements IDatabaseHandler{
         
         //console.log(returnJson);
     }).then(()=>{return returnJson});
-    
-   
   }
   
   insertLogElement(logArray: LogElement[]) {
