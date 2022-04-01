@@ -11,6 +11,8 @@ export class LogElement{
     private duration:BigInt;
     private internalTask:boolean;
     private unpaid:boolean;
+    private edited:boolean;
+    private bookKeepReady:boolean;
     private ritNum:number;
     private caseNum:string;
     private caseTaskNum:number;
@@ -20,17 +22,19 @@ export class LogElement{
     constructor( 
         userID: string, 
         type: Type, 
-        customer: string, 
-        description: string, 
+        customer: string = null, 
+        description: string = null, 
         startTimestamp: BigInt, 
         duration: BigInt, 
         internalTask: boolean, 
-        unpaid: boolean, 
-        ritNum: number, 
-        caseNum: string, 
-        caseTaskNum: number,
-        calendarid: string,
-        mailid: string,
+        unpaid: boolean,
+        edited:boolean,
+        bookKeepReady:boolean, 
+        ritNum: number = null, 
+        caseNum: string = null, 
+        caseTaskNum: number = null,
+        calendarid: number = null,
+        mailid: number = null,
         id?: number,
     ) {
         this.id = id
@@ -42,6 +46,8 @@ export class LogElement{
         this.duration = duration
         this.internalTask = internalTask
         this.unpaid = unpaid
+        this.edited = edited
+        this.bookKeepReady = bookKeepReady
         this.ritNum = ritNum
         this.caseNum = caseNum
         this.caseTaskNum = caseTaskNum
@@ -120,6 +126,22 @@ export class LogElement{
 
     public setUnpaid(unpaid:boolean){
         this.unpaid = unpaid;
+    }
+
+    public getEdited(){
+        return this.edited;
+    }
+
+    public setEdited(edited:boolean){
+        this.edited = edited;
+    }
+
+    public getBookKeepReady(){
+        return this.bookKeepReady;
+    }
+
+    public setBookKeepReady(bookKeepReady:boolean){
+        this.bookKeepReady = bookKeepReady;
     }
 
     public getRitNum():number{

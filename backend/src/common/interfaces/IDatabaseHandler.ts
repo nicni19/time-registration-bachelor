@@ -17,12 +17,12 @@ export interface IDatabaseHandler{
 
     deleteTimerRun(runIDs:number[]): string;
 
-    getLastGraphMailLookup(userID:string):string;
+    getLastGraphMailLookup(userID:string):Promise<string>;
 
-    setLastGraphMailLookup(userID:string, timestamp:string);
+    setLastGraphMailLookup(userID:string, timestamp:bigint);
 
-    getLastGraphCalendarLookup(userID:string):string;
+    getLastGraphCalendarLookup(userID:string):Promise<string>;
 
-    setLastGraphCalendarLookup(userID:string, timestamp:string);
+    setLastGraphCalendarLookup(userID:string, timestamp:bigint);
 
 }

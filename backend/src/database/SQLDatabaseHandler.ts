@@ -7,7 +7,7 @@ import { IDatabaseHandler } from "../common/interfaces/IDatabaseHandler";
 
 let con;
 
-export class SQLDatabaseHandler implements IDatabaseHandler{ 
+export class SQLDatabaseHandler{ 
 
     
     constructor(){
