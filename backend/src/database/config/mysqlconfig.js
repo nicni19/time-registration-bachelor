@@ -1,5 +1,6 @@
 export let config = {
-    host: ' ',
-    user: ' ',
-    password: ' '
+    host: '',
+    user: '',   
+    password: ''
 }
+

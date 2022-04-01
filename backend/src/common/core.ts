@@ -7,7 +7,9 @@ import { IGraphHandler } from './interfaces/IGraphHandler';
 import { SQLDatabaseHandler } from '../database/SQLDatabaseHandler'; 
 
 import graphTest from '../graphTest.json';
+import { LogElement } from './domain/LogElement';
 import { AzureSQLDatabaseHandler } from '../database/AzureSQLDatabaseHandler';
+
 
 export class Core{
     
@@ -43,11 +45,11 @@ export class Core{
         //Todo: Get preferences from database
         let prefArray = ['mail','calendar'];
 
-        let jsonResponse = {}
+        let logElements: LogElement[] = [];
         
         for (let i: number = 0; i < prefArray.length; i++) {
             try {
-                jsonResponse[prefArray[i]] = await this.graphMap.get(prefArray[i]).updateDatabase(this.databaseHandler, authToken);
+                logElements.push(await this.graphMap.get(prefArray[i]).updateDatabase(this.databaseHandler, authToken, userID));
             } catch (error) {
                 return error;
             }
@@ -55,7 +57,11 @@ export class Core{
             
         }
 
-        return jsonResponse;
+        for (let i: number = 0; i < logElements.length; i++) {
+            console.log(logElements[i]);
+        }
+
+        return 'jsonResponse';
     }
 
 }

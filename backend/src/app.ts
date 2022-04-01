@@ -89,19 +89,14 @@ app.post('/insertTimerRun', (req, res) => {
   res.send('Timer run inserted');
 });
 
-app.get('/getCalendar/:id', async (req, res) => {
+app.get('/getCalendar', async (req, res) => {
   res.setHeader('Content-Type', 'application/json');
-  if (!req.headers.authorization) {
-    res.status(401);
-    res.send({'Message': 'Auth token missing'});
-    return;
-  }
+  
   let token: string = req.headers.authorization.split(' ')[1];
   console.log(token);
-  let username: string = req.headers.authorization.split(' ')[3];
-  console.log(username);
+  let requestJSON = JSON.parse(JSON.stringify(req.headers));
 
-  let jsonResponse = await core.graphUpdate(username, token);
+  let jsonResponse = await core.graphUpdate(requestJSON.userid as string, token);
   
   res.status(200);
   res.send(jsonResponse);

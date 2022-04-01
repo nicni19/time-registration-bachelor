@@ -4,6 +4,7 @@ import { IDatabaseHandler } from "../common/interfaces/IDatabaseHandler";
 
 //let conf = require('./config/mysqlconifg.js');
 //let mysql = require('mysql');
+
 let con;
 
 export class SQLDatabaseHandler implements IDatabaseHandler{ 
