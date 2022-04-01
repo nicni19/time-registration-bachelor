@@ -8,10 +8,13 @@ import { SQLDatabaseHandler } from '../database/SQLDatabaseHandler';
 
 import graphTest from '../graphTest.json';
 import { LogElement } from './domain/LogElement';
+import { AzureSQLDatabaseHandler } from '../database/AzureSQLDatabaseHandler';
+
 
 export class Core{
     
     databaseHandler: IDatabaseHandler = new SQLDatabaseHandler();
+    azureDatabase: AzureSQLDatabaseHandler = new AzureSQLDatabaseHandler();
     authHandler: IAuthHandler = new MicrosoftAuthHandler();
     graphMap = new Map();
     
@@ -25,12 +28,16 @@ export class Core{
     }
 
     insertLogElement(){
-
+        
     }
     
 
     async authTest(){
         return await this.authHandler.authenticate(graphTest.id,graphTest.token);
+    }
+
+    azureTest(){
+        return this.azureDatabase.testQuery();
     }
 
 

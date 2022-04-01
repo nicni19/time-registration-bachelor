@@ -9,6 +9,13 @@ app.use(express.json());
 const core: Core = new Core();
 let lastLookup: string = '202022-01-16T01:03:21.347Z';
 
+//Azure test
+app.get('/azureTest', async (req, res) => {
+    //Test ting
+    let returnVal = await core.azureTest();
+    console.log(returnVal);
+    res.send(returnVal);
+});
 
 app.use(async (req,res,next)=>{
   //TODO: Undooo jank
