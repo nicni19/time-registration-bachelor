@@ -54,16 +54,17 @@ app.get('/authTest', async (req, res) => {
   
 });
 
-app.get('/getLogElements', (req, res) => {
-  /*
-  core.insertGraphElementsToDB(token)
+app.get('/getLogElements', async (req, res) => {
+  res.setHeader('Content-Type', 'application/json');
+  
+  let token: string = req.headers.authorization.split(' ')[1];
+  console.log(token);
+  let requestJSON = JSON.parse(JSON.stringify(req.headers));
 
-  logElements = core.fetchLogElements(userID, params)
-
-  res.send(logElements)
-  */
-
-  res.send('Log elements');
+  let jsonResponse = await core.graphUpdate(requestJSON.userid as string, token);
+  
+  res.status(200);
+  res.send(jsonResponse);
 });
 
 app.post('/insertLogElements', (req, res) => {
@@ -87,19 +88,6 @@ app.post('/insertTimerRun', (req, res) => {
   core.insertTimerRun
   */
   res.send('Timer run inserted');
-});
-
-app.get('/getCalendar', async (req, res) => {
-  res.setHeader('Content-Type', 'application/json');
-  
-  let token: string = req.headers.authorization.split(' ')[1];
-  console.log(token);
-  let requestJSON = JSON.parse(JSON.stringify(req.headers));
-
-  let jsonResponse = await core.graphUpdate(requestJSON.userid as string, token);
-  
-  res.status(200);
-  res.send(jsonResponse);
 });
 
 app.listen(port, () => {

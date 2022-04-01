@@ -1,8 +1,10 @@
+import { Type } from "./Type";
+
 export class LogElement{
     
     private id:number;
     private userID:string;
-    private type:string;
+    private type:Type;
     private customer:string;
     private description:string;
     private startTimestamp:number;
@@ -12,12 +14,12 @@ export class LogElement{
     private ritNum:number;
     private caseNum:string;
     private caseTaskNum:number;
-    private calendarid: number;
-    private mailid: number;
+    private calendarid: string;
+    private mailid: string;
 
     constructor( 
         userID: string, 
-        type: string, 
+        type: Type, 
         customer: string, 
         description: string, 
         startTimestamp: number, 
@@ -27,8 +29,8 @@ export class LogElement{
         ritNum: number, 
         caseNum: string, 
         caseTaskNum: number,
-        calendarid: number,
-        mailid: number,
+        calendarid: string,
+        mailid: string,
         id?: number,
     ) {
         this.id = id
@@ -64,11 +66,11 @@ export class LogElement{
         this.userID = userID;
     }
 
-    public getType():string{
+    public getType():Type{
         return this.type;
     }
 
-    public setType(type:string){
+    public setType(type:Type){
         this.type = type;
     }
 
@@ -140,17 +142,16 @@ export class LogElement{
         return this.caseTaskNum;
     }
 
-    public getCalendarid(): number {
+    public getCalendarid():string {
         return this.calendarid;
     }
-    public setCalendarid(value: number) {
+    public setCalendarid(value: string) {
         this.calendarid = value;
     }
-
-    public getMailid(): number {
+    public getMailid(): string {
         return this.mailid;
     }
-    public setMailid(value: number) {
+    public setMailid(value: string) {
         this.mailid = value;
     }
 }

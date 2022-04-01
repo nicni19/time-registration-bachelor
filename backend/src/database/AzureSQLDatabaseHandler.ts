@@ -1,11 +1,11 @@
-import { Connection, Request } from 'tedious'
+import { Connection, Request } from 'tedious';
 import { LogElement } from '../common/domain/LogElement';
 import { TimerRun } from '../common/domain/TimerRun';
 import { IDatabaseHandler } from '../common/interfaces/IDatabaseHandler';
+import * as azureConfig from "./config/azureconfig.json"
 
 export class AzureSQLDatabaseHandler implements IDatabaseHandler{
 
-  azureConfig = require('./config/azureconfig.json')
   connection : Connection;
 
   constructor(){
@@ -15,7 +15,7 @@ export class AzureSQLDatabaseHandler implements IDatabaseHandler{
       if (err) {
         console.error(err.message);
       } else {
-        console.log("User " + "'" + this.azureConfig.username + "' connected to Azure database");
+        console.log("User " + "'" + azureConfig.username + "' connected to Azure database");
       }
     });
 
@@ -25,8 +25,8 @@ export class AzureSQLDatabaseHandler implements IDatabaseHandler{
   config = {
     authentication: {
       options: {
-        userName: this.azureConfig.username,
-        password: this.azureConfig.password
+        userName: azureConfig.username,
+        password: azureConfig.password
       },
       type: "default"
     },
@@ -74,7 +74,7 @@ export class AzureSQLDatabaseHandler implements IDatabaseHandler{
     throw new Error('Method not implemented.');
   }
   insertLogElement(logArray: LogElement[]) {
-    throw new Error('Method not implemented.');
+
   }
   deleteLogElements(logIDs: number[]) {
     throw new Error('Method not implemented.');
@@ -89,16 +89,16 @@ export class AzureSQLDatabaseHandler implements IDatabaseHandler{
     throw new Error('Method not implemented.');
   }
   getLastGraphMailLookup(userID: string): string {
-    throw new Error('Method not implemented.');
+    return '2022-01-01T08:50:19.308Z';  
   }
   setLastGraphMailLookup(userID: string, timestamp: string) {
-    throw new Error('Method not implemented.');
+  
   }
   getLastGraphCalendarLookup(userID: string): string {
-    throw new Error('Method not implemented.');
+    return '2022-01-01T08:50:19.308Z';
   }
   setLastGraphCalendarLookup(userID: string, timestamp: string) {
-    throw new Error('Method not implemented.');
+
   }
   
 }

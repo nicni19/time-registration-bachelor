@@ -1,6 +1,7 @@
 import { LogElement } from "../common/domain/LogElement";
 import { IDatabaseHandler } from "../common/interfaces/IDatabaseHandler";
 import { IGraphHandler } from "../common/interfaces/IGraphHandler";
+import { Type } from "../common/domain/Type"
 const request = require('request');
 
 export class GraphMailHandler implements IGraphHandler {
@@ -8,11 +9,15 @@ export class GraphMailHandler implements IGraphHandler {
     lastLookup: string;
 
     constructor(){
-        this.lastLookup = '2022-01-16T01:03:21.347Z';
     }
     
     async updateDatabase(databaseHandler: IDatabaseHandler, authToken: string, userID: string): Promise<any> {
-        return await this.fetchMailEvents(authToken, userID);
+        this.lastLookup = databaseHandler.getLastGraphMailLookup(userID);
+
+        let logElements: LogElement[] = await this.fetchMailEvents(authToken, userID);
+        databaseHandler.insertLogElement(logElements);
+        databaseHandler.setLastGraphMailLookup(userID, new Date(Date.now()).toISOString());
+        return logElements;
     }
 
     async fetchMailEvents(authToken, userID: string): Promise<any> {
@@ -32,14 +37,14 @@ export class GraphMailHandler implements IGraphHandler {
                 let startTime = new Date((body.value[i].sentDateTime).replace('T', ' ')).getTime();
                 let description = "Reciever: " + body.value[i].toRecipients[0].emailAddress.address + ", Subject: " + body.value[i].subject;
 
-                let logElement: LogElement = new LogElement(userID, 'Mail', null, description, startTime, null, null, null, null, null, null, null, body.value[i].id)
+                let logElement: LogElement = new LogElement(userID, Type.Mail, null, description, startTime, null, null, null, null, null, null, null, body.value[i].id)
                 logElements.push(logElement);
+                console.log(logElement.getCalendarid());
+                
             }
             resolve(logElements);
         }).auth(null, null, true, authToken)
         }).then(() => {
-            let newLookup: Date = new Date(Date.now());
-            this.lastLookup = newLookup.toISOString();
             return logElements;
         });
         
