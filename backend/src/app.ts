@@ -1,5 +1,6 @@
 import express, { json } from 'express';
 import { Core } from './common/core';
+import { LogElement } from './common/domain/LogElement';
 const app = express();
 const port = 3000;
 const request = require('request');
@@ -12,8 +13,11 @@ let lastLookup: string = '202022-01-16T01:03:21.347Z';
 //Azure test
 app.get('/azureTest', async (req, res) => {
     //Test ting
-    let returnVal = await core.azureTest();
-    console.log(returnVal);
+    let testElement = new LogElement('6fc4dcd488b119e7','type',null,"This is the description",1648797418621,100,true,false,true,false);
+    let testArray:LogElement[] = [];
+    testArray.push(testElement); 
+    let returnVal = await core.azureTest(testArray);
+    //console.log(returnVal);
     res.send(returnVal);
 });
 

@@ -36,8 +36,10 @@ export class Core{
         return await this.authHandler.authenticate(graphTest.id,graphTest.token);
     }
 
-    azureTest(){
-        return this.azureDatabase.testQuery();
+    async azureTest(elements:LogElement[]){
+        //return this.azureDatabase.testQuery();
+        //this.azureDatabase.insertLogElement(elements);
+        return await this.azureDatabase.getLogElements(['6fc4dcd488b119e7']);
     }
 
 
