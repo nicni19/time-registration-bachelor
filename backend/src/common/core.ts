@@ -38,7 +38,7 @@ export class Core{
         //this.azureDatabase.insertLogElement(elements);
         //return await this.databaseHandler.getLogElements(['6fc4dcd488b119e7']);
         //this.databaseHandler.setLastGraphMailLookup('6fc4dcd488b119e7',BigInt(1648797418669));
-        console.log(await this.databaseHandler.getLastGraphCalendarLookup('6fc4dcd488b119e7'))
+        return await this.databaseHandler.getLastGraphCalendarLookup('6fc4dcd488b119e7');
     }
 
     async graphUpdate(userID: string, authToken: string) {
@@ -49,7 +49,7 @@ export class Core{
         
         for (let i: number = 0; i < prefArray.length; i++) {
             try {
-                logElements.push(await this.graphMap.get(prefArray[i]).updateDatabase(this.azureDatabase, authToken, userID));
+                logElements.push(await this.graphMap.get(prefArray[i]).updateDatabase(this.databaseHandler, authToken, userID));
             } catch (error) {
                 return error;
             } 

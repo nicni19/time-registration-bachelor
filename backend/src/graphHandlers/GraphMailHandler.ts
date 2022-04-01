@@ -12,7 +12,7 @@ export class GraphMailHandler implements IGraphHandler {
     }
     
     async updateDatabase(databaseHandler: IDatabaseHandler, authToken: string, userID: string): Promise<any> {
-        this.lastLookup = databaseHandler.getLastGraphMailLookup(userID);
+        this.lastLookup = await databaseHandler.getLastGraphMailLookup(userID);
 
         let logElements: LogElement[] = await this.fetchMailEvents(authToken, userID);
         databaseHandler.insertLogElement(logElements);

@@ -19,10 +19,10 @@ export interface IDatabaseHandler{
 
     getLastGraphMailLookup(userID:string):Promise<string>;
 
-    setLastGraphMailLookup(userID:string, timestamp:bigint);
+    setLastGraphMailLookup(userID:string, timestamp:string);
 
     getLastGraphCalendarLookup(userID:string):Promise<string>;
 
-    setLastGraphCalendarLookup(userID:string, timestamp:bigint);
+    setLastGraphCalendarLookup(userID:string, timestamp:string);
 
 }

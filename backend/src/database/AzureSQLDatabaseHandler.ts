@@ -216,7 +216,7 @@ export class AzureSQLDatabaseHandler implements IDatabaseHandler{
     }).then(()=>{return returnString});    
   }
 
-  setLastGraphMailLookup(userID: string, timestamp: bigint) {
+  setLastGraphMailLookup(userID: string, timestamp: string) {
     let queryString = this.squel.update().table('users').set('last_mail_lookup',timestamp).where('id = ' + "'" + userID + "'");
     const request : Request = new Request(
       queryString, (err) => {
@@ -249,7 +249,7 @@ export class AzureSQLDatabaseHandler implements IDatabaseHandler{
     }).then(()=>{return returnString});
   }
 
-  setLastGraphCalendarLookup(userID: string, timestamp: bigint) {
+  setLastGraphCalendarLookup(userID: string, timestamp: string) {
     let queryString = this.squel.update().table('users').set('last_calendar_lookup',timestamp).where('id = ' + "'" + userID + "'");
     const request : Request = new Request(
       queryString, (err) => {

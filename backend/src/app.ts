@@ -12,7 +12,7 @@ let lastLookup: string = '202022-01-16T01:03:21.347Z';
 
 //Azure test
 app.get('/azureTest', async (req, res) => {
-    core.azureTest();
+
     /*
     //Test ting
     let testElement = new LogElement('6fc4dcd488b119e7','type',null,"This is the description",1648797418621,100,true,false,true,false);
@@ -61,17 +61,16 @@ app.get('/authTest', async (req, res) => {
   
 });
 
-app.get('/getLogElements', async (req, res) => {
-  res.setHeader('Content-Type', 'application/json');
-  
-  let token: string = req.headers.authorization.split(' ')[1];
-  console.log(token);
-  let requestJSON = JSON.parse(JSON.stringify(req.headers));
+app.get('/getLogElements', (req, res) => {
+  /*
+  core.insertGraphElementsToDB(token)
 
-  let jsonResponse = await core.graphUpdate(requestJSON.userid as string, token);
-  
-  res.status(200);
-  res.send();
+  logElements = core.fetchLogElements(userID, params)
+
+  res.send(logElements)
+  */
+
+  res.send('Log elements');
 });
 
 app.post('/insertLogElements', (req, res) => {
@@ -95,6 +94,19 @@ app.post('/insertTimerRun', (req, res) => {
   core.insertTimerRun
   */
   res.send('Timer run inserted');
+});
+
+app.get('/getCalendar', async (req, res) => {
+  res.setHeader('Content-Type', 'application/json');
+  
+  let token: string = req.headers.authorization.split(' ')[1];
+  console.log(token);
+  let requestJSON = JSON.parse(JSON.stringify(req.headers));
+
+  let jsonResponse = await core.graphUpdate(requestJSON.userid as string, token);
+  
+  res.status(200);
+  res.send(jsonResponse);
 });
 
 app.listen(port, () => {

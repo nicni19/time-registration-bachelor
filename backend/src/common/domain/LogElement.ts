@@ -33,8 +33,8 @@ export class LogElement{
         ritNum: number = null, 
         caseNum: string = null, 
         caseTaskNum: number = null,
-        calendarid: number = null,
-        mailid: number = null,
+        calendarid: string = null,
+        mailid: string = null,
         id?: number,
     ) {
         this.id = id

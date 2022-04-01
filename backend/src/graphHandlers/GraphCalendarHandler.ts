@@ -16,7 +16,7 @@ export class GraphCalendarHandler implements IGraphHandler {
     }
     
     async updateDatabase(databaseHandler: IDatabaseHandler, authToken: string, userID: string): Promise<any>{
-        this.lastLookup = databaseHandler.getLastGraphCalendarLookup(userID);
+        this.lastLookup = await databaseHandler.getLastGraphCalendarLookup(userID);
 
         let logElements: LogElement[] = await this.fetchCalendarEvents(authToken, userID);
         databaseHandler.insertLogElement(logElements);
