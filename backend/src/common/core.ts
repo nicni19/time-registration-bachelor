@@ -13,8 +13,7 @@ import { AzureSQLDatabaseHandler } from '../database/AzureSQLDatabaseHandler';
 
 export class Core{
     
-    databaseHandler: IDatabaseHandler = new SQLDatabaseHandler();
-    azureDatabase: AzureSQLDatabaseHandler = new AzureSQLDatabaseHandler();
+    databaseHandler: AzureSQLDatabaseHandler = new AzureSQLDatabaseHandler();
     authHandler: IAuthHandler = new MicrosoftAuthHandler();
     graphMap = new Map();
     
@@ -28,20 +27,19 @@ export class Core{
     }
 
     insertLogElement(){
-        
     }
     
-
     async authTest(){
         return await this.authHandler.authenticate(graphTest.id,graphTest.token);
     }
 
-    async azureTest(elements:LogElement[]){
+    async azureTest(){
         //return this.azureDatabase.testQuery();
         //this.azureDatabase.insertLogElement(elements);
-        return await this.azureDatabase.getLogElements(['6fc4dcd488b119e7']);
+        //return await this.databaseHandler.getLogElements(['6fc4dcd488b119e7']);
+        //this.databaseHandler.setLastGraphMailLookup('6fc4dcd488b119e7',BigInt(1648797418669));
+        console.log(await this.databaseHandler.getLastGraphCalendarLookup('6fc4dcd488b119e7'))
     }
-
 
     async graphUpdate(userID: string, authToken: string) {
         //Todo: Get preferences from database

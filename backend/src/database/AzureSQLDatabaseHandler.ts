@@ -1,3 +1,4 @@
+import { request } from 'express';
 import { Connection, Request } from 'tedious'
 import { LogElement } from '../common/domain/LogElement';
 import { TimerRun } from '../common/domain/TimerRun';
@@ -193,20 +194,70 @@ export class AzureSQLDatabaseHandler implements IDatabaseHandler{
     throw new Error('Method not implemented.');
   }
 
-  getLastGraphMailLookup(userID: string): string {
-    throw new Error('Method not implemented.');
-  }
-
-  setLastGraphMailLookup(userID: string, timestamp: string) {
-    throw new Error('Method not implemented.');
-  }
-
-  getLastGraphCalendarLookup(userID: string): string {
-    throw new Error('Method not implemented.');
-  }
-
-  setLastGraphCalendarLookup(userID: string, timestamp: string) {
-    throw new Error('Method not implemented.');
-  }
+  async getLastGraphMailLookup(userID: string): Promise<string> {
+    let queryString = this.squel.select('last_mail_lookup').from('users').where('id = ' + "'" + userID + "'");
+    let returnString = "";
+    return await new Promise((resolve) =>{
+      const request : Request = new Request(
+        queryString, (err) => {
+          if(err){
+            console.log(err.message)
+          }
+        }
+      );
   
+      request.on("row", columns => {
+        columns.forEach(column => {
+          returnString = column.value;
+        });
+        resolve(returnString)
+      });
+      this.connection.execSql(request)
+    }).then(()=>{return returnString});    
+  }
+
+  setLastGraphMailLookup(userID: string, timestamp: bigint) {
+    let queryString = this.squel.update().table('users').set('last_mail_lookup',timestamp).where('id = ' + "'" + userID + "'");
+    const request : Request = new Request(
+      queryString, (err) => {
+        if(err){
+          console.log(err.message)
+        }
+      }
+    );
+    this.connection.execSql(request)
+  }
+
+  async getLastGraphCalendarLookup(userID: string): Promise<string> {
+    let queryString = this.squel.select('last_calendar_lookup').from('users').where('id = ' + "'" + userID + "'");
+    let returnString = "";
+    return await new Promise((resolve) =>{
+      const request : Request = new Request(
+        queryString, (err) => {
+          if(err){
+            console.log(err.message)
+          }
+        }
+      );
+      request.on("row", columns => {
+        columns.forEach(column => {
+          returnString = column.value;
+        });
+        resolve(returnString)
+      });
+      this.connection.execSql(request)
+    }).then(()=>{return returnString});
+  }
+
+  setLastGraphCalendarLookup(userID: string, timestamp: bigint) {
+    let queryString = this.squel.update().table('users').set('last_calendar_lookup',timestamp).where('id = ' + "'" + userID + "'");
+    const request : Request = new Request(
+      queryString, (err) => {
+        if(err){
+          console.log(err.message)
+        }
+      }
+    );
+    this.connection.execSql(request)
+  }
 }
