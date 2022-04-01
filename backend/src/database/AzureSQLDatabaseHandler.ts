@@ -1,3 +1,4 @@
+import * as azureConfig from "./config/azureconfig.json"
 import { request } from 'express';
 import { Connection, Request } from 'tedious'
 import { LogElement } from '../common/domain/LogElement';
@@ -18,7 +19,7 @@ export class AzureSQLDatabaseHandler implements IDatabaseHandler{
       if (err) {
         console.error(err.message);
       } else {
-        console.log("User " + "'" + this.azureConfig.username + "' connected to Azure database");
+        console.log("User " + "'" + azureConfig.username + "' connected to Azure database");
       }
     });
 
@@ -28,8 +29,8 @@ export class AzureSQLDatabaseHandler implements IDatabaseHandler{
   config = {
     authentication: {
       options: {
-        userName: this.azureConfig.username,
-        password: this.azureConfig.password
+        userName: azureConfig.username,
+        password: azureConfig.password
       },
       type: "default"
     },
@@ -193,7 +194,6 @@ export class AzureSQLDatabaseHandler implements IDatabaseHandler{
   deleteTimerRun(runIDs: number[]): string {
     throw new Error('Method not implemented.');
   }
-
   async getLastGraphMailLookup(userID: string): Promise<string> {
     let queryString = this.squel.select('last_mail_lookup').from('users').where('id = ' + "'" + userID + "'");
     let returnString = "";

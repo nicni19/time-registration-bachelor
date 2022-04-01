@@ -2,6 +2,8 @@ import express from "express";
 import { LogElement } from "../common/domain/LogElement";
 import { IDatabaseHandler } from "../common/interfaces/IDatabaseHandler";
 import { IGraphHandler } from "../common/interfaces/IGraphHandler";
+import { Type } from "../common/domain/Type"
+
 const request = require('request');
 const { htmlToText } = require('html-to-text');
 
@@ -11,11 +13,15 @@ export class GraphCalendarHandler implements IGraphHandler {
     lastLookup: string;
 
     constructor(){
-        this.lastLookup = '2022-01-16T01:03:21.347Z';
     }
     
     async updateDatabase(databaseHandler: IDatabaseHandler, authToken: string, userID: string): Promise<any>{
-        return await this.fetchCalendarEvents(authToken, userID);   
+        this.lastLookup = databaseHandler.getLastGraphCalendarLookup(userID);
+
+        let logElements: LogElement[] = await this.fetchCalendarEvents(authToken, userID);
+        databaseHandler.insertLogElement(logElements);
+        databaseHandler.setLastGraphCalendarLookup(userID, new Date(Date.now()).toISOString());
+        return logElements;
     }
 
     async fetchCalendarEvents(authToken: string, userID: string): Promise<any> {
@@ -41,7 +47,7 @@ export class GraphCalendarHandler implements IGraphHandler {
                 let duration: number = endTime - startTime;
                 let description = body.value[i].subject + ': ' + event;
 
-                let logElement: LogElement = new LogElement(userID, 'Calendar', null, description, startTime, duration, null, null, null, null, null, body.value[i].id, null);
+                let logElement: LogElement = new LogElement(userID, Type.CalendarEvent, null, description, BigInt(startTime), BigInt(duration), null, null, null, null, null, body.value[i].id, null);
                 logElements.push(logElement);
 
             }

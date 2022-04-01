@@ -1,12 +1,14 @@
+import { Type } from "./Type";
+
 export class LogElement{
     
     private id:number;
     private userID:string;
-    private type:string;
+    private type:Type;
     private customer:string;
     private description:string;
-    private startTimestamp:number;
-    private duration:number;
+    private startTimestamp:BigInt;
+    private duration:BigInt;
     private internalTask:boolean;
     private unpaid:boolean;
     private edited:boolean;
@@ -14,16 +16,16 @@ export class LogElement{
     private ritNum:number;
     private caseNum:string;
     private caseTaskNum:number;
-    private calendarid: number;
-    private mailid: number;
+    private calendarid: string;
+    private mailid: string;
 
     constructor( 
         userID: string, 
-        type: string, 
+        type: Type, 
         customer: string = null, 
         description: string = null, 
-        startTimestamp: number, 
-        duration: number, 
+        startTimestamp: BigInt, 
+        duration: BigInt, 
         internalTask: boolean, 
         unpaid: boolean,
         edited:boolean,
@@ -70,11 +72,11 @@ export class LogElement{
         this.userID = userID;
     }
 
-    public getType():string{
+    public getType():Type{
         return this.type;
     }
 
-    public setType(type:string){
+    public setType(type:Type){
         this.type = type;
     }
 
@@ -94,19 +96,19 @@ export class LogElement{
         this.description = description;
     }
 
-    public getStartTimestamp():number{
+    public getStartTimestamp():BigInt{
         return this.startTimestamp;
     }
 
-    public setStartTimestamp(start:number){
+    public setStartTimestamp(start:BigInt){
         this.startTimestamp = start;
     }
 
-    public getDuration():number{
+    public getDuration():BigInt{
         return this.duration;
     }
 
-    public setDuration(duration:number){
+    public setDuration(duration:BigInt){
         this.duration = duration;
     }
 
@@ -162,17 +164,16 @@ export class LogElement{
         return this.caseTaskNum;
     }
 
-    public getCalendarid(): number {
+    public getCalendarid():string {
         return this.calendarid;
     }
-    public setCalendarid(value: number) {
+    public setCalendarid(value: string) {
         this.calendarid = value;
     }
-
-    public getMailid(): number {
+    public getMailid(): string {
         return this.mailid;
     }
-    public setMailid(value: number) {
+    public setMailid(value: string) {
         this.mailid = value;
     }
 }

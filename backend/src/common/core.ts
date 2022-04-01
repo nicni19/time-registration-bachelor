@@ -49,19 +49,20 @@ export class Core{
         
         for (let i: number = 0; i < prefArray.length; i++) {
             try {
-                logElements.push(await this.graphMap.get(prefArray[i]).updateDatabase(this.databaseHandler, authToken, userID));
+                logElements.push(await this.graphMap.get(prefArray[i]).updateDatabase(this.azureDatabase, authToken, userID));
             } catch (error) {
                 return error;
-            }
-                
-            
+            } 
         }
 
         for (let i: number = 0; i < logElements.length; i++) {
-            console.log(logElements[i]);
+            let log: LogElement = logElements[i];
         }
+        console.log(logElements);
 
-        return 'jsonResponse';
+        return logElements;
     }
+
+
 
 }
