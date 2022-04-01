@@ -39,7 +39,6 @@ export class GraphMailHandler implements IGraphHandler {
 
                 let logElement: LogElement = new LogElement(userID, Type.Mail, null, description, startTime, null, null, null, null, null, null, null, body.value[i].id)
                 logElements.push(logElement);
-                console.log(logElement.getCalendarid());
                 
             }
             resolve(logElements);

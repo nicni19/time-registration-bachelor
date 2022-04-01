@@ -56,10 +56,7 @@ export class Core{
         }
 
         for (let i: number = 0; i < logElements.length; i++) {
-            console.log(logElements[i]);
-            console.log("Cal id: ");
             let log: LogElement = logElements[i][i];
-            console.log(typeof log.getCalendarid());
         }
 
         return logElements;
