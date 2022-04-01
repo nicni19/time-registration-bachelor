@@ -7,8 +7,8 @@ export class LogElement{
     private type:Type;
     private customer:string;
     private description:string;
-    private startTimestamp:number;
-    private duration:number;
+    private startTimestamp:BigInt;
+    private duration:BigInt;
     private internalTask:boolean;
     private unpaid:boolean;
     private ritNum:number;
@@ -22,8 +22,8 @@ export class LogElement{
         type: Type, 
         customer: string, 
         description: string, 
-        startTimestamp: number, 
-        duration: number, 
+        startTimestamp: BigInt, 
+        duration: BigInt, 
         internalTask: boolean, 
         unpaid: boolean, 
         ritNum: number, 
@@ -90,19 +90,19 @@ export class LogElement{
         this.description = description;
     }
 
-    public getStartTimestamp():number{
+    public getStartTimestamp():BigInt{
         return this.startTimestamp;
     }
 
-    public setStartTimestamp(start:number){
+    public setStartTimestamp(start:BigInt){
         this.startTimestamp = start;
     }
 
-    public getDuration():number{
+    public getDuration():BigInt{
         return this.duration;
     }
 
-    public setDuration(duration:number){
+    public setDuration(duration:BigInt){
         this.duration = duration;
     }
 

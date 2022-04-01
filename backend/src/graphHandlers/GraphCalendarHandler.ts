@@ -47,7 +47,7 @@ export class GraphCalendarHandler implements IGraphHandler {
                 let duration: number = endTime - startTime;
                 let description = body.value[i].subject + ': ' + event;
 
-                let logElement: LogElement = new LogElement(userID, Type.CalendarEvent, null, description, startTime, duration, null, null, null, null, null, body.value[i].id, null);
+                let logElement: LogElement = new LogElement(userID, Type.CalendarEvent, null, description, BigInt(startTime), BigInt(duration), null, null, null, null, null, body.value[i].id, null);
                 logElements.push(logElement);
 
             }

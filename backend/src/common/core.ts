@@ -56,8 +56,9 @@ export class Core{
         }
 
         for (let i: number = 0; i < logElements.length; i++) {
-            let log: LogElement = logElements[i][i];
+            let log: LogElement = logElements[i];
         }
+        console.log(logElements);
 
         return logElements;
     }
