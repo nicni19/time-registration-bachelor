@@ -5,10 +5,26 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <script src="index.js"></script>
     <style>
         .mainHeader{font-family:Arial, Helvetica, sans-serif;}
         .inputLabel{font-family: Arial, Helvetica, sans-serif;}
         .queryButton{width: 20%; height: 40px; font-family: Arial, Helvetica, sans-serif;}
+        /* width */
+        ::-webkit-scrollbar {
+        width: 10px;
+        }
+
+        /* Track */
+        ::-webkit-scrollbar-track {
+        box-shadow: inset 0 0 5px grey;
+        }
+
+        /* Handle */
+        ::-webkit-scrollbar-thumb {
+        background: rgb(101, 118, 101);
+        border-radius: 10px;
+        }
     </style>
 </head>
 <body>
@@ -38,24 +54,14 @@
             <button type="button" class="queryButton">Some query</button>
             <button type="button" class="queryButton">Some query</button>
         </div>
-        <div id="resultsWrapper" style="height: 350px; outline: 2px; outline-style: dotted; outline-color: darkslategrey; background-color: rgb(235, 235, 235);">
-            <ul id="resultsList">
+        <div id="resultsWrapper" style="height: 350px; outline: 2px; outline-style: dotted; outline-color: darkslategrey; background-color: rgb(235, 235, 235); overflow-y: scroll; margin-bottom: 8px; margin-top: 8px;">
+            <ul id="resultsList" style="height: 350px;">
 
             </ul>
             
         </div>
         <button id="clearListButton" onclick="clearList()" style="width: 100%; height: 40px; font-size: x-large; background-color: darkolivegreen; color: whitesmoke;">Clear list</button>
     </div>
-    <script>
-        function listTest(){
-            let testJson = {'elements':[{name:'Nicolaj',age:'25'}]};
-            let node = document.createElement('li')
-            node.append(testJson.elements[0])
-            document.getElementById('resultsList').append(node)
-        }
-        function clearList(){
-            let ul = document.getElementById('resultsList').innerHTML=""
-        }
-    </script>
 </body>
 </html>
+<div id="testElement" style="height: 30px; width: 95%; outline: 2px; outline-style: none; margin-bottom: 10px; display: flex; justify-content: center; background-color: yellowgreen;">Hello there!</div>
