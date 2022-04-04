@@ -7,7 +7,7 @@ export interface IDatabaseHandler{
 
     getLogElements(queryArguments:String[]);
 
-    insertLogElement(logArray: LogElement[]);
+    insertLogElement(logArray: LogElement[]): Promise<any>;
 
     deleteLogElements(logIDs: number[]);
 

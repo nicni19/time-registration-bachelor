@@ -146,44 +146,47 @@ export class AzureSQLDatabaseHandler implements IDatabaseHandler{
     }).then(()=>{return returnJson});
   }
   
-  insertLogElement(logArray: LogElement[]) {
+  async insertLogElement(logArray: LogElement[]): Promise<any> {
     let array = [];
-    
 
-    for (let i: number = 0; i < logArray.length; i++) {
-      array.push({ 
-        user_id: logArray[i].getUserID(),
-        element_description: logArray[i].getDescription(),
-        start_timestamp: logArray[i].getStartTimestamp(),
-        duration: logArray[i].getDuration(),
-        internal_task: +logArray[i].getInternalTask(),
-        unpaid: +logArray[i].getUnpaid(),
-        rit_num: logArray[i].getRitNum(),
-        case_num: logArray[i].getCaseNum(),
-        case_task_num: logArray[i].getCaseTaskNum(),
-        customer: logArray[i].getCustomer(),
-        edited: +logArray[i].getEdited(),
-        book_keep_ready: +logArray[i].getBookKeepReady(),
-        calendar_id: logArray[i].getCalendarid(),
-        mail_id: logArray[i].getMailid()
-      })
-    }    
+    return await new Promise((resolve,reject) => {
+      for (let i: number = 0; i < logArray.length; i++) {
+        array.push({ 
+          user_id: logArray[i].getUserID(),
+          element_description: logArray[i].getDescription(),
+          start_timestamp: logArray[i].getStartTimestamp(),
+          duration: logArray[i].getDuration(),
+          internal_task: +logArray[i].getInternalTask(),
+          unpaid: +logArray[i].getUnpaid(),
+          rit_num: logArray[i].getRitNum(),
+          case_num: logArray[i].getCaseNum(),
+          case_task_num: logArray[i].getCaseTaskNum(),
+          customer: logArray[i].getCustomer(),
+          edited: +logArray[i].getEdited(),
+          book_keep_ready: +logArray[i].getBookKeepReady(),
+          calendar_id: logArray[i].getCalendarid(),
+          mail_id: logArray[i].getMailid()
+        })
+      }    
 
-      //Created query string by using SQUEL
-      let queryString = this.squel.insert()
-        .into('log_elements')
-        .setFieldsRows(array)
-        .toString() 
+        //Created query string by using SQUEL
+        let queryString = this.squel.insert()
+          .into('log_elements')
+          .setFieldsRows(array)
+          .toString() 
 
-    const request : Request = new Request(
-      queryString, (err) => {
-        if(err){
-          console.log(err.message)
+      const request : Request = new Request(
+        queryString, (err) => {
+          if(err){
+            console.log(err.message)
+          }
         }
-      }
-    );     
-    this.connection.execSql(request);
-
+      );     
+      this.connection.execSql(request);
+      resolve(true);
+    }).then(() => {
+      return true;
+  });
 
   }
 

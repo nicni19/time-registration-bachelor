@@ -20,10 +20,16 @@ export class GraphCalendarHandler implements IGraphHandler {
         console.log("Calendar");
 
         let logElements: LogElement[] = await this.fetchCalendarEvents(authToken, userID);
-        databaseHandler.insertLogElement(logElements);
-        databaseHandler.setLastGraphCalendarLookup(userID, new Date(Date.now()).toISOString());
+        
+        //let isDone: boolean = await databaseHandler.insertLogElement(logElements);
+        this.updateGraphCalendarLookup(await databaseHandler.insertLogElement(logElements),databaseHandler,userID)
         console.log(logElements);
         return logElements;
+    }
+
+    async updateGraphCalendarLookup(isDone:boolean,databaseHandler:IDatabaseHandler,userID:string){
+        //databaseHandler.setLastGraphCalendarLookup(userID, new Date(Date.now()).toISOString());
+        
     }
 
     async fetchCalendarEvents(authToken: string, userID: string): Promise<any> {
