@@ -147,36 +147,44 @@ export class AzureSQLDatabaseHandler implements IDatabaseHandler{
   }
   
   insertLogElement(logArray: LogElement[]) {
-    logArray.forEach(element => {
+    let array = [];
+    
+
+    for (let i: number = 0; i < logArray.length; i++) {
+      array.push({ 
+        user_id: logArray[i].getUserID(),
+        element_description: logArray[i].getDescription(),
+        start_timestamp: logArray[i].getStartTimestamp(),
+        duration: logArray[i].getDuration(),
+        internal_task: +logArray[i].getInternalTask(),
+        unpaid: +logArray[i].getUnpaid(),
+        rit_num: logArray[i].getRitNum(),
+        case_num: logArray[i].getCaseNum(),
+        case_task_num: logArray[i].getCaseTaskNum(),
+        customer: logArray[i].getCustomer(),
+        edited: +logArray[i].getEdited(),
+        book_keep_ready: +logArray[i].getBookKeepReady(),
+        calendar_id: logArray[i].getCalendarid(),
+        mail_id: logArray[i].getMailid()
+      })
+    }    
+
       //Created query string by using SQUEL
       let queryString = this.squel.insert()
-          .into('log_elements')
-          .set("user_id", element.getUserID())
-          .set("element_description",element.getDescription())
-          .set("start_timestamp",element.getStartTimestamp())
-          .set("duration",element.getDuration())
-          .set("internal_task", + element.getInternalTask())
-          .set("unpaid", + element.getUnpaid())
-          .set("rit_num",element.getRitNum())
-          .set("case_num",element.getCaseNum())
-          .set("case_task_num",element.getCaseTaskNum())
-          .set("customer",element.getCustomer())
-          .set("edited",+ element.getEdited())
-          .set("book_keep_ready", + element.getBookKeepReady())
-          .set("calendar_id",element.getCalendarid())
-          .set("mail_id",element.getMailid())
-          .toString()
+        .into('log_elements')
+        .setFieldsRows(array)
+        .toString() 
 
-      //let testQueryString = "INSERT INTO log_elements (user_id, element_description, start_timestamp, duration, internal_task, unpaid, rit_num, case_num, case_task_num, customer, edited, book_keep_ready, calendar_id, mail_id) VALUES ('6fc4dcd488b119e7', 'This is the description', 1648797418621, 100, 1, 0, NULL, NULL, NULL, NULL, 1, 0, NULL, NULL)"
-      const request : Request = new Request(
-        queryString, (err) => {
-          if(err){
-            console.log(err.message)
-          }
+    const request : Request = new Request(
+      queryString, (err) => {
+        if(err){
+          console.log(err.message)
         }
-      );     
-      this.connection.execSql(request);
-    });
+      }
+    );     
+    this.connection.execSql(request);
+
+
   }
 
   deleteLogElements(logIDs: number[]) {

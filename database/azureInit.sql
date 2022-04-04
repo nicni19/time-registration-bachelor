@@ -1,7 +1,7 @@
 CREATE TABLE users (
 	id varchar(50) PRIMARY KEY,
-	last_mail_lookup bigint NOT NULL,
-	last_calendar_lookup bigint NOT NULL
+	last_mail_lookup varchar(30) NOT NULL,
+	last_calendar_lookup varchar(30) NOT NULL
 );
 
 CREATE TABLE log_elements (

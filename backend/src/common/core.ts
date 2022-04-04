@@ -16,6 +16,7 @@ export class Core{
     databaseHandler: AzureSQLDatabaseHandler = new AzureSQLDatabaseHandler();
     authHandler: IAuthHandler = new MicrosoftAuthHandler();
     graphMap = new Map();
+    dbArray: IDatabaseHandler[] = [new AzureSQLDatabaseHandler(),new AzureSQLDatabaseHandler()]
     
     constructor(){
         this.graphMap.set('mail', new GraphMailHandler as IGraphHandler);
@@ -46,11 +47,15 @@ export class Core{
         let prefArray = ['mail','calendar'];
 
         let logElements: LogElement[] = [];
+
+
+        console.log(new Date(Date.now()).toISOString());
         
         for (let i: number = 0; i < prefArray.length; i++) {
             try {
-                logElements.push(await this.graphMap.get(prefArray[i]).updateDatabase(this.databaseHandler, authToken, userID));
+                logElements.push(await this.graphMap.get(prefArray[i]).updateDatabase(this.dbArray[i], authToken, userID));
             } catch (error) {
+                console.log(error);
                 return error;
             } 
         }
