@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .mainHeader{font-family:Arial, Helvetica, sans-serif;}
+        .inputLabel{font-family: Arial, Helvetica, sans-serif;}
+        .queryButton{width: 20%; height: 40px; font-family: Arial, Helvetica, sans-serif;}
+    </style>
+</head>
+<body>
+    <div id="wrapper">
+        <div style="display: flex; justify-content: left;">
+            <h1 class="mainHeader">RitVault lightweight frontend</h1>
+            <div id="logo" style="display: flex; justify-content: left;">
+                <p style="font-size: small;">by</p>
+                <p style="font-size: larger; font-family: Verdana, Geneva, Tahoma, sans-serif;">Jondog Technologies</p>
+            </div>
+        </div>
+        <hr size="3" width="98%" color="green">
+        <div id="settings">
+            <form>
+                <label for="userID" class="inputLabel">Microsoft Identity ID:</label><br>
+                <input type="text" id="userID" name="userID" style="width: 20%; height: 30px;"><br>
+                <br>
+                <label for="graphToken" class="inputLabel">Microsoft Graph token:</label><br>
+                <input type="text" id="graphToken" name="graphToken" style="width: 20%; height: 30px;"><br>
+            </form>
+            <hr size="2" width="98%" color="#A0A0A0">
+        </div>
+        <div id="queryButtons" style="display: flex; justify-content: left;">
+            <button type="button" id="getCalendarButton" class="queryButton" onclick="listTest()">Get calendar events</button>
+            <button type="button" class="queryButton">Some query</button>
+            <button type="button" class="queryButton">Some query</button>
+            <button type="button" class="queryButton">Some query</button>
+            <button type="button" class="queryButton">Some query</button>
+        </div>
+        <div id="resultsWrapper" style="height: 350px; outline: 2px; outline-style: dotted; outline-color: darkslategrey; background-color: rgb(235, 235, 235);">
+            <ul id="resultsList">
+
+            </ul>
+            
+        </div>
+        <button id="clearListButton" onclick="clearList()" style="width: 100%; height: 40px; font-size: x-large; background-color: darkolivegreen; color: whitesmoke;">Clear list</button>
+    </div>
+    <script>
+        function listTest(){
+            let testJson = {'elements':[{name:'Nicolaj',age:'25'}]};
+            let node = document.createElement('li')
+            node.append(testJson.elements[0])
+            document.getElementById('resultsList').append(node)
+        }
+        function clearList(){
+            let ul = document.getElementById('resultsList').innerHTML=""
+        }
+    </script>
+</body>
+</html>
