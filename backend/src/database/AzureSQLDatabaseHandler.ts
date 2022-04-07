@@ -10,20 +10,24 @@ export class AzureSQLDatabaseHandler implements IDatabaseHandler{
 
   azureConfig = require('./config/azureconfig.json');
   squel = require('squel');
-  connection : Connection;
+  connections = [];
 
   constructor(){
-    this.connection = new Connection(this.config);
-    
-    this.connection.on("connect", err => {
-      if (err) {
-        console.error(err.message);
-      } else {
-        console.log("User " + "'" + azureConfig.username + "' connected to Azure database");
-      }
-    });
+    this.connections = [new Connection(this.config), new Connection(this.config), new Connection(this.config), new Connection(this.config)];
 
-    this.connection.connect();
+    for (let i: number = 0; i < this.connections.length; i++) {
+      this.connections[i].on("connect", err => {
+        if (err) {
+          console.error(err.message);
+        } else {
+          let connectionNumber: number = i+1;
+          console.log("User " + "'" + azureConfig.username + "' connected to Azure database, on connection: " + connectionNumber);
+        }
+      });
+  
+      this.connections[i].connect();
+    }
+    
   }
 
   config = {
@@ -43,6 +47,7 @@ export class AzureSQLDatabaseHandler implements IDatabaseHandler{
   
   };
   //TODO: Fjern, den skal egentligt ikke bruges længere, tror jeg..?
+  /*
   async query(queryString:string){
     let returnJson = {"elements":[]}
     console.log(queryString);
@@ -101,6 +106,7 @@ export class AzureSQLDatabaseHandler implements IDatabaseHandler{
     }).then(()=>{return returnJson});
   
   }
+  */
 
   getPreferences(id: String): {} {
     throw new Error('Method not implemented.');
@@ -126,7 +132,7 @@ export class AzureSQLDatabaseHandler implements IDatabaseHandler{
         }
       );
   
-        this.connection.execSql(request);
+        this.connections[0].execSql(request);
         
         request.on("row", columns => {
           let jsonElement = {}
@@ -182,7 +188,7 @@ export class AzureSQLDatabaseHandler implements IDatabaseHandler{
           }
         }
       );     
-      this.connection.execSql(request);
+      this.connections[1].execSql(request);
       resolve(true);
     }).then(() => {
       return true;
@@ -223,7 +229,7 @@ export class AzureSQLDatabaseHandler implements IDatabaseHandler{
         });
         resolve(returnString)
       });
-      this.connection.execSql(request)
+      this.connections[2].execSql(request)
     }).then(()=>{return returnString});    
   }
 
@@ -236,7 +242,7 @@ export class AzureSQLDatabaseHandler implements IDatabaseHandler{
         }
       }
     );
-    this.connection.execSql(request)
+    this.connections[2].execSql(request)
   }
 
   async getLastGraphCalendarLookup(userID: string): Promise<string> {
@@ -256,7 +262,7 @@ export class AzureSQLDatabaseHandler implements IDatabaseHandler{
         });
         resolve(returnString)
       });
-      this.connection.execSql(request)
+      this.connections[3].execSql(request)
     }).then(()=>{return returnString});
   }
 
@@ -269,6 +275,6 @@ export class AzureSQLDatabaseHandler implements IDatabaseHandler{
         }
       }
     );
-    this.connection.execSql(request)
+    this.connections[3].execSql(request)
   }
 }

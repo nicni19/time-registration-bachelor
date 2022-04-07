@@ -15,8 +15,10 @@ export class GraphMailHandler implements IGraphHandler {
         this.lastLookup = await databaseHandler.getLastGraphMailLookup(userID);
 
         let logElements: LogElement[] = await this.fetchMailEvents(authToken, userID);
-        let isDone: boolean = await databaseHandler.insertLogElement(logElements);
-        //databaseHandler.setLastGraphMailLookup(userID, new Date(Date.now()).toISOString());
+        databaseHandler.insertLogElement(logElements)
+        .then(databaseHandler.setLastGraphMailLookup(userID, new Date(Date.now()).toISOString())
+        );
+        
         console.log(logElements);
         return logElements;
     }

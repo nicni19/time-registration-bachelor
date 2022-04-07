@@ -21,15 +21,10 @@ export class GraphCalendarHandler implements IGraphHandler {
 
         let logElements: LogElement[] = await this.fetchCalendarEvents(authToken, userID);
         
-        //let isDone: boolean = await databaseHandler.insertLogElement(logElements);
-        this.updateGraphCalendarLookup(await databaseHandler.insertLogElement(logElements),databaseHandler,userID)
+        databaseHandler.insertLogElement(logElements),databaseHandler,userID
+        databaseHandler.setLastGraphCalendarLookup(userID, new Date(Date.now()).toISOString());
         console.log(logElements);
         return logElements;
-    }
-
-    async updateGraphCalendarLookup(isDone:boolean,databaseHandler:IDatabaseHandler,userID:string){
-        //databaseHandler.setLastGraphCalendarLookup(userID, new Date(Date.now()).toISOString());
-        
     }
 
     async fetchCalendarEvents(authToken: string, userID: string): Promise<any> {
