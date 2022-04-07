@@ -7,7 +7,7 @@ export interface IDatabaseHandler{
 
     getLogElements(queryArguments:String[]);
 
-    insertLogElement(logArray: LogElement[]);
+    insertLogElement(logArray: LogElement[]): Promise<any>;
 
     deleteLogElements(logIDs: number[]);
 
@@ -17,11 +17,11 @@ export interface IDatabaseHandler{
 
     deleteTimerRun(runIDs:number[]): string;
 
-    getLastGraphMailLookup(userID:string):string;
+    getLastGraphMailLookup(userID:string):Promise<string>;
 
     setLastGraphMailLookup(userID:string, timestamp:string);
 
-    getLastGraphCalendarLookup(userID:string):string;
+    getLastGraphCalendarLookup(userID:string):Promise<string>;
 
     setLastGraphCalendarLookup(userID:string, timestamp:string);
 

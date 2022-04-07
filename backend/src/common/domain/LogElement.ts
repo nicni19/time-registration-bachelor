@@ -1,31 +1,40 @@
+import { Type } from "./Type";
+
 export class LogElement{
     
     private id:number;
     private userID:string;
-    private type:string;
+    private type:Type;
     private customer:string;
     private description:string;
-    private startTimestamp:bigint;
-    private duration:bigint;
+    private startTimestamp:number;
+    private duration:number;
     private internalTask:boolean;
     private unpaid:boolean;
+    private edited:boolean;
+    private bookKeepReady:boolean;
     private ritNum:number;
     private caseNum:string;
     private caseTaskNum:number;
-
+    private calendarid: string;
+    private mailid: string;
 
     constructor( 
         userID: string, 
-        type: string, 
-        customer: string, 
-        description: string, 
-        startTimestamp: bigint, 
-        duration: bigint, 
+        type: Type, 
+        customer: string = null, 
+        description: string = null, 
+        startTimestamp: number, 
+        duration: number, 
         internalTask: boolean, 
-        unpaid: boolean, 
-        ritNum: number, 
-        caseNum: string, 
-        caseTaskNum: number,
+        unpaid: boolean,
+        edited:boolean,
+        bookKeepReady:boolean, 
+        ritNum: number = null, 
+        caseNum: string = null, 
+        caseTaskNum: number = null,
+        calendarid: string = null,
+        mailid: string = null,
         id?: number,
     ) {
         this.id = id
@@ -37,9 +46,13 @@ export class LogElement{
         this.duration = duration
         this.internalTask = internalTask
         this.unpaid = unpaid
+        this.edited = edited
+        this.bookKeepReady = bookKeepReady
         this.ritNum = ritNum
         this.caseNum = caseNum
         this.caseTaskNum = caseTaskNum
+        this.calendarid = calendarid
+        this.mailid = mailid
     };
     
     
@@ -59,11 +72,11 @@ export class LogElement{
         this.userID = userID;
     }
 
-    public getType():string{
+    public getType():Type{
         return this.type;
     }
 
-    public setType(type:string){
+    public setType(type:Type){
         this.type = type;
     }
 
@@ -83,19 +96,19 @@ export class LogElement{
         this.description = description;
     }
 
-    public getStartTimestamp():bigint{
+    public getStartTimestamp():number{
         return this.startTimestamp;
     }
 
-    public setStartTimestamp(start:bigint){
+    public setStartTimestamp(start:number){
         this.startTimestamp = start;
     }
 
-    public getDuration():bigint{
+    public getDuration():number{
         return this.duration;
     }
 
-    public setDuration(duration:bigint){
+    public setDuration(duration:number){
         this.duration = duration;
     }
 
@@ -113,6 +126,22 @@ export class LogElement{
 
     public setUnpaid(unpaid:boolean){
         this.unpaid = unpaid;
+    }
+
+    public getEdited(){
+        return this.edited;
+    }
+
+    public setEdited(edited:boolean){
+        this.edited = edited;
+    }
+
+    public getBookKeepReady(){
+        return this.bookKeepReady;
+    }
+
+    public setBookKeepReady(bookKeepReady:boolean){
+        this.bookKeepReady = bookKeepReady;
     }
 
     public getRitNum():number{
@@ -133,5 +162,18 @@ export class LogElement{
 
     public getCaseTaskNum():number{
         return this.caseTaskNum;
+    }
+
+    public getCalendarid():string {
+        return this.calendarid;
+    }
+    public setCalendarid(value: string) {
+        this.calendarid = value;
+    }
+    public getMailid(): string {
+        return this.mailid;
+    }
+    public setMailid(value: string) {
+        this.mailid = value;
     }
 }
