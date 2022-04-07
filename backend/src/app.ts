@@ -69,10 +69,10 @@ app.get('/getLogElements', async (req, res) => {
   let requestJSON = JSON.parse(JSON.stringify(req.headers));
   console.log(requestJSON.userid);
 
-  let jsonResponse = await core.graphUpdate(requestJSON.userid as string, token);
+  await core.graphUpdate(requestJSON.userid as string, token);
   
   res.status(200);
-  res.send(jsonResponse);
+  res.send();
 });
 
 app.post('/insertLogElements', (req, res) => {

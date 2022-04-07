@@ -122,6 +122,7 @@ export class AzureSQLDatabaseHandler implements IDatabaseHandler{
     console.log(queryString);
 
     let returnJson = {"elements":[]}
+    let logElements: LogElement[];
 
     return await new Promise((resolve,reject) => {
       const request : Request = new Request(
@@ -135,21 +136,21 @@ export class AzureSQLDatabaseHandler implements IDatabaseHandler{
         this.connections[0].execSql(request);
         
         request.on("row", columns => {
-          let jsonElement = {}
-          columns.forEach(column => {
-            jsonElement[column.metadata.colName] = column.value;
-          });
-          returnJson.elements.push(jsonElement);
+          let logElement: LogElement = new LogElement(columns['userid'],columns['type'],
+          columns['element_description'],columns['start_timestamp'],columns['duration'],columns['internal_task'],
+          columns['unpaid'],columns['rit_num'],columns['case_num'],columns['case_task_num'],columns['customer'],
+          columns['edited'],columns['book_keep_ready'],columns['calendar_id'],columns['mail_id'],columns['id'])
+          logElements.push(logElement);
         });
 
         request.on('requestCompleted',()=>{
           console.log("Completed")
-          console.log(returnJson)
-          resolve(returnJson);
+          console.log(logElements)
+          resolve(logElements);
         })
         
         //console.log(returnJson);
-    }).then(()=>{return returnJson});
+    }).then(()=>{return logElements});
   }
   
   async insertLogElement(logArray: LogElement[]): Promise<any> {

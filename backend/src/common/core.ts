@@ -28,6 +28,10 @@ export class Core{
 
     insertLogElement(){
     }
+
+    async getLogElements(userid: string): Promise<LogElement[]> {
+        return this.databaseHandler.getLogElements([userid]);
+    }
     
     async authTest(){
         return await this.authHandler.authenticate(graphTest.id,graphTest.token);
@@ -41,31 +45,25 @@ export class Core{
         return await this.databaseHandler.getLastGraphCalendarLookup('6fc4dcd488b119e7');
     }
 
-    async graphUpdate(userID: string, authToken: string) {
+    async graphUpdate(userID: string, authToken: string): Promise<boolean> {
         //Todo: Get preferences from database
-        let prefArray = ['mail','calendar'];
-
-        let logElements: LogElement[] = [];
-
+        let prefArray = ['mail'];
 
         console.log(new Date(Date.now()).toISOString());
         
         for (let i: number = 0; i < prefArray.length; i++) {
             try {
-                logElements.push(await this.graphMap.get(prefArray[i]).updateDatabase(this.databaseHandler, authToken, userID));
+                await this.graphMap.get(prefArray[i]).updateDatabase(this.databaseHandler, authToken, userID);
             } catch (error) {
                 console.log(error);
-                return error;
+                return false;
             } 
         }
 
-        for (let i: number = 0; i < logElements.length; i++) {
-            let log: LogElement = logElements[i];
-        }
-        console.log(logElements);
-
-        return logElements;
+        return true;
     }
+
+
 
 
 
