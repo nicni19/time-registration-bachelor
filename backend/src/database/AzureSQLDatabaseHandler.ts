@@ -283,4 +283,51 @@ export class AzureSQLDatabaseHandler implements IDatabaseHandler{
     );
     this.connections[3].execSql(request)
   }
+
+  async insertFromGraph(logArray: LogElement[]): Promise<any> {
+    let array = {
+      columns: [
+        {name: 'user_id', type: this.TYPES.VarChar(50)},
+        {name: 'element_type', type: this.TYPES.VarChar(50)},
+
+      ],
+      rows: []
+    };
+
+    return await new Promise((resolve,reject) => {
+      for (let i: number = 0; i < logArray.length; i++) {
+        array.rows.push([logArray[i].getUserID(),
+          element_type: Type[logArray[i].getType().valueOf()],
+          element_description: logArray[i].getDescription(),
+          start_timestamp: logArray[i].getStartTimestamp(),
+          duration: logArray[i].getDuration(),
+          internal_task: +logArray[i].getInternalTask(),
+          unpaid: +logArray[i].getUnpaid(),
+          rit_num: logArray[i].getRitNum(),
+          case_num: logArray[i].getCaseNum(),
+          case_task_num: logArray[i].getCaseTaskNum(),
+          customer: logArray[i].getCustomer(),
+          edited: +logArray[i].getEdited(),
+          book_keep_ready: +logArray[i].getBookKeepReady(),
+          calendar_id: logArray[i].getCalendarid(),
+          mail_id: logArray[i].getMailid()
+        ])
+      }    
+
+      const request : Request = new Request(
+        '[dbo].[GraphInsert]', (err) => {
+          if(err){
+            console.log(err.message)
+          }
+        });
+
+        request.addParameter('elementList', this.TYPES.TVP, array)
+
+      this.connections[1].callProcedure(request);
+      resolve(true);
+    }).then(() => {
+      return true;
+  });
+  }
+
 }
