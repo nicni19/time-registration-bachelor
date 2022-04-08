@@ -21,20 +21,20 @@ export class LogElement{
 
     constructor( 
         userID: string, 
-        type: Type, 
-        customer: string = null, 
-        description: string = null, 
+        type: Type,
+        description: string,
         startTimestamp: number, 
         duration: number, 
         internalTask: boolean, 
         unpaid: boolean,
+        ritNum: number, 
+        caseNum: string, 
+        caseTaskNum: number,
+        customer: string,
         edited:boolean,
         bookKeepReady:boolean, 
-        ritNum: number = null, 
-        caseNum: string = null, 
-        caseTaskNum: number = null,
-        calendarid: string = null,
-        mailid: string = null,
+        calendarid: string,
+        mailid: string,
         id?: number,
     ) {
         this.id = id

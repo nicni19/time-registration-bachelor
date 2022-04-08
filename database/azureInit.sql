@@ -7,6 +7,7 @@ CREATE TABLE users (
 CREATE TABLE log_elements (
 	id int IDENTITY(1,1) PRIMARY KEY,
     user_id varchar(50) FOREIGN KEY REFERENCES users(id),
+    element_type varchar(20), 
 	element_description text,
 	start_timestamp bigint,
     duration bigint,

@@ -4,12 +4,14 @@ import { Connection, Request } from 'tedious'
 import { LogElement } from '../common/domain/LogElement';
 import { TimerRun } from '../common/domain/TimerRun';
 import { IDatabaseHandler } from '../common/interfaces/IDatabaseHandler';
+import { Type } from "../common/domain/Type";
 //import { squel } from 'sequel';
 
 export class AzureSQLDatabaseHandler implements IDatabaseHandler{
 
   azureConfig = require('./config/azureconfig.json');
   squel = require('squel');
+  TYPES = require('tedious').TYPES;
   connections = [];
 
   constructor(){
@@ -42,7 +44,8 @@ export class AzureSQLDatabaseHandler implements IDatabaseHandler{
     options: {
       database: "TimeRegistrationSystem",
       encrypt: true,
-      trustServerCertificate:true
+      trustServerCertificate:true,
+      useColumnNames:true
     }
   
   };
@@ -118,47 +121,52 @@ export class AzureSQLDatabaseHandler implements IDatabaseHandler{
    * @returns a JSON element containing all fetched elements
    */
   async getLogElements(queryArguments: String[]) {
-    let queryString = this.squel.select().from('log_elements').where("user_id = " + "'" + queryArguments[0].toString() + "'").toString();
+    let queryString: string = this.squel.select().from('log_elements').where("user_id =  @userid").toString();
     console.log(queryString);
 
     let returnJson = {"elements":[]}
+    let logElements: LogElement[] = [];
 
     return await new Promise((resolve,reject) => {
       const request : Request = new Request(
-        queryString, (err, rowCount) => {
+        queryString, (err) => {
           if(err){
             console.log(err.message)
           }
         }
       );
-  
+        request.addParameter('userid', this.TYPES.VarChar, queryArguments[0].toString());
+
         this.connections[0].execSql(request);
         
         request.on("row", columns => {
-          let jsonElement = {}
-          columns.forEach(column => {
-            jsonElement[column.metadata.colName] = column.value;
-          });
-          returnJson.elements.push(jsonElement);
+          let logElement: LogElement = new LogElement(columns['user_id'].value,Type[columns['element_type'].value as keyof typeof Type],
+          columns['element_description'].value,columns['start_timestamp'].value,columns['duration'].value,columns['internal_task'].value,
+          columns['unpaid'].value,columns['rit_num'].value,columns['case_num'].value,columns['case_task_num'].value,columns['customer'].value,
+          columns['edited'].value,columns['book_keep_ready'].value,columns['calendar_id'].value,columns['mail_id'].value,columns['id'].value)
+          logElements.push(logElement);
         });
 
         request.on('requestCompleted',()=>{
           console.log("Completed")
-          console.log(returnJson)
-          resolve(returnJson);
+          console.log(logElements)
+          resolve(logElements);
         })
         
         //console.log(returnJson);
-    }).then(()=>{return returnJson});
+    }).then(()=>{return logElements});
   }
   
   async insertLogElement(logArray: LogElement[]): Promise<any> {
     let array = [];
+    console.log("log");
+    
 
     return await new Promise((resolve,reject) => {
       for (let i: number = 0; i < logArray.length; i++) {
         array.push({ 
           user_id: logArray[i].getUserID(),
+          element_type: Type[logArray[i].getType().valueOf()],
           element_description: logArray[i].getDescription(),
           start_timestamp: logArray[i].getStartTimestamp(),
           duration: logArray[i].getDuration(),
@@ -224,9 +232,8 @@ export class AzureSQLDatabaseHandler implements IDatabaseHandler{
       );
   
       request.on("row", columns => {
-        columns.forEach(column => {
-          returnString = column.value;
-        });
+        returnString = columns['last_mail_lookup'].value;
+        
         resolve(returnString)
       });
       this.connections[2].execSql(request)
@@ -257,9 +264,8 @@ export class AzureSQLDatabaseHandler implements IDatabaseHandler{
         }
       );
       request.on("row", columns => {
-        columns.forEach(column => {
-          returnString = column.value;
-        });
+          returnString = columns['last_calendar_lookup'].value;
+        
         resolve(returnString)
       });
       this.connections[3].execSql(request)
