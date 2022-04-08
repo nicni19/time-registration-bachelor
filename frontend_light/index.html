@@ -40,15 +40,15 @@
         <div id="settings">
             <form>
                 <label for="userID" class="inputLabel">Microsoft Identity ID:</label><br>
-                <input type="text" id="userID" name="userID" style="width: 20%; height: 30px;"><br>
+                <input type="text" id="userID" name="userID" autocomplete="off" style="width: 20%; height: 30px;"><br>
                 <br>
                 <label for="graphToken" class="inputLabel">Microsoft Graph token:</label><br>
-                <input type="text" id="graphToken" name="graphToken" style="width: 20%; height: 30px;"><br>
+                <input type="text" id="graphToken" name="graphToken" autocomplete="off" style="width: 20%; height: 30px;"><br>
             </form>
             <hr size="2" width="98%" color="#A0A0A0">
         </div>
         <div id="queryButtons" style="display: flex; justify-content: left;">
-            <button type="button" id="getCalendarButton" class="queryButton" onclick="listTest()">Get calendar events</button>
+            <button type="button" id="getCalendarButton" class="queryButton" onclick="newTest()">Get calendar events</button>
             <button type="button" class="queryButton">Some query</button>
             <button type="button" class="queryButton">Some query</button>
             <button type="button" class="queryButton">Some query</button>
@@ -64,4 +64,4 @@
     </div>
 </body>
 </html>
-<div id="testElement" style="height: 30px; width: 95%; outline: 2px; outline-style: none; margin-bottom: 10px; display: flex; justify-content: center; background-color: yellowgreen;">Hello there!</div>
+<div id="testElement" style="display: none !important; height: 30px; width: 95%; outline: 2px; outline-style: none; margin-bottom: 10px; display: flex; justify-content: center; background-color: yellowgreen;">Hello there!</div>
