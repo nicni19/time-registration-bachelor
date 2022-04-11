@@ -285,18 +285,14 @@ export class AzureSQLDatabaseHandler implements IDatabaseHandler{
   }
 
   async insertFromGraph(logArray: LogElement[]): Promise<any> {
-    let array = {
-      columns: [
-        {name: 'user_id', type: this.TYPES.VarChar(50)},
-        {name: 'element_type', type: this.TYPES.VarChar(50)},
-
-      ],
-      rows: []
-    };
+    let array = [];
+    console.log("log");
+    
 
     return await new Promise((resolve,reject) => {
       for (let i: number = 0; i < logArray.length; i++) {
-        array.rows.push([logArray[i].getUserID(),
+        array.push({ 
+          user_id: logArray[i].getUserID(),
           element_type: Type[logArray[i].getType().valueOf()],
           element_description: logArray[i].getDescription(),
           start_timestamp: logArray[i].getStartTimestamp(),
@@ -311,23 +307,28 @@ export class AzureSQLDatabaseHandler implements IDatabaseHandler{
           book_keep_ready: +logArray[i].getBookKeepReady(),
           calendar_id: logArray[i].getCalendarid(),
           mail_id: logArray[i].getMailid()
-        ])
+        })
       }    
 
+        //Created query string by using SQUEL
+        let queryString = this.squel.insert()
+          .into('temp_log_elements')
+          .setFieldsRows(array)
+          .toString() 
+
       const request : Request = new Request(
-        '[dbo].[GraphInsert]', (err) => {
+        queryString, (err) => {
           if(err){
             console.log(err.message)
           }
-        });
-
-        request.addParameter('elementList', this.TYPES.TVP, array)
-
-      this.connections[1].callProcedure(request);
+        }
+      );     
+      this.connections[1].execSql(request);
       resolve(true);
     }).then(() => {
       return true;
   });
+
   }
 
 }
