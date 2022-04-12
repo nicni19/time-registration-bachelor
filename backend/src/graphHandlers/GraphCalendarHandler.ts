@@ -17,10 +17,15 @@ export class GraphCalendarHandler implements IGraphHandler {
     
     async updateDatabase(databaseHandler: IDatabaseHandler, authToken: string, userID: string): Promise<any>{
         this.lastLookup = await databaseHandler.getLastGraphCalendarLookup(userID);
+        console.log("Calendar");
 
         let logElements: LogElement[] = await this.fetchCalendarEvents(authToken, userID);
-        databaseHandler.insertLogElement(logElements);
-        databaseHandler.setLastGraphCalendarLookup(userID, new Date(Date.now()).toISOString());
+        
+        databaseHandler.insertFromGraph(logElements).then(
+            databaseHandler.setLastGraphCalendarLookup(userID, new Date(Date.now()).toISOString())
+        );
+        
+        console.log(logElements);
         return logElements;
     }
 
@@ -47,7 +52,7 @@ export class GraphCalendarHandler implements IGraphHandler {
                 let duration: number = endTime - startTime;
                 let description = body.value[i].subject + ': ' + event;
 
-                let logElement: LogElement = new LogElement(userID, Type.CalendarEvent, null, description, BigInt(startTime), BigInt(duration), null, null, null, null, null, body.value[i].id, null);
+                let logElement: LogElement = new LogElement(userID, Type.CalendarEvent, description, startTime, duration, null, null, null, null, null, null, false, false, body.value[i].id, null);
                 logElements.push(logElement);
 
             }

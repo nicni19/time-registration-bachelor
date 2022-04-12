@@ -7,8 +7,8 @@ export class LogElement{
     private type:Type;
     private customer:string;
     private description:string;
-    private startTimestamp:BigInt;
-    private duration:BigInt;
+    private startTimestamp:number;
+    private duration:number;
     private internalTask:boolean;
     private unpaid:boolean;
     private edited:boolean;
@@ -21,20 +21,20 @@ export class LogElement{
 
     constructor( 
         userID: string, 
-        type: Type, 
-        customer: string = null, 
-        description: string = null, 
-        startTimestamp: BigInt, 
-        duration: BigInt, 
+        type: Type,
+        description: string,
+        startTimestamp: number, 
+        duration: number, 
         internalTask: boolean, 
         unpaid: boolean,
+        ritNum: number, 
+        caseNum: string, 
+        caseTaskNum: number,
+        customer: string,
         edited:boolean,
         bookKeepReady:boolean, 
-        ritNum: number = null, 
-        caseNum: string = null, 
-        caseTaskNum: number = null,
-        calendarid: string = null,
-        mailid: string = null,
+        calendarid: string,
+        mailid: string,
         id?: number,
     ) {
         this.id = id
@@ -96,19 +96,19 @@ export class LogElement{
         this.description = description;
     }
 
-    public getStartTimestamp():BigInt{
+    public getStartTimestamp():number{
         return this.startTimestamp;
     }
 
-    public setStartTimestamp(start:BigInt){
+    public setStartTimestamp(start:number){
         this.startTimestamp = start;
     }
 
-    public getDuration():BigInt{
+    public getDuration():number{
         return this.duration;
     }
 
-    public setDuration(duration:BigInt){
+    public setDuration(duration:number){
         this.duration = duration;
     }
 

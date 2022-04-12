@@ -61,16 +61,22 @@ app.get('/authTest', async (req, res) => {
   
 });
 
-app.get('/getLogElements', (req, res) => {
-  /*
-  core.insertGraphElementsToDB(token)
+app.get('/getLogElements', async (req, res) => {
+  res.setHeader('Content-Type', 'application/json');
+  
+  let token: string = req.headers.authorization.split(' ')[1];
+  console.log(token);
+  let requestJSON = JSON.parse(JSON.stringify(req.headers));
+  console.log(requestJSON.userid);
 
-  logElements = core.fetchLogElements(userID, params)
+  let logElements: LogElement[];
 
-  res.send(logElements)
-  */
-
-  res.send('Log elements');
+  await core.graphUpdate(requestJSON.userid as string, token).then( async () => {
+    logElements = await core.getLogElements(requestJSON.userid);
+  });
+  
+  res.status(200);
+  res.send(logElements);
 });
 
 app.post('/insertLogElements', (req, res) => {
@@ -97,16 +103,7 @@ app.post('/insertTimerRun', (req, res) => {
 });
 
 app.get('/getCalendar', async (req, res) => {
-  res.setHeader('Content-Type', 'application/json');
-  
-  let token: string = req.headers.authorization.split(' ')[1];
-  console.log(token);
-  let requestJSON = JSON.parse(JSON.stringify(req.headers));
 
-  let jsonResponse = await core.graphUpdate(requestJSON.userid as string, token);
-  
-  res.status(200);
-  res.send(jsonResponse);
 });
 
 app.listen(port, () => {

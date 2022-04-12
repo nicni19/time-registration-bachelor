@@ -4,26 +4,32 @@ import { Connection, Request } from 'tedious'
 import { LogElement } from '../common/domain/LogElement';
 import { TimerRun } from '../common/domain/TimerRun';
 import { IDatabaseHandler } from '../common/interfaces/IDatabaseHandler';
+import { Type } from "../common/domain/Type";
 //import { squel } from 'sequel';
 
 export class AzureSQLDatabaseHandler implements IDatabaseHandler{
 
   azureConfig = require('./config/azureconfig.json');
   squel = require('squel');
-  connection : Connection;
+  TYPES = require('tedious').TYPES;
+  connections = [];
 
   constructor(){
-    this.connection = new Connection(this.config);
-    
-    this.connection.on("connect", err => {
-      if (err) {
-        console.error(err.message);
-      } else {
-        console.log("User " + "'" + azureConfig.username + "' connected to Azure database");
-      }
-    });
+    this.connections = [new Connection(this.config), new Connection(this.config), new Connection(this.config), new Connection(this.config), new Connection(this.config)];
 
-    this.connection.connect();
+    for (let i: number = 0; i < this.connections.length; i++) {
+      this.connections[i].on("connect", err => {
+        if (err) {
+          console.error(err.message);
+        } else {
+          let connectionNumber: number = i+1;
+          console.log("User " + "'" + azureConfig.username + "' connected to Azure database, on connection: " + connectionNumber);
+        }
+      });
+  
+      this.connections[i].connect();
+    }
+    
   }
 
   config = {
@@ -38,11 +44,13 @@ export class AzureSQLDatabaseHandler implements IDatabaseHandler{
     options: {
       database: "TimeRegistrationSystem",
       encrypt: true,
-      trustServerCertificate:true
+      trustServerCertificate:true,
+      useColumnNames:true
     }
   
   };
   //TODO: Fjern, den skal egentligt ikke bruges længere, tror jeg..?
+  /*
   async query(queryString:string){
     let returnJson = {"elements":[]}
     console.log(queryString);
@@ -101,6 +109,7 @@ export class AzureSQLDatabaseHandler implements IDatabaseHandler{
     }).then(()=>{return returnJson});
   
   }
+  */
 
   getPreferences(id: String): {} {
     throw new Error('Method not implemented.');
@@ -112,62 +121,74 @@ export class AzureSQLDatabaseHandler implements IDatabaseHandler{
    * @returns a JSON element containing all fetched elements
    */
   async getLogElements(queryArguments: String[]) {
-    let queryString = this.squel.select().from('log_elements').where("user_id = " + "'" + queryArguments[0].toString() + "'").toString();
+    let queryString: string = this.squel.select().from('log_elements').where("user_id =  @userid").toString();
     console.log(queryString);
 
     let returnJson = {"elements":[]}
+    let logElements: LogElement[] = [];
 
     return await new Promise((resolve,reject) => {
       const request : Request = new Request(
-        queryString, (err, rowCount) => {
+        queryString, (err) => {
           if(err){
             console.log(err.message)
           }
         }
       );
-  
-        this.connection.execSql(request);
+        request.addParameter('userid', this.TYPES.VarChar, queryArguments[0].toString());
+
+        this.connections[0].execSql(request);
         
         request.on("row", columns => {
-          let jsonElement = {}
-          columns.forEach(column => {
-            jsonElement[column.metadata.colName] = column.value;
-          });
-          returnJson.elements.push(jsonElement);
+          let logElement: LogElement = new LogElement(columns['user_id'].value,Type[columns['element_type'].value as keyof typeof Type],
+          columns['element_description'].value,columns['start_timestamp'].value,columns['duration'].value,columns['internal_task'].value,
+          columns['unpaid'].value,columns['rit_num'].value,columns['case_num'].value,columns['case_task_num'].value,columns['customer'].value,
+          columns['edited'].value,columns['book_keep_ready'].value,columns['calendar_id'].value,columns['mail_id'].value,columns['id'].value)
+          logElements.push(logElement);
         });
 
         request.on('requestCompleted',()=>{
           console.log("Completed")
-          console.log(returnJson)
-          resolve(returnJson);
+          console.log(logElements)
+          resolve(logElements);
         })
         
         //console.log(returnJson);
-    }).then(()=>{return returnJson});
+    }).then(()=>{return logElements});
   }
   
-  insertLogElement(logArray: LogElement[]) {
-    logArray.forEach(element => {
-      //Created query string by using SQUEL
-      let queryString = this.squel.insert()
-          .into('log_elements')
-          .set("user_id", element.getUserID())
-          .set("element_description",element.getDescription())
-          .set("start_timestamp",element.getStartTimestamp())
-          .set("duration",element.getDuration())
-          .set("internal_task", + element.getInternalTask())
-          .set("unpaid", + element.getUnpaid())
-          .set("rit_num",element.getRitNum())
-          .set("case_num",element.getCaseNum())
-          .set("case_task_num",element.getCaseTaskNum())
-          .set("customer",element.getCustomer())
-          .set("edited",+ element.getEdited())
-          .set("book_keep_ready", + element.getBookKeepReady())
-          .set("calendar_id",element.getCalendarid())
-          .set("mail_id",element.getMailid())
-          .toString()
+  async insertLogElement(logArray: LogElement[]): Promise<any> {
+    let array = [];
+    console.log("log");
+    
 
-      //let testQueryString = "INSERT INTO log_elements (user_id, element_description, start_timestamp, duration, internal_task, unpaid, rit_num, case_num, case_task_num, customer, edited, book_keep_ready, calendar_id, mail_id) VALUES ('6fc4dcd488b119e7', 'This is the description', 1648797418621, 100, 1, 0, NULL, NULL, NULL, NULL, 1, 0, NULL, NULL)"
+    return await new Promise((resolve,reject) => {
+      for (let i: number = 0; i < logArray.length; i++) {
+        array.push({ 
+          user_id: logArray[i].getUserID(),
+          element_type: Type[logArray[i].getType().valueOf()],
+          element_description: logArray[i].getDescription(),
+          start_timestamp: logArray[i].getStartTimestamp(),
+          duration: logArray[i].getDuration(),
+          internal_task: +logArray[i].getInternalTask(),
+          unpaid: +logArray[i].getUnpaid(),
+          rit_num: logArray[i].getRitNum(),
+          case_num: logArray[i].getCaseNum(),
+          case_task_num: logArray[i].getCaseTaskNum(),
+          customer: logArray[i].getCustomer(),
+          edited: +logArray[i].getEdited(),
+          book_keep_ready: +logArray[i].getBookKeepReady(),
+          calendar_id: logArray[i].getCalendarid(),
+          mail_id: logArray[i].getMailid()
+        })
+      }    
+
+        //Created query string by using SQUEL
+        let queryString = this.squel.insert()
+          .into('log_elements')
+          .setFieldsRows(array)
+          .toString() 
+
       const request : Request = new Request(
         queryString, (err) => {
           if(err){
@@ -175,8 +196,12 @@ export class AzureSQLDatabaseHandler implements IDatabaseHandler{
           }
         }
       );     
-      this.connection.execSql(request);
-    });
+      this.connections[1].execSql(request);
+      resolve(true);
+    }).then(() => {
+      return true;
+  });
+
   }
 
   deleteLogElements(logIDs: number[]) {
@@ -207,12 +232,11 @@ export class AzureSQLDatabaseHandler implements IDatabaseHandler{
       );
   
       request.on("row", columns => {
-        columns.forEach(column => {
-          returnString = column.value;
-        });
+        returnString = columns['last_mail_lookup'].value;
+        
         resolve(returnString)
       });
-      this.connection.execSql(request)
+      this.connections[2].execSql(request)
     }).then(()=>{return returnString});    
   }
 
@@ -225,7 +249,7 @@ export class AzureSQLDatabaseHandler implements IDatabaseHandler{
         }
       }
     );
-    this.connection.execSql(request)
+    this.connections[2].execSql(request)
   }
 
   async getLastGraphCalendarLookup(userID: string): Promise<string> {
@@ -240,12 +264,11 @@ export class AzureSQLDatabaseHandler implements IDatabaseHandler{
         }
       );
       request.on("row", columns => {
-        columns.forEach(column => {
-          returnString = column.value;
-        });
+          returnString = columns['last_calendar_lookup'].value;
+        
         resolve(returnString)
       });
-      this.connection.execSql(request)
+      this.connections[3].execSql(request)
     }).then(()=>{return returnString});
   }
 
@@ -258,6 +281,54 @@ export class AzureSQLDatabaseHandler implements IDatabaseHandler{
         }
       }
     );
-    this.connection.execSql(request)
+    this.connections[3].execSql(request)
   }
+
+  async insertFromGraph(logArray: LogElement[]): Promise<any> {
+    let array = [];
+    console.log("log");
+    
+
+    return await new Promise((resolve,reject) => {
+      for (let i: number = 0; i < logArray.length; i++) {
+        array.push({ 
+          user_id: logArray[i].getUserID(),
+          element_type: Type[logArray[i].getType().valueOf()],
+          element_description: logArray[i].getDescription(),
+          start_timestamp: logArray[i].getStartTimestamp(),
+          duration: logArray[i].getDuration(),
+          internal_task: +logArray[i].getInternalTask(),
+          unpaid: +logArray[i].getUnpaid(),
+          rit_num: logArray[i].getRitNum(),
+          case_num: logArray[i].getCaseNum(),
+          case_task_num: logArray[i].getCaseTaskNum(),
+          customer: logArray[i].getCustomer(),
+          edited: +logArray[i].getEdited(),
+          book_keep_ready: +logArray[i].getBookKeepReady(),
+          calendar_id: logArray[i].getCalendarid(),
+          mail_id: logArray[i].getMailid()
+        })
+      }    
+
+        //Created query string by using SQUEL
+        let queryString = this.squel.insert()
+          .into('temp_log_elements')
+          .setFieldsRows(array)
+          .toString() 
+
+      const request : Request = new Request(
+        queryString, (err) => {
+          if(err){
+            console.log(err.message)
+          }
+        }
+      );     
+      this.connections[4].execSql(request);
+      resolve(true);
+    }).then(() => {
+      return true;
+  });
+
+  }
+
 }
