@@ -94,9 +94,13 @@ app.get('/getLogElements/:startDate/:endDate', async (req, res) => {
   console.log(requestJSON.userid);
 
   let logElements: LogElement[];
+  let queryMap: Map<string,any> = new Map;
+  queryMap.set("userid",requestJSON.userid);
+  queryMap.set("startTime",startDate);
+  queryMap.set("endTime",endDate);
 
   await core.graphUpdate(requestJSON.userid as string, token).then( async () => {
-    logElements = await core.getLogElements(requestJSON.userid);
+    logElements = await core.getLogElements(queryMap);
   });
   
   res.status(200);
@@ -112,9 +116,11 @@ app.get('/getLogElements', async (req, res) => {
   console.log(requestJSON.userid);
 
   let logElements: LogElement[];
+  let queryMap: Map<string,any> = new Map;
+  queryMap.set("userid",requestJSON.userid);
 
   await core.graphUpdate(requestJSON.userid as string, token).then( async () => {
-    logElements = await core.getLogElements(requestJSON.userid);
+    logElements = await core.getLogElements(queryMap);
   });
   
   res.status(200);
