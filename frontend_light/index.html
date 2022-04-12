@@ -49,15 +49,33 @@
         </div>
         <div id="queryButtons" style="display: flex; justify-content: left;">
             <button type="button" id="getCalendarButton" class="queryButton" onclick="newTest()">Get calendar events</button>
-            <button type="button" class="queryButton">Some query</button>
+            <button type="button" class="queryButton" onclick="getLogElements()">Test query</button>
             <button type="button" class="queryButton">Some query</button>
             <button type="button" class="queryButton">Some query</button>
             <button type="button" class="queryButton">Some query</button>
         </div>
         <div id="resultsWrapper" style="height: 350px; outline: 2px; outline-style: dotted; outline-color: darkslategrey; background-color: rgb(235, 235, 235); overflow-y: scroll; margin-bottom: 8px; margin-top: 8px;">
-            <ul id="resultsList" style="height: 350px;">
-
-            </ul>
+            <table id="resultTable" style="width: 100%;">
+                <tr style="background-color: rgb(216, 216, 216);">
+                    <th>ID</th>
+                    <th>UserID</th>
+                    <th>Type</th>
+                    <th>Customer</th>
+                    <th style="width: 15%;">Description</th>
+                    <th>Start</th>
+                    <th>Duration</th>
+                    <th>Internal</th>
+                    <th>Unpaid</th>
+                    <th>Edited</th>
+                    <th>Ready</th>
+                    <th>RitTask</th>
+                    <th>Case</th>
+                    <th>Task</th>
+                    <th>CalendarID</th>
+                    <th>MailID</th>
+                </tr>
+            </table>
+            
             
         </div>
         <button id="clearListButton" onclick="clearList()" style="width: 100%; height: 40px; font-size: x-large; background-color: darkolivegreen; color: whitesmoke;">Clear list</button>

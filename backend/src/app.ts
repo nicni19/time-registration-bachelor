@@ -5,7 +5,9 @@ const app = express();
 const port = 3000;
 const request = require('request');
 const { htmlToText } = require('html-to-text');
+const cors = require('cors');
 app.use(express.json());
+app.use(cors());
 
 const core: Core = new Core();
 let lastLookup: string = '202022-01-16T01:03:21.347Z';
@@ -22,6 +24,10 @@ app.get('/azureTest', async (req, res) => {
     //console.log(returnVal);
     res.send(returnVal);
     */
+    console.log(req.headers.authorization)
+    res.setHeader('Access-Control-Allow-Origin','*');
+    res.status(201);
+    res.send(req.header.toString())
 });
 
 app.use(async (req,res,next)=>{
