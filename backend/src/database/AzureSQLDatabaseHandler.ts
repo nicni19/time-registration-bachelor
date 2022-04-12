@@ -15,7 +15,7 @@ export class AzureSQLDatabaseHandler implements IDatabaseHandler{
   connections = [];
 
   constructor(){
-    this.connections = [new Connection(this.config), new Connection(this.config), new Connection(this.config), new Connection(this.config)];
+    this.connections = [new Connection(this.config), new Connection(this.config), new Connection(this.config), new Connection(this.config), new Connection(this.config)];
 
     for (let i: number = 0; i < this.connections.length; i++) {
       this.connections[i].on("connect", err => {
@@ -323,7 +323,7 @@ export class AzureSQLDatabaseHandler implements IDatabaseHandler{
           }
         }
       );     
-      this.connections[1].execSql(request);
+      this.connections[4].execSql(request);
       resolve(true);
     }).then(() => {
       return true;
