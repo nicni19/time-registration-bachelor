@@ -61,6 +61,52 @@ app.get('/authTest', async (req, res) => {
   
 });
 
+app.get('/getLogElements/:startDate/:endDate', async (req, res) => {
+  res.setHeader('Content-Type', 'application/json');
+  console.log(req.params.startDate);
+  console.log(req.params.endDate);
+  let startDate: Date;
+  let endDate: Date;
+  try {
+    startDate = new Date(req.params.startDate.replace('T', ' '));
+    endDate = new Date(req.params.endDate.replace('T', ' '));
+    console.log(endDate);
+    
+    if (isNaN(startDate.valueOf()) || isNaN(endDate.valueOf())) {
+      throw "Parameters are not correct date strings. Format should be like this: '2022-04-04T00:00:00.0000000'." 
+      + " URL should be /getLogElements/'startDate'/'endDate'";
+    }
+    if (startDate.valueOf() > endDate.valueOf()) {
+      throw "Start date is later than the end date";
+    }
+
+  } catch (error) {
+    res.status(400);
+    res.send({
+      ErrorMessage: error
+    });
+    return;
+  }
+
+  let token: string = req.headers.authorization.split(' ')[1];
+  console.log(token);
+  let requestJSON = JSON.parse(JSON.stringify(req.headers));
+  console.log(requestJSON.userid);
+
+  let logElements: LogElement[];
+  let queryMap: Map<string,any> = new Map;
+  queryMap.set("userid",requestJSON.userid);
+  queryMap.set("startTime",startDate);
+  queryMap.set("endTime",endDate);
+
+  await core.graphUpdate(requestJSON.userid as string, token).then( async () => {
+    logElements = await core.getLogElements(queryMap);
+  });
+  
+  res.status(200);
+  res.send(logElements);
+});
+
 app.get('/getLogElements', async (req, res) => {
   res.setHeader('Content-Type', 'application/json');
   
@@ -70,9 +116,11 @@ app.get('/getLogElements', async (req, res) => {
   console.log(requestJSON.userid);
 
   let logElements: LogElement[];
+  let queryMap: Map<string,any> = new Map;
+  queryMap.set("userid",requestJSON.userid);
 
   await core.graphUpdate(requestJSON.userid as string, token).then( async () => {
-    logElements = await core.getLogElements(requestJSON.userid);
+    logElements = await core.getLogElements(queryMap);
   });
   
   res.status(200);

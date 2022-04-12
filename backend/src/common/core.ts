@@ -29,8 +29,8 @@ export class Core{
     insertLogElement(){
     }
 
-    async getLogElements(userid: string): Promise<LogElement[]> {
-        return this.databaseHandler.getLogElements([userid]);
+    async getLogElements(queryMap: Map<string,any>): Promise<LogElement[]> {
+        return this.databaseHandler.getLogElements(queryMap);
     }
     
     async authTest(){
