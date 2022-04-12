@@ -9,6 +9,8 @@ export interface IDatabaseHandler{
 
     insertLogElement(logArray: LogElement[]): Promise<any>;
 
+    insertFromGraph(logArray: LogElement[]): Promise<any>
+
     deleteLogElements(logIDs: number[]);
 
     insertTimerRun(runArray: TimerRun[]);

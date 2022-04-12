@@ -21,7 +21,7 @@ export class GraphCalendarHandler implements IGraphHandler {
 
         let logElements: LogElement[] = await this.fetchCalendarEvents(authToken, userID);
         
-        databaseHandler.insertLogElement(logElements).then(
+        databaseHandler.insertFromGraph(logElements).then(
             databaseHandler.setLastGraphCalendarLookup(userID, new Date(Date.now()).toISOString())
         );
         

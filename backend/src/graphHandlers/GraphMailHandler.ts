@@ -20,7 +20,7 @@ export class GraphMailHandler implements IGraphHandler {
         } catch (err) {
             return err;
         } finally {
-            databaseHandler.insertLogElement(logElements)
+            databaseHandler.insertFromGraph(logElements)
             .then(databaseHandler.setLastGraphMailLookup(userID, new Date(Date.now()).toISOString())
             );
         }
