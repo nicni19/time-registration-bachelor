@@ -14,7 +14,7 @@ import { AzureSQLDatabaseHandler } from '../database/AzureSQLDatabaseHandler';
 export class Core{
     
     databaseHandler: AzureSQLDatabaseHandler = new AzureSQLDatabaseHandler();
-    authHandler: IAuthHandler = new MicrosoftAuthHandler();
+    authHandler: IAuthHandler = new MicrosoftAuthHandler(this.databaseHandler);
     graphMap = new Map();
     
     constructor(){
@@ -61,6 +61,10 @@ export class Core{
         }
 
         return true;
+    }
+
+    async getPrivileges(userID:string){
+        await this.databaseHandler.getPrivileges(userID);
     }
 
 

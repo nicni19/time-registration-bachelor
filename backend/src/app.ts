@@ -14,20 +14,13 @@ let lastLookup: string = '202022-01-16T01:03:21.347Z';
 
 //Azure test
 app.get('/azureTest', async (req, res) => {
-
     /*
-    //Test ting
-    let testElement = new LogElement('6fc4dcd488b119e7','type',null,"This is the description",1648797418621,100,true,false,true,false);
-    let testArray:LogElement[] = [];
-    testArray.push(testElement); 
-    let returnVal = await core.azureTest(testArray);
-    //console.log(returnVal);
-    res.send(returnVal);
-    */
     console.log(req.headers.authorization)
     res.setHeader('Access-Control-Allow-Origin','*');
     res.status(201);
     res.send(req.header.toString())
+    */
+   console.log(await core.getPrivileges('615498f0dae8d115'))
 });
 
 app.use(async (req,res,next)=>{

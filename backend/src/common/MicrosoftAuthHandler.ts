@@ -1,10 +1,16 @@
 import { Actions } from "./domain/Actions";
 import { IAuthHandler } from "./interfaces/IAuthHandler";
 import express from 'express';
+import { IDatabaseHandler } from "./interfaces/IDatabaseHandler";
 const request = require('request');
 
 export class MicrosoftAuthHandler implements IAuthHandler{
     
+    private databaseHandler:IDatabaseHandler;
+
+    constructor(databaseHandler:IDatabaseHandler){
+        this.databaseHandler = databaseHandler;
+    }
     /**
      * Compares the userID of the request with the userID fetched from Microsoft Graph in order to confirm identity
      * @param userID
