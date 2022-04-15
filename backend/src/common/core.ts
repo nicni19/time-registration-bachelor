@@ -9,6 +9,7 @@ import { SQLDatabaseHandler } from '../database/SQLDatabaseHandler';
 import graphTest from '../graphTest.json';
 import { LogElement } from './domain/LogElement';
 import { AzureSQLDatabaseHandler } from '../database/AzureSQLDatabaseHandler';
+import { Actions } from './domain/Actions';
 
 
 export class Core{
@@ -63,8 +64,13 @@ export class Core{
         return true;
     }
 
+    
+    async authorizeUser(userID:string,action:Actions){
+        return await this.authHandler.authorize(userID,action);
+    }
+    
     async getPrivileges(userID:string){
-        await this.databaseHandler.getPrivileges(userID);
+        return await this.databaseHandler.getPrivileges(userID);
     }
 
 

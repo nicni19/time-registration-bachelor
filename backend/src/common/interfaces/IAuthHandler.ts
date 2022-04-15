@@ -17,5 +17,5 @@ export interface IAuthHandler{
      * @param userID - The user's ID
      * @param action - The action the user wants to perform
      */
-    authorize(userID:string,action:Actions): boolean;
+    authorize(userID:string,action:Actions): Promise<boolean>;
 }

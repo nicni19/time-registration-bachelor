@@ -56,7 +56,9 @@ CREATE TABLE action_permissions (
     get_logs_for_current_user BIT NOT NULL,
     insert_timer_runs_for_current_user BIT NOT NULL,
     get_timer_runs_for_current_user BIT NOT NULL,
-    get_all_logs BIT NOT NULL
+    get_all_logs BIT NOT NULL,
+    delete_log_element_for_current_user BIT NOT NULL,
+    delete_timer_element_for_current_user BIT NOT NULL
 );
 
 CREATE TABLE timer_runs (

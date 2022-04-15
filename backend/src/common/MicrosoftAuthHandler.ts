@@ -43,9 +43,27 @@ export class MicrosoftAuthHandler implements IAuthHandler{
         }).catch(()=>{return new Promise((resolve)=>{resolve(false)})});  
     }
 
-
-    authorize(userID: string, action: Actions): boolean {
-        throw new Error("Method not implemented.");
+    /**
+     * Authorizes wether or not the user has the privilege to perform a given action
+     * based on the userID and a value of the Actions enum
+     * @param userID The users ID
+     * @param action The action to be performed
+     * @returns If the user has the right to perform the action, the method returns true. Otherwise returns false. False = default
+     */
+    async authorize(userID: string, action: Actions): Promise<boolean> {            
+        let privileges:Map<any,any>;
+        return await new Promise(async (resolve,reject)=>{
+            privileges = await this.databaseHandler.getPrivileges(userID);
+            console.log(await privileges)
+            resolve(privileges)
+        }).then(()=>{
+            if(privileges.has(Actions[action])){
+                return privileges.get(Actions[action]).value
+            }else{
+                //Returns false by default
+                return false;
+            } 
+        })
     }
 
 

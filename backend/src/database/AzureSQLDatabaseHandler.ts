@@ -337,10 +337,9 @@ export class AzureSQLDatabaseHandler implements IDatabaseHandler{
       .where('user_id = ' + "'" + userID + "'")
       .toString();
 
-    //let returnJson = {'privileges':[]};
     let privilegesMap = new Map();
 
-    return new Promise((resolve,reject)=>{
+    return await new Promise(async (resolve,reject)=>{
       const request : Request = new Request(
         queryString, (err) => {
           if(err){
@@ -370,7 +369,8 @@ export class AzureSQLDatabaseHandler implements IDatabaseHandler{
       request.on('requestCompleted',()=>{
         resolve(privilegesMap);
       });
-    }).then(()=>{return privilegesMap}).catch((err)=>{console.log(err)});
+    }).then(async()=>{return await privilegesMap})
+    .catch((err)=>{console.log(err)});
   }
 
 }

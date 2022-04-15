@@ -1,5 +1,6 @@
 import express, { json } from 'express';
 import { Core } from './common/core';
+import { Actions } from './common/domain/Actions';
 import { LogElement } from './common/domain/LogElement';
 const app = express();
 const port = 3000;
@@ -20,7 +21,7 @@ app.get('/azureTest', async (req, res) => {
     res.status(201);
     res.send(req.header.toString())
     */
-   console.log(await core.getPrivileges('615498f0dae8d115'))
+   console.log("END RESULT: ",await core.authorizeUser('615498f0dae8d115',Actions.get_all_logs))
 });
 
 app.use(async (req,res,next)=>{
