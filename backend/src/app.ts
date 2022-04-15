@@ -21,7 +21,7 @@ app.get('/azureTest', async (req, res) => {
     res.status(201);
     res.send(req.header.toString())
     */
-   console.log("END RESULT: ",await core.authorizeUser('615498f0dae8d115',Actions.get_all_logs))
+   //console.log("END RESULT: ",await core.authorizeUser('615498f0dae8d115',Actions.get_all_logs))
 });
 
 app.use(async (req,res,next)=>{
@@ -67,16 +67,21 @@ app.get('/getLogElements', async (req, res) => {
   let token: string = req.headers.authorization.split(' ')[1];
   console.log(token);
   let requestJSON = JSON.parse(JSON.stringify(req.headers));
-  console.log(requestJSON.userid);
+  console.log("User ID: ",requestJSON.userid);
 
-  let logElements: LogElement[];
+  //AUTHORIZATION: Cheks if the user has the privilege to perform the given action
+  if(await core.authorizeUser(requestJSON.userid,Actions.get_logs_for_current_user)){
+    let logElements: LogElement[];
 
-  await core.graphUpdate(requestJSON.userid as string, token).then( async () => {
-    logElements = await core.getLogElements(requestJSON.userid);
-  });
-  
-  res.status(200);
-  res.send(logElements);
+    await core.graphUpdate(requestJSON.userid as string, token).then( async () => {
+      logElements = await core.getLogElements(requestJSON.userid);
+    });
+    
+    res.status(200);
+    res.send(logElements);
+  }else{
+    res.status(401).send("User: " + requestJSON.userid +" does not have privilege to perform this action");
+  }
 });
 
 app.post('/insertLogElements', (req, res) => {
