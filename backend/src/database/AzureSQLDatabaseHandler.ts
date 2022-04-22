@@ -120,9 +120,13 @@ export class AzureSQLDatabaseHandler implements IDatabaseHandler{
    * @param queryArguments TODO: Currently only supports user_id as query parameter..
    * @returns a JSON element containing all fetched elements
    */
-  async getLogElements(queryArguments: String[]) {
-    let queryString: string = this.squel.select().from('log_elements').where("user_id =  @userid").toString();
-    console.log(queryString);
+  async getLogElements(queryArguments: Map<string,any>) {
+    let queryString: string;
+    if (queryArguments.get('startTime') != null && queryArguments.get('endTime') != null) {
+      queryString = this.squel.select().from('log_elements').where("user_id =  @userid").where("start_timestamp > @startTime and start_timestamp < @endTime").toString();
+    } else {
+      queryString = this.squel.select().from('log_elements').where("user_id =  @userid").toString();
+    }
 
     let returnJson = {"elements":[]}
     let logElements: LogElement[] = [];
@@ -135,7 +139,15 @@ export class AzureSQLDatabaseHandler implements IDatabaseHandler{
           }
         }
       );
-        request.addParameter('userid', this.TYPES.VarChar, queryArguments[0].toString());
+      if (queryArguments.get('startTime') != null && queryArguments.get('endTime') != null) {
+        request.addParameter('startTime', this.TYPES.BigInt, queryArguments.get('startTime').valueOf());
+        request.addParameter('endTime', this.TYPES.BigInt, queryArguments.get('endTime').valueOf());
+      }
+        
+
+        request.addParameter('userid', this.TYPES.VarChar, queryArguments.get('userid'));
+        
+        console.log(queryString);
 
         this.connections[0].execSql(request);
         

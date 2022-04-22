@@ -6,8 +6,8 @@ export interface IDatabaseHandler{
     getPreferences(id:String):{};
 
     getPrivileges(userID:string):Promise<any>;
-
-    getLogElements(queryArguments:String[]);
+    
+    getLogElements(queryArguments:Map<string,any>);
 
     insertLogElement(logArray: LogElement[]): Promise<any>;
 
