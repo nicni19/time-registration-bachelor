@@ -9,12 +9,13 @@ import { SQLDatabaseHandler } from '../database/SQLDatabaseHandler';
 import graphTest from '../graphTest.json';
 import { LogElement } from './domain/LogElement';
 import { AzureSQLDatabaseHandler } from '../database/AzureSQLDatabaseHandler';
+import { Actions } from './domain/Actions';
 
 
 export class Core{
     
     databaseHandler: AzureSQLDatabaseHandler = new AzureSQLDatabaseHandler();
-    authHandler: IAuthHandler = new MicrosoftAuthHandler();
+    authHandler: IAuthHandler = new MicrosoftAuthHandler(this.databaseHandler);
     graphMap = new Map();
     
     constructor(){
@@ -61,6 +62,15 @@ export class Core{
         }
 
         return true;
+    }
+
+    
+    async authorizeUser(userID:string,action:Actions){
+        return await this.authHandler.authorize(userID,action);
+    }
+    
+    async getPrivileges(userID:string){
+        return await this.databaseHandler.getPrivileges(userID);
     }
 
 

@@ -1,27 +1,27 @@
 import express, { json } from 'express';
 import { Core } from './common/core';
+import { Actions } from './common/domain/Actions';
 import { LogElement } from './common/domain/LogElement';
 const app = express();
 const port = 3000;
 const request = require('request');
 const { htmlToText } = require('html-to-text');
+const cors = require('cors');
 app.use(express.json());
+app.use(cors());
 
 const core: Core = new Core();
 let lastLookup: string = '202022-01-16T01:03:21.347Z';
 
 //Azure test
 app.get('/azureTest', async (req, res) => {
-
     /*
-    //Test ting
-    let testElement = new LogElement('6fc4dcd488b119e7','type',null,"This is the description",1648797418621,100,true,false,true,false);
-    let testArray:LogElement[] = [];
-    testArray.push(testElement); 
-    let returnVal = await core.azureTest(testArray);
-    //console.log(returnVal);
-    res.send(returnVal);
+    console.log(req.headers.authorization)
+    res.setHeader('Access-Control-Allow-Origin','*');
+    res.status(201);
+    res.send(req.header.toString())
     */
+   //console.log("END RESULT: ",await core.authorizeUser('615498f0dae8d115',Actions.get_all_logs))
 });
 
 app.use(async (req,res,next)=>{
@@ -113,18 +113,23 @@ app.get('/getLogElements', async (req, res) => {
   let token: string = req.headers.authorization.split(' ')[1];
   console.log(token);
   let requestJSON = JSON.parse(JSON.stringify(req.headers));
-  console.log(requestJSON.userid);
+  console.log("User ID: ",requestJSON.userid);
 
-  let logElements: LogElement[];
-  let queryMap: Map<string,any> = new Map;
-  queryMap.set("userid",requestJSON.userid);
+  //AUTHORIZATION: Cheks if the user has the privilege to perform the given action
+  if(await core.authorizeUser(requestJSON.userid,Actions.get_logs_for_current_user)){
+    let logElements: LogElement[];
+    let queryMap: Map<string,any> = new Map;
+    queryMap.set("userid",requestJSON.userid);
 
-  await core.graphUpdate(requestJSON.userid as string, token).then( async () => {
-    logElements = await core.getLogElements(queryMap);
-  });
-  
-  res.status(200);
-  res.send(logElements);
+    await core.graphUpdate(requestJSON.userid as string, token).then( async () => {
+      logElements = await core.getLogElements(requestJSON.userid);
+    });
+    
+    res.status(200);
+    res.send(logElements);
+  }else{
+    res.status(401).send("User: " + requestJSON.userid +" does not have privilege to perform this action");
+  }
 });
 
 app.post('/insertLogElements', (req, res) => {

@@ -15,7 +15,7 @@ export class AzureSQLDatabaseHandler implements IDatabaseHandler{
   connections = [];
 
   constructor(){
-    this.connections = [new Connection(this.config), new Connection(this.config), new Connection(this.config), new Connection(this.config), new Connection(this.config)];
+    this.connections = [new Connection(this.config), new Connection(this.config), new Connection(this.config), new Connection(this.config), new Connection(this.config), new Connection(this.config)];
 
     for (let i: number = 0; i < this.connections.length; i++) {
       this.connections[i].on("connect", err => {
@@ -341,6 +341,48 @@ export class AzureSQLDatabaseHandler implements IDatabaseHandler{
       return true;
   });
 
+  }
+
+  async getPrivileges(userID:string):Promise<any>{
+    let queryString = this.squel.select()
+      .from('action_permissions')
+      .where('user_id = ' + "'" + userID + "'")
+      .toString();
+
+    let privilegesMap = new Map();
+
+    return await new Promise(async (resolve,reject)=>{
+      const request : Request = new Request(
+        queryString, (err) => {
+          if(err){
+            console.log(err.message)
+          }
+        }
+      )
+      /*
+      request.on('columnMetadata',columns =>{
+        Object.keys(columns).forEach(col => {
+          if(col != "id" && col != "user_id"){
+            privilegesMap.set(col,false);
+          }
+        })
+      });
+      */
+      request.on('row',columns =>{
+        Object.keys(columns).forEach(element => {
+          if(element != "id" && element != "user_id"){
+            privilegesMap.set(element,columns[element])
+          }
+        })
+      })
+
+      this.connections[5].execSql(request);
+
+      request.on('requestCompleted',()=>{
+        resolve(privilegesMap);
+      });
+    }).then(async()=>{return await privilegesMap})
+    .catch((err)=>{console.log(err)});
   }
 
 }
