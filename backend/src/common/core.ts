@@ -27,7 +27,8 @@ export class Core{
         return await this.authHandler.authenticate(userID,token);
     }
 
-    insertLogElement(){
+    insertLogElement(json){
+        this.databaseHandler.insertLogElement(this.convertJSONToLogElements(json));
     }
 
     async getLogElements(queryMap: Map<string,any>): Promise<LogElement[]> {
@@ -71,6 +72,20 @@ export class Core{
     
     async getPrivileges(userID:string){
         return await this.databaseHandler.getPrivileges(userID);
+    }
+
+    convertJSONToLogElements(json) {
+        let log_elements: LogElement[] = [];
+
+        for (let i: number = 0; i < json.log_elements; i++) {
+            log_elements.push(new LogElement(json.log_elements[i].userID, json.log_elements[i].type, json.log_elements[i].description, 
+                json.log_elements[i].startTimestamp, json.log_elements[i].duration, json.log_elements[i].internalTask, json.log_elements[i].unpaid,
+                json.log_elements[i].ritNum, json.log_elements[i].caseNum, json.log_elements[i].caseTaskNum, json.log_elements[i].customer,
+                json.log_elements[i].edited, json.log_elements[i].bookKeepReady, json.log_elements[i].calendarid, json.log_elements[i].mailid,
+                json.log_elements[i].id))
+        }
+
+        return log_elements;
     }
 
 
