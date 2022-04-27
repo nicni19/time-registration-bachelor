@@ -133,9 +133,10 @@ app.get('/getLogElements', async (req, res) => {
 });
 
 app.post('/insertLogElements', (req, res) => {
-  /*
-  core.insertLogElementsIntoDB
+  
+  core.insertLogElements(req.body);
 
+  /*
   res.send('success')
   */
   res.send('Log elements inserted');
