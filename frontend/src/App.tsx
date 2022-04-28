@@ -76,7 +76,8 @@ class App extends React.Component<{},{error:any,isAuthenticated:boolean,user:any
           accountId = accountId.split(".")[0];
           console.log("New id: " + accountId);
           this.globalID = accountId;
-          if(this.publicClientApplication.getAllAccounts()[0] != null){
+          
+          if(await this.backendDoesUserExsist(accountId)){
             this.setState({isAuthenticated:true})      
           }    
 
@@ -98,7 +99,7 @@ class App extends React.Component<{},{error:any,isAuthenticated:boolean,user:any
   async backendDoesUserExsist(userId:string){
     let responseJson = {};
     let token = await this.getSilentAccessToken();
-    return await fetch('http://localhost:3000/GetLogElements',{
+    return await fetch('http://localhost:3000/doesCurrentUserExist',{
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -106,7 +107,7 @@ class App extends React.Component<{},{error:any,isAuthenticated:boolean,user:any
             'userid' : userId
         },
         mode: 'cors'
-    }).then(response => response.json()).then(data=>{console.log(data)})
+    }).then(response => response.json()).then(data=>{return data.userFound})
   }
 
 
