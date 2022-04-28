@@ -10,6 +10,7 @@ class App extends React.Component<{},{error:any,isAuthenticated:boolean,user:any
   
   publicClientApplication:PublicClientApplication;
   graph = require('@microsoft/microsoft-graph-client');
+  globalID = "";
 
   constructor(props:any){
     super(props)
@@ -33,6 +34,7 @@ class App extends React.Component<{},{error:any,isAuthenticated:boolean,user:any
     });
   }
 
+  //Ikke rigtigt brugbar længere, brug i stedet accountID fra login-metoden
   async getGraphUserID(accessToken:string):Promise<string>{
     let id:string = "";
     let returnval:any;
@@ -54,27 +56,9 @@ class App extends React.Component<{},{error:any,isAuthenticated:boolean,user:any
   
   async login(){
     try{
-      /*
-      //Popup
-      await this.publicClientApplication.loginPopup({
-        scopes: config.scopes,
-        prompt: "select_account"
-      })
-      let graphID = await this.getGraphUserID(await this.getSilentAccessToken()).then(()=>{
-        if(graphID != undefined){
-          console.log("Yes")
-          this.setState({isAuthenticated:true})
-        }else{
-          console.log("No")
-        }
-      })     
-      */
-      //this.setState({isAuthenticated:true})
-
       const loginRequest = {
         scopes: ["user.read"]
       }
-
       let accountId = "";
 
       this.publicClientApplication.loginPopup(loginRequest)
@@ -82,9 +66,16 @@ class App extends React.Component<{},{error:any,isAuthenticated:boolean,user:any
           accountId = loginResponse.account.homeAccountId;
           // Display signed-in user content, call API, etc.
       }).then(async()=>{
+          /*
           accountId = accountId.replace(/[-0]/g, "")
           accountId = accountId.split(".")[0];
           console.log(accountId);
+          */
+          let idArray = accountId.split("-");
+          accountId = idArray[3] + idArray[4];
+          accountId = accountId.split(".")[0];
+          console.log("New id: " + accountId);
+          this.globalID = accountId;
           if(this.publicClientApplication.getAllAccounts()[0] != null){
             this.setState({isAuthenticated:true})      
           }    
@@ -93,7 +84,6 @@ class App extends React.Component<{},{error:any,isAuthenticated:boolean,user:any
           //login failure
           console.log(error);
       });
-
     }
     catch(err){
       console.log(err)
@@ -104,6 +94,21 @@ class App extends React.Component<{},{error:any,isAuthenticated:boolean,user:any
       })
     }
   }
+
+  async backendDoesUserExsist(userId:string){
+    let responseJson = {};
+    let token = await this.getSilentAccessToken();
+    return await fetch('http://localhost:3000/GetLogElements',{
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token,
+            'userid' : userId
+        },
+        mode: 'cors'
+    }).then(response => response.json()).then(data=>{console.log(data)})
+  }
+
 
   logout(){
     //this.publicClientApplication.logoutPopup;
@@ -142,6 +147,7 @@ class App extends React.Component<{},{error:any,isAuthenticated:boolean,user:any
             <p>
               Login successfull
               <button onClick={()=>{this.test()}}>Show token</button>
+              <button onClick={()=>{this.backendDoesUserExsist(this.globalID)}}>testQuery</button>
               <button onClick={async()=>{this.getGraphUserID(await this.getSilentAccessToken())}}>Returnval</button>
             </p>
             :
