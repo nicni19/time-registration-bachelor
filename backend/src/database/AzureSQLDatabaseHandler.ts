@@ -15,7 +15,7 @@ export class AzureSQLDatabaseHandler implements IDatabaseHandler{
   connections = [];
 
   constructor(){
-    this.connections = [new Connection(this.config), new Connection(this.config), new Connection(this.config), new Connection(this.config), new Connection(this.config), new Connection(this.config)];
+    this.connections = [new Connection(this.config), new Connection(this.config), new Connection(this.config), new Connection(this.config), new Connection(this.config), new Connection(this.config), new Connection(this.config)];
 
     for (let i: number = 0; i < this.connections.length; i++) {
       this.connections[i].on("connect", err => {
@@ -110,6 +110,46 @@ export class AzureSQLDatabaseHandler implements IDatabaseHandler{
   
   }
   */
+
+  async isUserInDatabase(userID: string): Promise<boolean> {
+    let queryString: string;
+    let userExist: boolean = false;
+
+    queryString = this.squel.select().from('users').where("id = @userid").toString();
+    console.log(queryString);
+    console.log(userID);
+    
+    
+
+    return await new Promise((resolve,reject) => {
+      const request : Request = new Request(
+        queryString, (err) => {
+          if(err){
+            console.log(err.message)
+          }
+        });
+        request.addParameter('userid', this.TYPES.VarChar, userID);
+        
+        
+
+        request.on("row", columns => {
+          if (columns['id'] != null) {
+            userExist = true;
+          } else {
+            userExist = false;
+          }
+        });
+
+        request.on('requestCompleted',()=>{
+          console.log("Completed")
+          console.log(userExist);
+          resolve(userExist);
+        })
+
+        this.connections[6].execSql(request);
+
+      }).then(()=>{return userExist});
+  }
 
   getPreferences(id: String): {} {
     throw new Error('Method not implemented.');

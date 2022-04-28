@@ -24,6 +24,22 @@ app.get('/azureTest', async (req, res) => {
    //console.log("END RESULT: ",await core.authorizeUser('615498f0dae8d115',Actions.get_all_logs))
 });
 
+app.get('/doesCurrentUserExist', async (req, res) => {
+  res.setHeader('Content-Type', 'application/json');
+  let responseJSON = JSON.parse(JSON.stringify(req.headers))
+
+  let userExist: boolean = await core.doesUserExist(responseJSON.userid);
+
+  if (userExist == true) {
+    res.status(200);
+    res.send({'userFound':userExist});
+  } else {
+    res.status(404);
+    res.send({'userFound':userExist});
+  }
+
+});
+
 app.use(async (req,res,next)=>{
   //TODO: Undooo jank
   let requestAuthenticated:boolean = false;
@@ -133,9 +149,10 @@ app.get('/getLogElements', async (req, res) => {
 });
 
 app.post('/insertLogElements', (req, res) => {
-  /*
-  core.insertLogElementsIntoDB
+  
+  core.insertLogElements(req.body);
 
+  /*
   res.send('success')
   */
   res.send('Log elements inserted');
@@ -158,6 +175,8 @@ app.post('/insertTimerRun', (req, res) => {
 app.get('/getCalendar', async (req, res) => {
 
 });
+
+
 
 app.listen(port, () => {
   return console.log(`Express is listening at http://localhost:${port}`);
