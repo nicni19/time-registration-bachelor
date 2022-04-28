@@ -32,41 +32,68 @@ class App extends React.Component<{},{error:any,isAuthenticated:boolean,user:any
       }
     });
   }
-  /*
+
   async getGraphUserID(accessToken:string):Promise<string>{
     let id:string = "";
-    return await new Promise((resolve,reject) =>{
-      request.get('https://graph.microsoft.com/v1.0/me',{ json: true },(err: any,res: any,body: any)=>{
-        if(err){
-          console.log(err)
-          return null;
+    let returnval:any;
+    let responseJson:any = {};
+    return await new Promise(async(resolve,reject) =>{
+      console.log("AccessToken (Graph): " + accessToken)
+      
+      returnval = await fetch('https://graph.microsoft.com/v1.0/me',{
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + accessToken
         }
-        id = body.id;
-        resolve(id)
-      }).auth(null,null,true,accessToken);
+        
+      }).then(response => response.json()).then(data=>{responseJson = data;}).then(()=>{console.log(responseJson.id);return responseJson.id})
+      
     }).then(()=>{return id});
   }
-  */
+  
   async login(){
     try{
+      /*
       //Popup
       await this.publicClientApplication.loginPopup({
         scopes: config.scopes,
         prompt: "select_account"
       })
-      /*
-      .then(()=>{
-        let account = this.publicClientApplication.getAllAccounts()[0];
-        let accessToken:string;
-        this.publicClientApplication.acquireTokenSilent({scopes:config.scopes,account}).then((accessTokenResponse)=>{
-          accessToken = accessTokenResponse.accessToken;
-        }).then(async()=>{
-          await this.getGraphUserID(accessToken)
-        });
-        
-      })
+      let graphID = await this.getGraphUserID(await this.getSilentAccessToken()).then(()=>{
+        if(graphID != undefined){
+          console.log("Yes")
+          this.setState({isAuthenticated:true})
+        }else{
+          console.log("No")
+        }
+      })     
       */
-      this.setState({isAuthenticated:true})
+      //this.setState({isAuthenticated:true})
+
+      const loginRequest = {
+        scopes: ["user.read"]
+      }
+
+      let accountId = "";
+
+      this.publicClientApplication.loginPopup(loginRequest)
+      .then(function (loginResponse:any) {
+          accountId = loginResponse.account.homeAccountId;
+          // Display signed-in user content, call API, etc.
+      }).then(async()=>{
+          accountId = accountId.replace(/[-0]/g, "")
+          accountId = accountId.split(".")[0];
+          console.log(accountId);
+          if(this.publicClientApplication.getAllAccounts()[0] != null){
+            this.setState({isAuthenticated:true})      
+          }    
+
+      }).catch(function (error) { 
+          //login failure
+          console.log(error);
+      });
+
     }
     catch(err){
       console.log(err)
@@ -82,12 +109,24 @@ class App extends React.Component<{},{error:any,isAuthenticated:boolean,user:any
     //this.publicClientApplication.logoutPopup;
   }
 
+  async getSilentAccessToken():Promise<string>{
+    return await new Promise(async(resolve,reject)=>{
+      let accessToken = "";
+      let account = this.publicClientApplication.getAllAccounts()[0];
+      this.publicClientApplication.acquireTokenSilent({scopes:config.scopes,account}).then((accessTokenResponse)=>{
+        accessToken = accessTokenResponse.accessToken;
+        //console.log("Access Token: " + accessToken);
+        resolve(accessToken)
+      }).then(()=>{return accessToken}).catch((error)=>{console.log(error)})
+    });
+  }
+
   async test(){
     //console.log(await this.getGraphUserID)
     let account = this.publicClientApplication.getAllAccounts()[0];
     this.publicClientApplication.acquireTokenSilent({scopes:config.scopes,account}).then((accessTokenResponse)=>{
       let accessToken = accessTokenResponse.accessToken;
-      console.log(accessToken);
+      console.log("Access Token: " + accessToken);
     }).catch((error)=>{console.log(error)})
   }
 
@@ -103,6 +142,7 @@ class App extends React.Component<{},{error:any,isAuthenticated:boolean,user:any
             <p>
               Login successfull
               <button onClick={()=>{this.test()}}>Show token</button>
+              <button onClick={async()=>{this.getGraphUserID(await this.getSilentAccessToken())}}>Returnval</button>
             </p>
             :
             <p>
