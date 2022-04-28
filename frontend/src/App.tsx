@@ -56,9 +56,7 @@ class App extends React.Component<{},{error:any,isAuthenticated:boolean,user:any
   
   async login(){
     try{
-      const loginRequest = {
-        scopes: ["user.read"]
-      }
+      const loginRequest = {scopes: config.scopes}
       let accountId = "";
 
       this.publicClientApplication.loginPopup(loginRequest)
@@ -66,11 +64,7 @@ class App extends React.Component<{},{error:any,isAuthenticated:boolean,user:any
           accountId = loginResponse.account.homeAccountId;
           // Display signed-in user content, call API, etc.
       }).then(async()=>{
-          /*
-          accountId = accountId.replace(/[-0]/g, "")
-          accountId = accountId.split(".")[0];
-          console.log(accountId);
-          */
+          //TODO: Find en pænere måde 
           let idArray = accountId.split("-");
           accountId = idArray[3] + idArray[4];
           accountId = accountId.split(".")[0];
@@ -97,7 +91,6 @@ class App extends React.Component<{},{error:any,isAuthenticated:boolean,user:any
   }
 
   async backendDoesUserExsist(userId:string){
-    let responseJson = {};
     let token = await this.getSilentAccessToken();
     return await fetch('http://localhost:3000/doesCurrentUserExist',{
         method: 'GET',
@@ -110,9 +103,9 @@ class App extends React.Component<{},{error:any,isAuthenticated:boolean,user:any
     }).then(response => response.json()).then(data=>{return data.userFound})
   }
 
-
   logout(){
-    //this.publicClientApplication.logoutPopup;
+    this.publicClientApplication.logoutPopup();
+    this.setState({isAuthenticated:false})
   }
 
   async getSilentAccessToken():Promise<string>{
@@ -150,6 +143,7 @@ class App extends React.Component<{},{error:any,isAuthenticated:boolean,user:any
               <button onClick={()=>{this.test()}}>Show token</button>
               <button onClick={()=>{this.backendDoesUserExsist(this.globalID)}}>testQuery</button>
               <button onClick={async()=>{this.getGraphUserID(await this.getSilentAccessToken())}}>Returnval</button>
+              <button onClick={()=>{this.logout()}}>Log out</button>
             </p>
             :
             <p>
