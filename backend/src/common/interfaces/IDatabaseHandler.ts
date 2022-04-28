@@ -29,6 +29,6 @@ export interface IDatabaseHandler{
 
     setLastGraphCalendarLookup(userID:string, timestamp:string);
 
-    isUserInDatabase(userID:string);
+    isUserInDatabase(userID:string): Promise<boolean>;
 
 }

@@ -24,12 +24,19 @@ app.get('/azureTest', async (req, res) => {
    //console.log("END RESULT: ",await core.authorizeUser('615498f0dae8d115',Actions.get_all_logs))
 });
 
-app.get('/doesCurrentExist', async (req, res) => {
+app.get('/doesCurrentUserExist', async (req, res) => {
   res.setHeader('Content-Type', 'application/json');
+  let responseJSON = JSON.parse(JSON.stringify(req.headers))
 
-  let requestJSON = req.headers;
+  let userExist: boolean = await core.doesUserExist(responseJSON.userid);
 
-  
+  if (userExist == true) {
+    res.status(200);
+    res.send({'userFound':userExist});
+  } else {
+    res.status(404);
+    res.send({'userFound':userExist});
+  }
 
 });
 

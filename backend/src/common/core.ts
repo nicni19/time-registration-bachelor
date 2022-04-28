@@ -27,8 +27,8 @@ export class Core{
         return await this.authHandler.authenticate(userID,token);
     }
 
-    async doesUserExist(userid: string){
-        
+    async doesUserExist(userid: string): Promise<boolean> {
+        return await this.databaseHandler.isUserInDatabase(userid);
     }
 
 
