@@ -27,6 +27,10 @@ export class Core{
         return await this.authHandler.authenticate(userID,token);
     }
 
+    async doesUserExist(userid: string){
+        
+    }
+
 
     insertLogElements(json){
         this.databaseHandler.insertLogElement(this.convertJSONToLogElements(json));

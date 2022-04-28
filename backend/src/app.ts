@@ -24,6 +24,15 @@ app.get('/azureTest', async (req, res) => {
    //console.log("END RESULT: ",await core.authorizeUser('615498f0dae8d115',Actions.get_all_logs))
 });
 
+app.get('/doesCurrentExist', async (req, res) => {
+  res.setHeader('Content-Type', 'application/json');
+
+  let requestJSON = req.headers;
+
+  
+
+});
+
 app.use(async (req,res,next)=>{
   //TODO: Undooo jank
   let requestAuthenticated:boolean = false;
@@ -159,6 +168,8 @@ app.post('/insertTimerRun', (req, res) => {
 app.get('/getCalendar', async (req, res) => {
 
 });
+
+
 
 app.listen(port, () => {
   return console.log(`Express is listening at http://localhost:${port}`);

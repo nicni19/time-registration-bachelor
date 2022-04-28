@@ -111,6 +111,11 @@ export class AzureSQLDatabaseHandler implements IDatabaseHandler{
   }
   */
 
+  async isUserInDatabase(userID: string) {
+    let queryString: string;
+
+  }
+
   getPreferences(id: String): {} {
     throw new Error('Method not implemented.');
     
