@@ -3,10 +3,13 @@ import logo from './logo.svg';
 import './App.css';
 import {config} from './config.js';
 import {PublicClientApplication} from '@azure/msal-browser';
+import { resolve } from 'path';
+import { rejects } from 'assert';
 
 class App extends React.Component<{},{error:any,isAuthenticated:boolean,user:any}> {
   
   publicClientApplication:PublicClientApplication;
+  graph = require('@microsoft/microsoft-graph-client');
 
   constructor(props:any){
     super(props)
@@ -29,7 +32,21 @@ class App extends React.Component<{},{error:any,isAuthenticated:boolean,user:any
       }
     });
   }
-
+  /*
+  async getGraphUserID(accessToken:string):Promise<string>{
+    let id:string = "";
+    return await new Promise((resolve,reject) =>{
+      request.get('https://graph.microsoft.com/v1.0/me',{ json: true },(err: any,res: any,body: any)=>{
+        if(err){
+          console.log(err)
+          return null;
+        }
+        id = body.id;
+        resolve(id)
+      }).auth(null,null,true,accessToken);
+    }).then(()=>{return id});
+  }
+  */
   async login(){
     try{
       //Popup
@@ -37,9 +54,22 @@ class App extends React.Component<{},{error:any,isAuthenticated:boolean,user:any
         scopes: config.scopes,
         prompt: "select_account"
       })
+      /*
+      .then(()=>{
+        let account = this.publicClientApplication.getAllAccounts()[0];
+        let accessToken:string;
+        this.publicClientApplication.acquireTokenSilent({scopes:config.scopes,account}).then((accessTokenResponse)=>{
+          accessToken = accessTokenResponse.accessToken;
+        }).then(async()=>{
+          await this.getGraphUserID(accessToken)
+        });
+        
+      })
+      */
       this.setState({isAuthenticated:true})
     }
     catch(err){
+      console.log(err)
       this.setState({
         isAuthenticated:false,
         user:{},
@@ -52,9 +82,10 @@ class App extends React.Component<{},{error:any,isAuthenticated:boolean,user:any
     //this.publicClientApplication.logoutPopup;
   }
 
-  test(){
+  async test(){
+    //console.log(await this.getGraphUserID)
     let account = this.publicClientApplication.getAllAccounts()[0];
-    this.publicClientApplication.acquireTokenSilent({scopes:['user.read'],account}).then((accessTokenResponse)=>{
+    this.publicClientApplication.acquireTokenSilent({scopes:config.scopes,account}).then((accessTokenResponse)=>{
       let accessToken = accessTokenResponse.accessToken;
       console.log(accessToken);
     }).catch((error)=>{console.log(error)})

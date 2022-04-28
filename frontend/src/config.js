@@ -4,5 +4,5 @@ export const config = {
     scopes:[
         'user.read'
     ],
-    authority:'https://login.microsoftonline.com/common/'
+    authority:'https://login.microsoftonline.com/consumers/'
 }
