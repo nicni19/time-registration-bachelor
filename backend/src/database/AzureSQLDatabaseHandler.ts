@@ -212,6 +212,7 @@ export class AzureSQLDatabaseHandler implements IDatabaseHandler{
   async insertLogElement(logArray: LogElement[]): Promise<any> {
     let array = [];
     console.log("log");
+    let success: boolean;
     
 
     return await new Promise((resolve,reject) => {
@@ -245,13 +246,16 @@ export class AzureSQLDatabaseHandler implements IDatabaseHandler{
         queryString, (err) => {
           if(err){
             console.log(err.message)
+            success = false;
+            reject(false)
           }
         }
       );     
       this.connections[1].execSql(request);
+      success = true;
       resolve(true);
     }).then(() => {
-      return true;
+      return success;
   });
 
   }

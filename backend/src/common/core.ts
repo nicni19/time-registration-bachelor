@@ -33,7 +33,7 @@ export class Core{
 
 
     insertLogElements(json){
-        this.databaseHandler.insertLogElement(this.convertJSONToLogElements(json));
+        return this.databaseHandler.insertLogElement(this.convertJSONToLogElements(json));
     }
 
     async getLogElements(queryMap: Map<string,any>): Promise<LogElement[]> {
