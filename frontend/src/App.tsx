@@ -7,12 +7,12 @@ import {PublicClientApplication} from '@azure/msal-browser';
 import { resolve } from 'path';
 import { rejects } from 'assert';
 import UserBox from './components/UserBox';
+import { ClientHandler } from './common/ClientHandler';
 
 class App extends React.Component<{},{error:any,isAuthenticated:boolean,user:any}> {
   
-  publicClientApplication:PublicClientApplication;
   graph = require('@microsoft/microsoft-graph-client');
-  globalID = "";
+  clientHandler = new ClientHandler;
 
   constructor(props:any){
     super(props)
@@ -22,18 +22,7 @@ class App extends React.Component<{},{error:any,isAuthenticated:boolean,user:any
       user:{}
     };
 
-    this.login = this.login.bind(this)
-    this.publicClientApplication = new PublicClientApplication({
-      auth:{
-        clientId: config.appId,
-        redirectUri: config.redirectUri,
-        authority: config.authority
-      },
-      cache:{
-        cacheLocation:"sessionStorage",
-        storeAuthStateInCookie: true
-      }
-    });
+    //this.login = this.login.bind(this)
   }
 
   //Ikke rigtigt brugbar længere, brug i stedet accountID fra login-metoden
@@ -42,8 +31,7 @@ class App extends React.Component<{},{error:any,isAuthenticated:boolean,user:any
     let returnval:any;
     let responseJson:any = {};
     return await new Promise(async(resolve,reject) =>{
-      console.log("AccessToken (Graph): " + accessToken)
-      
+      console.log("AccessToken (Graph): " + accessToken)      
       returnval = await fetch('https://graph.microsoft.com/v1.0/me',{
         method: 'GET',
         headers: {
@@ -57,79 +45,25 @@ class App extends React.Component<{},{error:any,isAuthenticated:boolean,user:any
   }
   
   async login(){
-    try{
-      const loginRequest = {scopes: config.scopes}
-      let accountId = "";
-
-      this.publicClientApplication.loginPopup(loginRequest)
-      .then(function (loginResponse:any) {
-          accountId = loginResponse.account.homeAccountId;
-          // Display signed-in user content, call API, etc.
-      }).then(async()=>{
-          //TODO: Find en pænere måde 
-          let idArray = accountId.split("-");
-          accountId = idArray[3] + idArray[4];
-          accountId = accountId.split(".")[0];
-          console.log("New id: " + accountId);
-          this.globalID = accountId;
-          
-          if(await this.backendDoesUserExsist(accountId)){
-            this.setState({isAuthenticated:true})      
-          }    
-
-      }).catch(function (error) { 
-          //login failure
-          console.log(error);
-      });
-    }
-    catch(err){
-      console.log(err)
+    let loginResult = await this.clientHandler.login();
+    if(loginResult){
+      this.setState({isAuthenticated:true}); 
+    }else{
+      console.log(loginResult)
       this.setState({
         isAuthenticated:false,
-        user:{},
-        error:err
+        user:{}
       })
     }
   }
 
-  logout(){
-    this.publicClientApplication.logoutPopup();
-    this.setState({isAuthenticated:false})
-  }
-
-
-  async backendDoesUserExsist(userId:string){
-    let token = await this.getSilentAccessToken();
-    return await fetch('http://localhost:3000/doesCurrentUserExist',{
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + token,
-            'userid' : userId
-        },
-        mode: 'cors'
-    }).then(response => response.json()).then(data=>{return data.userFound})
-  }
-
-  async getSilentAccessToken():Promise<string>{
-    return await new Promise(async(resolve,reject)=>{
-      let accessToken = "";
-      let account = this.publicClientApplication.getAllAccounts()[0];
-      this.publicClientApplication.acquireTokenSilent({scopes:config.scopes,account}).then((accessTokenResponse)=>{
-        accessToken = accessTokenResponse.accessToken;
-        //console.log("Access Token: " + accessToken);
-        resolve(accessToken)
-      }).then(()=>{return accessToken}).catch((error)=>{console.log(error)})
-    });
-  }
-
-  async test(){
-    //console.log(await this.getGraphUserID)
-    let account = this.publicClientApplication.getAllAccounts()[0];
-    this.publicClientApplication.acquireTokenSilent({scopes:config.scopes,account}).then((accessTokenResponse)=>{
-      let accessToken = accessTokenResponse.accessToken;
-      console.log("Access Token: " + accessToken);
-    }).catch((error)=>{console.log(error)})
+  async logout(){
+    if(await this.clientHandler.logout()){
+      this.setState({isAuthenticated:false})
+    }else{
+      console.log("Sign Out failed");
+      
+    }
   }
 
   render(){
@@ -138,7 +72,7 @@ class App extends React.Component<{},{error:any,isAuthenticated:boolean,user:any
         {this.state.isAuthenticated ? 
           <div className='App'>
             <div id="sidebar" style={{backgroundColor:"grey",width:"20%",height:"99.5vh",display:"inline-block",alignContent:"center"}}> 
-              <UserBox isLoggedIn={this.state.isAuthenticated}/>
+              <UserBox isLoggedIn={this.state.isAuthenticated} clientHandler={this.clientHandler}/>
               {this.state.isAuthenticated ? <p><button onClick={()=>{this.logout()}}>Log out</button></p> :<button onClick={()=>{this.login()}}>Click here to login like a true Jondog!</button>}
             </div>
             <div id='MainView' style={{backgroundColor:"lightgray",width:"80%",height:"99.5vh",display:"inline-block",boxShadow:"inset 0 0 10px 0px"}}>

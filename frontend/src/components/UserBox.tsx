@@ -1,7 +1,9 @@
 import React from "react";
+import {ClientHandler} from '../common/ClientHandler'
 
 type UserBoxProps = {
     isLoggedIn:boolean;
+    clientHandler:ClientHandler;
 }
 
 class UserBox extends React.Component<UserBoxProps>{
@@ -10,8 +12,9 @@ class UserBox extends React.Component<UserBoxProps>{
 
     }
 
-    test(){
+    async test(){
         console.log("ButtonPressseeeed")
+        console.log(await this.props.clientHandler.getSilentAccessToken())
     }
 
     render(){
