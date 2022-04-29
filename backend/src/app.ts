@@ -138,7 +138,7 @@ app.get('/getLogElements', async (req, res) => {
     queryMap.set("userid",requestJSON.userid);
 
     await core.graphUpdate(requestJSON.userid as string, token).then( async () => {
-      logElements = await core.getLogElements(requestJSON.userid);
+      logElements = await core.getLogElements(queryMap);
     });
     
     res.status(200);
