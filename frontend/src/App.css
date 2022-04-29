@@ -28,6 +28,11 @@
   color: #61dafb;
 }
 
+#sidebar {
+  background-color: aqua;
+  height: 800px;
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);

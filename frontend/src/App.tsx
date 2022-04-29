@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
 import logo from './logo.svg';
+import heimdalLogo from './nordiske-guder-heimdal.jpg'
 import './App.css';
 import {config} from './config.js';
 import {PublicClientApplication} from '@azure/msal-browser';
 import { resolve } from 'path';
 import { rejects } from 'assert';
+import UserBox from './components/UserBox';
 
 class App extends React.Component<{},{error:any,isAuthenticated:boolean,user:any}> {
   
@@ -90,6 +92,12 @@ class App extends React.Component<{},{error:any,isAuthenticated:boolean,user:any
     }
   }
 
+  logout(){
+    this.publicClientApplication.logoutPopup();
+    this.setState({isAuthenticated:false})
+  }
+
+
   async backendDoesUserExsist(userId:string){
     let token = await this.getSilentAccessToken();
     return await fetch('http://localhost:3000/doesCurrentUserExist',{
@@ -101,11 +109,6 @@ class App extends React.Component<{},{error:any,isAuthenticated:boolean,user:any
         },
         mode: 'cors'
     }).then(response => response.json()).then(data=>{return data.userFound})
-  }
-
-  logout(){
-    this.publicClientApplication.logoutPopup();
-    this.setState({isAuthenticated:false})
   }
 
   async getSilentAccessToken():Promise<string>{
@@ -130,6 +133,33 @@ class App extends React.Component<{},{error:any,isAuthenticated:boolean,user:any
   }
 
   render(){
+    return (
+      <div className="Wrapper" style={{}}>
+        {this.state.isAuthenticated ? 
+          <div className='App'>
+            <div id="sidebar" style={{backgroundColor:"grey",width:"20%",height:"99.5vh",display:"inline-block",alignContent:"center"}}> 
+              <UserBox isLoggedIn={this.state.isAuthenticated}/>
+              {this.state.isAuthenticated ? <p><button onClick={()=>{this.logout()}}>Log out</button></p> :<button onClick={()=>{this.login()}}>Click here to login like a true Jondog!</button>}
+            </div>
+            <div id='MainView' style={{backgroundColor:"lightgray",width:"80%",height:"99.5vh",display:"inline-block",boxShadow:"inset 0 0 10px 0px"}}>
+              
+            </div>
+          </div>
+          :
+          <header className='App-header'>
+              <img src={heimdalLogo} className="App-logo" alt="logo" />
+              <h1>Heimdal</h1>
+              <h2>Time Registration System</h2>
+              <button onClick={()=>{this.login()}}>Click here to login like a true Jondog!</button>
+          </header>
+        }
+        
+      </div>
+    );
+  }
+
+  /*
+    render(){
     return (
       <div className="App">
         <header className="App-header">
@@ -162,6 +192,7 @@ class App extends React.Component<{},{error:any,isAuthenticated:boolean,user:any
       </div>
     );
   }
+  */
 }
 
 export default App;
