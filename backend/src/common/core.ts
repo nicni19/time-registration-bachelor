@@ -32,24 +32,12 @@ export class Core{
     }
 
 
-    insertLogElements(json){
-        this.databaseHandler.insertLogElement(this.convertJSONToLogElements(json));
+    insertLogElements(json): Promise<boolean>{
+        return this.databaseHandler.insertLogElement(this.convertJSONToLogElements(json));
     }
 
     async getLogElements(queryMap: Map<string,any>): Promise<LogElement[]> {
         return this.databaseHandler.getLogElements(queryMap);
-    }
-    
-    async authTest(){
-        return await this.authHandler.authenticate(graphTest.id,graphTest.token);
-    }
-
-    async azureTest(){
-        //return this.azureDatabase.testQuery();
-        //this.azureDatabase.insertLogElement(elements);
-        //return await this.databaseHandler.getLogElements(['6fc4dcd488b119e7']);
-        //this.databaseHandler.setLastGraphMailLookup('6fc4dcd488b119e7',BigInt(1648797418669));
-        return await this.databaseHandler.getLastGraphCalendarLookup('6fc4dcd488b119e7');
     }
 
     async graphUpdate(userID: string, authToken: string): Promise<boolean> {

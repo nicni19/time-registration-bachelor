@@ -49,67 +49,6 @@ export class AzureSQLDatabaseHandler implements IDatabaseHandler{
     }
   
   };
-  //TODO: Fjern, den skal egentligt ikke bruges længere, tror jeg..?
-  /*
-  async query(queryString:string){
-    let returnJson = {"elements":[]}
-    console.log(queryString);
-
-    return await new Promise((resolve,reject) => {
-      const request : Request = new Request(
-        queryString, (err, rowCount) => {
-          if(err){
-            console.log(err.message)
-          }
-        }
-      );
-  
-        this.connection.execSql(request);
-  
-        request.on("row", columns => {
-          let jsonElement = {}
-          columns.forEach(column => {
-            jsonElement[column.metadata.colName] = column.value;
-          });
-          returnJson.elements.push(jsonElement);
-          resolve(returnJson);
-        });
-        
-        console.log(returnJson);
-      }).then(()=>{return returnJson});
-  }
-
-  async testQuery() {
-    let returnJson = {"elements":[]}
-
-    //this.squel.SELECT().from("test");
-    //console.log(this.squel.select().from("students").toString())
-
-    return await new Promise((resolve,reject) => {
-    const request : Request = new Request(
-      this.squel.select().from("test").toString(), (err, rowCount) => {
-        if(err){
-          console.log(err.message)
-        }
-      }
-    );
-
-      this.connection.execSql(request);
-
-      request.on("row", columns => {
-        let jsonElement = {}
-        columns.forEach(column => {
-          jsonElement[column.metadata.colName] = column.value;
-        });
-        returnJson.elements.push(jsonElement);
-        resolve(returnJson);
-      });
-      
-      console.log(returnJson);
-    }).then(()=>{return returnJson});
-  
-  }
-  */
 
   async isUserInDatabase(userID: string): Promise<boolean> {
     let queryString: string;
@@ -209,9 +148,10 @@ export class AzureSQLDatabaseHandler implements IDatabaseHandler{
     }).then(()=>{return logElements});
   }
   
-  async insertLogElement(logArray: LogElement[]): Promise<any> {
+  async insertLogElement(logArray: LogElement[]): Promise<boolean> {
     let array = [];
     console.log("log");
+    let success: boolean;
     
 
     return await new Promise((resolve,reject) => {
@@ -245,13 +185,16 @@ export class AzureSQLDatabaseHandler implements IDatabaseHandler{
         queryString, (err) => {
           if(err){
             console.log(err.message)
+            success = false;
+            reject(false)
           }
         }
       );     
       this.connections[1].execSql(request);
+      success = true;
       resolve(true);
     }).then(() => {
-      return true;
+      return success;
   });
 
   }
