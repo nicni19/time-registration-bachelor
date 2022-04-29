@@ -53,19 +53,6 @@ app.use(async (req,res,next)=>{
   }
 });
 
-app.get('/authTest', async (req, res) => {
-  let resVal:boolean = await core.authTest()
-
-  if(await resVal == true){
-    res.status(200);
-    res.send(await resVal);
-  }else{
-    res.status(401);
-    res.send(await resVal);
-  }
-  
-});
-
 app.get('/getLogElements/:startDate/:endDate', async (req, res) => {
   res.setHeader('Content-Type', 'application/json');
   console.log(req.params.startDate);
