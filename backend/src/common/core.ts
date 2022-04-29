@@ -32,7 +32,7 @@ export class Core{
     }
 
 
-    insertLogElements(json){
+    insertLogElements(json): Promise<boolean>{
         return this.databaseHandler.insertLogElement(this.convertJSONToLogElements(json));
     }
 

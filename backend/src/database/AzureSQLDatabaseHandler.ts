@@ -209,7 +209,7 @@ export class AzureSQLDatabaseHandler implements IDatabaseHandler{
     }).then(()=>{return logElements});
   }
   
-  async insertLogElement(logArray: LogElement[]): Promise<any> {
+  async insertLogElement(logArray: LogElement[]): Promise<boolean> {
     let array = [];
     console.log("log");
     let success: boolean;
