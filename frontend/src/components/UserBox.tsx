@@ -1,10 +1,12 @@
 import { stringify } from "querystring";
 import React, { RefObject } from "react";
 import {ClientHandler} from '../common/ClientHandler'
+import './stylesheets/UserBox.css'
 
 type UserBoxProps = {
     isLoggedIn:boolean;
     clientHandler:ClientHandler;
+    logout:any;
 }
 
 class UserBox extends React.Component<UserBoxProps>{
@@ -44,15 +46,15 @@ class UserBox extends React.Component<UserBoxProps>{
     async test(){
         this.props.clientHandler.getNameAndEmail();
     }
-
+    
     render(){
         if(this.props.isLoggedIn){
             return(
-                <div style={{backgroundColor:"lightgrey",margin:"15px",height:"auto",paddingBottom:"10px",paddingTop:"10px"}}>
-                    <img ref={this.pictureRef} style={{width:100,height:100,borderRadius:"50%"}}></img>
-                    <p ref={this.nameRef}>[Username]</p>
-                    <p ref={this.emailRef} style={{fontSize:"small"}}>[Email]</p>
-                    <button onClick={()=>{this.test()}}>Click me!</button>
+                <div style={{backgroundColor:"#41444a",margin:"15px",height:"auto",paddingBottom:"10px",paddingTop:"12px"}}>
+                    <img ref={this.pictureRef} style={{width:100,height:100,borderRadius:"50%",border:"2px solid #71ad23"}}></img>
+                    <p ref={this.nameRef} style={{fontSize:"large",color:"white"}}>[Username]</p>
+                    <p ref={this.emailRef} style={{fontSize:"small",color:"white"}}>[Email]</p>
+                    <button className="sign-out-button" onClick={()=>{this.props.logout()}}>Sign Out</button>
                 </div>
             )
         }else{

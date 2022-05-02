@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import logo from './logo.svg';
-import heimdalLogo from './nordiske-guder-heimdal.jpg'
+import heimdalLogo from './public/Heimdal_logo.png'
 import './App.css';
 import {config} from './config.js';
 import {PublicClientApplication} from '@azure/msal-browser';
@@ -8,6 +8,8 @@ import { resolve } from 'path';
 import { rejects } from 'assert';
 import UserBox from './components/UserBox';
 import { ClientHandler } from './common/ClientHandler';
+import relateITLogo from './public/RelateIT_logo_big.svg';
+import msLoginLogo from './public/ms_sign_in_light.svg'
 
 class App extends React.Component<{},{error:any,isAuthenticated:boolean,user:any}> {
   
@@ -18,11 +20,11 @@ class App extends React.Component<{},{error:any,isAuthenticated:boolean,user:any
     super(props)
     this.state = {
       error:null,
-      isAuthenticated:false,
+      isAuthenticated:true,
       user:{}
     };
-
-    //this.login = this.login.bind(this)
+    this.logout = this.logout.bind(this)
+    this.login = this.login.bind(this)
   }
   
   async login(){
@@ -49,23 +51,25 @@ class App extends React.Component<{},{error:any,isAuthenticated:boolean,user:any
 
   render(){
     return (
-      <div className="Wrapper" style={{}}>
+      <div className="Wrapper">
         {this.state.isAuthenticated ? 
           <div className='App'>
-            <div id="sidebar" style={{backgroundColor:"grey",width:"20%",height:"99.5vh",display:"inline-block",alignContent:"center"}}> 
-              <UserBox isLoggedIn={this.state.isAuthenticated} clientHandler={this.clientHandler}/>
-              {this.state.isAuthenticated ? <p><button onClick={()=>{this.logout()}}>Log out</button></p> :<button onClick={()=>{this.login()}}>Click here to login like a true Jondog!</button>}
+            <div id="sidebar" style={{backgroundColor:"#282c34",width:"20%",height:"99.5vh",display:"inline-block",alignContent:"center"}}>
+              <img src={heimdalLogo} style={{width:"95%",height:"auto"}}></img> 
+              <UserBox isLoggedIn={this.state.isAuthenticated} clientHandler={this.clientHandler} logout={this.logout}/>
             </div>
-            <div id='MainView' style={{backgroundColor:"lightgray",width:"80%",height:"99.5vh",display:"inline-block",boxShadow:"inset 0 0 10px 0px"}}>
+            <div id='MainView' style={{backgroundColor:"gray",width:"80%",height:"99.5vh",display:"inline-block",boxShadow:"inset 0 0 10px 0px"}}>
               
             </div>
           </div>
           :
           <header className='App-header'>
-              <img src={heimdalLogo} className="App-logo" alt="logo" />
-              <h1>Heimdal</h1>
-              <h2>Time Registration System</h2>
-              <button onClick={()=>{this.login()}}>Click here to login like a true Jondog!</button>
+              <img src={heimdalLogo} className="Heimdal-logo" alt="logo" style={{width:"50vw",marginBottom:"2vw"}}/>
+              <img src={relateITLogo} alt="logo" style={{width:"25vw"}}/>
+              
+              <button onClick={()=>{this.login()}} style={{border:"0",background:"transparent",marginTop:"6vw"}}>
+                  <img src={msLoginLogo}></img>
+              </button>
           </header>
         }
         
