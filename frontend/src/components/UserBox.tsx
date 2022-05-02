@@ -1,4 +1,5 @@
-import React from "react";
+import { stringify } from "querystring";
+import React, { RefObject } from "react";
 import {ClientHandler} from '../common/ClientHandler'
 
 type UserBoxProps = {
@@ -7,34 +8,56 @@ type UserBoxProps = {
 }
 
 class UserBox extends React.Component<UserBoxProps>{
+    
+    profilePictureUrl:string = "";
+    infoBoxRef:any;
+    pictureRef:any;
+    nameRef:any;
+    emailRef:any;
+    
     constructor(props:any){
         super(props)
+        this.state = {
+            url:null
+        }
+        this.infoBoxRef = React.createRef();
+        this.pictureRef = React.createRef();
+        this.nameRef = React.createRef();
+        this.emailRef = React.createRef();
+    }
 
+    async componentDidMount(){
+        let url = await this.props.clientHandler.getAccountPhoto();
+        if(await url != null){
+            //Display user photo
+            this.pictureRef.current.setAttribute('src',url);
+        }
+        let clientInfoArray = await this.props.clientHandler.getNameAndEmail();
+        if(await clientInfoArray){
+            //Display user name
+            this.nameRef.current.innerHTML = clientInfoArray[0] + " " + clientInfoArray[1];
+            //Display email
+            this.emailRef.current.innerHTML = clientInfoArray[2];
+        } 
     }
 
     async test(){
-        console.log("ButtonPressseeeed")
-        console.log(await this.props.clientHandler.getSilentAccessToken())
+        this.props.clientHandler.getNameAndEmail();
     }
 
     render(){
         if(this.props.isLoggedIn){
             return(
-                <div style={{backgroundColor:"blue",margin:"15px",height:"150px"}}>
-                    <div style={{backgroundColor:"red",marginLeft:"15px",height:"70%"}}>
-                        <div style={{backgroundColor:"rebeccapurple",width:"45%",height:"100%",borderRadius:"50%"}}></div>
-                        <button onClick={()=>{this.test()}}>Click me!</button>
-                    </div>
+                <div style={{backgroundColor:"lightgrey",margin:"15px",height:"auto",paddingBottom:"10px",paddingTop:"10px"}}>
+                    <img ref={this.pictureRef} style={{width:100,height:100,borderRadius:"50%"}}></img>
+                    <p ref={this.nameRef}>[Username]</p>
+                    <p ref={this.emailRef} style={{fontSize:"small"}}>[Email]</p>
+                    <button onClick={()=>{this.test()}}>Click me!</button>
                 </div>
             )
         }else{
             return(
-                <div style={{backgroundColor:"yellow",margin:"15px",height:"150px"}}>
-                    <div style={{backgroundColor:"green",marginLeft:"15px",height:"70%"}}>
-                        <div style={{backgroundColor:"rebeccapurple",width:"45%",height:"100%",borderRadius:"50%"}}></div>
-    
-                    </div>
-                </div>
+                <div>Empty</div>
             )
         }
     }

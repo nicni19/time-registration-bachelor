@@ -24,25 +24,6 @@ class App extends React.Component<{},{error:any,isAuthenticated:boolean,user:any
 
     //this.login = this.login.bind(this)
   }
-
-  //Ikke rigtigt brugbar længere, brug i stedet accountID fra login-metoden
-  async getGraphUserID(accessToken:string):Promise<string>{
-    let id:string = "";
-    let returnval:any;
-    let responseJson:any = {};
-    return await new Promise(async(resolve,reject) =>{
-      console.log("AccessToken (Graph): " + accessToken)      
-      returnval = await fetch('https://graph.microsoft.com/v1.0/me',{
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + accessToken
-        }
-        
-      }).then(response => response.json()).then(data=>{responseJson = data;}).then(()=>{console.log(responseJson.id);return responseJson.id})
-      
-    }).then(()=>{return id});
-  }
   
   async login(){
     let loginResult = await this.clientHandler.login();
