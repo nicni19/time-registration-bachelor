@@ -126,13 +126,27 @@ app.get('/getLogElements', async (req, res) => {
 
 app.post('/insertLogElements', (req, res) => {
   
-  if (core.insertLogElements(req.body)) {
+  if (core.insertLogElements(req.body.logelements)) {
     res.status(200)
     res.send('Log elements inserted'); 
   } else {
     res.status(500);
     res.send('An error occured. Log elements not saved!')
   }
+});
+
+app.post('/deleteLogElements', async (req, res) => {
+  if (core.deleteLogElements(req.body.ids)) {
+    res.status(200)
+    res.send('Log elements deleted'); 
+  } else {
+    res.status(500);
+    res.send('An error occured. Log elements not deleted!')
+  }
+});
+
+app.get('/deleteTimerRun', async (req, res) => {
+
 });
 
 app.get('/getTimerRuns', (req, res) => {
@@ -148,11 +162,6 @@ app.post('/insertTimerRun', (req, res) => {
   */
   res.send('Endpoint not implemented');
 });
-
-app.get('/getCalendar', async (req, res) => {
-
-});
-
 
 
 app.listen(port, () => {
