@@ -199,8 +199,34 @@ export class AzureSQLDatabaseHandler implements IDatabaseHandler{
 
   }
 
-  deleteLogElements(logIDs: number[]) {
-    throw new Error('Method not implemented.');
+  async deleteLogElements(logIDs: number[], userID:string): Promise<boolean> {
+    let success: boolean;
+    let queryString = this.squel.delete()
+      .from("log_elements")
+      .where("id IN ? AND user_id = @userid", logIDs)
+      .toString();
+
+    return await new Promise((resolve,reject) => {
+      const request : Request = new Request(
+        queryString, (err) => {
+          if(err){
+            console.log(err.message)
+            success = false;
+            reject(false)
+          }
+        }
+      );  
+
+      request.addParameter('userid', this.TYPES.VarChar, userID);
+
+      this.connections[1].execSql(request);
+      success = true;
+      resolve(true);
+
+    }).then(() => {
+      return success;
+  });
+
   }
 
   insertTimerRun(runArray: TimerRun[]) {

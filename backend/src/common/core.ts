@@ -36,6 +36,10 @@ export class Core{
         return this.databaseHandler.insertLogElement(this.convertJSONToLogElements(json));
     }
 
+    deleteLogElements(ids: number[],userID:string): Promise<boolean>{
+        return this.databaseHandler.deleteLogElements(ids,userID);
+    }
+
     async getLogElements(queryMap: Map<string,any>): Promise<LogElement[]> {
         return this.databaseHandler.getLogElements(queryMap);
     }
