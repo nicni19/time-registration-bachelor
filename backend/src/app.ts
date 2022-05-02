@@ -136,7 +136,9 @@ app.post('/insertLogElements', (req, res) => {
 });
 
 app.post('/deleteLogElements', async (req, res) => {
-  if (core.deleteLogElements(req.body.ids)) {
+  let responseJSON = JSON.parse(JSON.stringify(req.headers));
+
+  if (core.deleteLogElements(req.body.ids,responseJSON.userid)) {
     res.status(200)
     res.send('Log elements deleted'); 
   } else {

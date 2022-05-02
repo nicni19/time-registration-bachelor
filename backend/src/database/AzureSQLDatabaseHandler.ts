@@ -199,15 +199,14 @@ export class AzureSQLDatabaseHandler implements IDatabaseHandler{
 
   }
 
-  async deleteLogElements(logIDs: number[]): Promise<boolean> {
+  async deleteLogElements(logIDs: number[], userID:string): Promise<boolean> {
     let success: boolean;
     let queryString = this.squel.delete()
       .from("log_elements")
-      .where("id IN ?", logIDs)
+      .where("id IN ? AND user_id = @userid", logIDs)
       .toString();
 
     return await new Promise((resolve,reject) => {
-
       const request : Request = new Request(
         queryString, (err) => {
           if(err){
@@ -217,6 +216,9 @@ export class AzureSQLDatabaseHandler implements IDatabaseHandler{
           }
         }
       );  
+
+      request.addParameter('userid', this.TYPES.VarChar, userID);
+
       this.connections[1].execSql(request);
       success = true;
       resolve(true);
