@@ -43,14 +43,27 @@ export class LogView extends React.Component<LogViewProps>{
 
   render(){
     return(
-      <div id="outerView" className="Outer-view" style={{width:"90%",height:"90vh",marginTop:"5vh",backgroundColor:"lightgray"}}>
-        <p>(DATE PICKER)</p>
+      <div id="outerView" className="Outer-view">
+        <p style={{height:"4vh"}}>(DATE PICKER)</p>
+        <div className="Field-identifier">
+          <p className="Identifier-generic" style={{width:"29%",borderRightWidth:"0.1vh"}}>Description</p>
+          <p className="Identifier-generic" style={{width:"6%",borderRightWidth:"0.1vh"}}>Start time</p>
+          <p className="Identifier-generic" style={{width:"10%",borderRightWidth:"0.1vh"}}>Type</p>
+          <p className="Identifier-generic" style={{width:"3.5%",borderRightWidth:"0.1vh"}}>Dur.</p>
+          <p className="Identifier-generic" style={{width:"15%",borderRightWidth:"0.1vh"}}>Customer</p>
+          <p className="Identifier-generic" style={{width:"5%",borderRightWidth:"0.1vh"}}>Rit num</p>
+          <p className="Identifier-generic" style={{width:"5%",borderRightWidth:"0.1vh"}}>Case num</p>
+          <p className="Identifier-generic" style={{width:"5%",borderRightWidth:"0.1vh",marginRight:"0.3vw"}}>Case task</p>
+          <p className="Identifier-generic" style={{width:"5%",borderRightWidth:"0.1vh"}}>Internal</p>
+          <p className="Identifier-generic" style={{width:"5%",borderRightWidth:"0.1vh",marginLeft:"-0.2vw"}}>Unpaid</p>
+          <p className="Identifier-generic" style={{width:"5%",borderRightWidth:"0.1vh",marginLeft:"-0.2vw"}}>Ready</p>
+        </div>
         <div ref={this.elementViewRef} id="elementView" className="Element-view">
           {
             this.globalLogElements
           }
         </div>
-        <button onClick={async()=>{this.fetchLogElements()}} style={{width:"100%",height:"5vh",backgroundColor:"green",marginTop:"0.5vh"}}>Submit changes to database</button>
+        <button className="Commit-button" onClick={async()=>{this.fetchLogElements()}}>Submit changes to database</button>
       </div>
     )
   }
