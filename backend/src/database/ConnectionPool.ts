@@ -6,7 +6,6 @@ export class ConnectionPool {
     connections = [];
     minCon: number;
     maxCon: number;
-    connectionAmount: number = 0;
     config;
 
     constructor(config, minCon: number, maxCon: number){
@@ -23,16 +22,12 @@ export class ConnectionPool {
         connection = await connection.connectToDB();
         
         this.connections.push(connection);
-        this.connectionAmount++;
         }
     }
 
     async getFreeConnection(): Promise<DBConnection> {
-      console.log("Connections in pool: ", this.connectionAmount);
       console.log(this.connections.length);
-      
-      
-      
+
       let connection = null;
 
       for (let i: number = 0; i < this.connections.length; i++) {
@@ -49,25 +44,23 @@ export class ConnectionPool {
       if (connection != null) { 
         //con = await con.restartConnectionIfClosed();
         return connection;
-      } else {
+      } else if (this.connections.length > this.maxCon) {
         let connection: DBConnection = new DBConnection(this.config);
         connection = await connection.connectToDB();
-        console.log("jjjj");
-        
 
         let conIndex = this.connections.push(connection)-1;
-        this.connectionAmount++;
         return this.connections[conIndex];
+      } else {
+        throw "Maximum amount of connections reached and all connections in use." +
+        " Please try again later or increase max connections"
       }
 
     }
 
     async executeRequest(request) {
       let connection = await this.getFreeConnection();
-
-
-
       connection.getConnection().execSql(request);
+      connection.setIsLocked(false);
     }
 
     returnConnection(conIndex) {
