@@ -5,6 +5,7 @@ import { LogElement } from '../common/domain/LogElement';
 import { TimerRun } from '../common/domain/TimerRun';
 import { IDatabaseHandler } from '../common/interfaces/IDatabaseHandler';
 import { Type } from "../common/domain/Type";
+import { ConnectionPool } from "./ConnectionPool";
 //import { squel } from 'sequel';
 
 export class AzureSQLDatabaseHandler implements IDatabaseHandler{
@@ -12,24 +13,11 @@ export class AzureSQLDatabaseHandler implements IDatabaseHandler{
   azureConfig = require('./config/azureconfig.json');
   squel = require('squel');
   TYPES = require('tedious').TYPES;
-  connections = [];
+  connectionPool;
 
   constructor(){
-    this.connections = [new Connection(this.config), new Connection(this.config), new Connection(this.config), new Connection(this.config), new Connection(this.config), new Connection(this.config), new Connection(this.config)];
-
-    for (let i: number = 0; i < this.connections.length; i++) {
-      this.connections[i].on("connect", err => {
-        if (err) {
-          console.error(err.message);
-        } else {
-          let connectionNumber: number = i+1;
-          console.log("User " + "'" + azureConfig.username + "' connected to Azure database, on connection: " + connectionNumber);
-        }
-      });
-  
-      this.connections[i].connect();
-    }
-    
+    this.connectionPool = new ConnectionPool(this.config, 3,10);
+    this.connectionPool.initConnections();
   }
 
   config = {
@@ -57,8 +45,8 @@ export class AzureSQLDatabaseHandler implements IDatabaseHandler{
     queryString = this.squel.select().from('users').where("id = @userid").toString();
     console.log(queryString);
     console.log(userID);
-    
-    
+
+    let connection = await this.connectionPool.getFreeConnection();
 
     return await new Promise((resolve,reject) => {
       const request : Request = new Request(
@@ -85,7 +73,8 @@ export class AzureSQLDatabaseHandler implements IDatabaseHandler{
           resolve(userExist);
         })
 
-        this.connections[6].execSql(request);
+        connection.getConnection().execSql(request);
+        this.connectionPool.returnConnection(connection);
 
       }).then(()=>{return userExist});
   }
@@ -110,6 +99,8 @@ export class AzureSQLDatabaseHandler implements IDatabaseHandler{
     let returnJson = {"elements":[]}
     let logElements: LogElement[] = [];
 
+    let connection = await this.connectionPool.getFreeConnection();
+
     return await new Promise((resolve,reject) => {
       const request : Request = new Request(
         queryString, (err) => {
@@ -128,7 +119,10 @@ export class AzureSQLDatabaseHandler implements IDatabaseHandler{
         
         console.log(queryString);
 
-        this.connections[0].execSql(request);
+        
+
+        connection.getConnection().execSql(request);
+        this.connectionPool.returnConnection(connection);
         
         request.on("row", columns => {
           let logElement: LogElement = new LogElement(columns['user_id'].value,Type[columns['element_type'].value as keyof typeof Type],
@@ -152,7 +146,7 @@ export class AzureSQLDatabaseHandler implements IDatabaseHandler{
     let array = [];
     console.log("log");
     let success: boolean;
-    
+    let connection = await this.connectionPool.getFreeConnection();
 
     return await new Promise((resolve,reject) => {
       for (let i: number = 0; i < logArray.length; i++) {
@@ -189,8 +183,11 @@ export class AzureSQLDatabaseHandler implements IDatabaseHandler{
             reject(false)
           }
         }
-      );     
-      this.connections[1].execSql(request);
+      );
+
+      connection.getConnection().execSql(request);
+
+      this.connectionPool.returnConnection(connection);
       success = true;
       resolve(true);
     }).then(() => {
@@ -206,6 +203,8 @@ export class AzureSQLDatabaseHandler implements IDatabaseHandler{
       .where("id IN ? AND user_id = @userid", logIDs)
       .toString();
 
+    let connection = await this.connectionPool.getFreeConnection();
+
     return await new Promise((resolve,reject) => {
       const request : Request = new Request(
         queryString, (err) => {
@@ -219,7 +218,10 @@ export class AzureSQLDatabaseHandler implements IDatabaseHandler{
 
       request.addParameter('userid', this.TYPES.VarChar, userID);
 
-      this.connections[1].execSql(request);
+      connection.getConnection().execSql(request);
+
+      this.connectionPool.returnConnection(connection);
+
       success = true;
       resolve(true);
 
@@ -243,6 +245,8 @@ export class AzureSQLDatabaseHandler implements IDatabaseHandler{
   async getLastGraphMailLookup(userID: string): Promise<string> {
     let queryString = this.squel.select('last_mail_lookup').from('users').where('id = ' + "'" + userID + "'");
     let returnString = "";
+    let connection = await this.connectionPool.getFreeConnection();
+
     return await new Promise((resolve) =>{
       const request : Request = new Request(
         queryString, (err) => {
@@ -257,11 +261,14 @@ export class AzureSQLDatabaseHandler implements IDatabaseHandler{
         
         resolve(returnString)
       });
-      this.connections[2].execSql(request)
+
+      connection.getConnection().execSql(request);
+
+      this.connectionPool.returnConnection(connection);
     }).then(()=>{return returnString});    
   }
 
-  setLastGraphMailLookup(userID: string, timestamp: string) {
+  async setLastGraphMailLookup(userID: string, timestamp: string) {
     let queryString = this.squel.update().table('users').set('last_mail_lookup',timestamp).where('id = ' + "'" + userID + "'");
     const request : Request = new Request(
       queryString, (err) => {
@@ -270,12 +277,18 @@ export class AzureSQLDatabaseHandler implements IDatabaseHandler{
         }
       }
     );
-    this.connections[2].execSql(request)
+    let connection = await this.connectionPool.getFreeConnection();
+
+    connection.getConnection().execSql(request);
+
+    this.connectionPool.returnConnection();
   }
 
   async getLastGraphCalendarLookup(userID: string): Promise<string> {
     let queryString = this.squel.select('last_calendar_lookup').from('users').where('id = ' + "'" + userID + "'");
     let returnString = "";
+    let connection = await this.connectionPool.getFreeConnection();
+
     return await new Promise((resolve) =>{
       const request : Request = new Request(
         queryString, (err) => {
@@ -289,11 +302,14 @@ export class AzureSQLDatabaseHandler implements IDatabaseHandler{
         
         resolve(returnString)
       });
-      this.connections[3].execSql(request)
+
+      connection.getConnection().execSql(request);
+
+      this.connectionPool.returnConnection(connection);
     }).then(()=>{return returnString});
   }
 
-  setLastGraphCalendarLookup(userID: string, timestamp: string) {
+  async setLastGraphCalendarLookup(userID: string, timestamp: string) {
     let queryString = this.squel.update().table('users').set('last_calendar_lookup',timestamp).where('id = ' + "'" + userID + "'");
     const request : Request = new Request(
       queryString, (err) => {
@@ -302,13 +318,18 @@ export class AzureSQLDatabaseHandler implements IDatabaseHandler{
         }
       }
     );
-    this.connections[3].execSql(request)
+    let connection = await this.connectionPool.getFreeConnection();
+
+    connection.getConnection().execSql(request);
+
+    this.connectionPool.returnConnection();
   }
 
   async insertFromGraph(logArray: LogElement[]): Promise<any> {
     let array = [];
     console.log("log");
-    
+
+    let connection = await this.connectionPool.getFreeConnection();
 
     return await new Promise((resolve,reject) => {
       for (let i: number = 0; i < logArray.length; i++) {
@@ -343,8 +364,11 @@ export class AzureSQLDatabaseHandler implements IDatabaseHandler{
             console.log(err.message)
           }
         }
-      );     
-      this.connections[4].execSql(request);
+      );
+
+      connection.getConnection().execSql(request);
+
+      this.connectionPool.returnConnection(connection);
       resolve(true);
     }).then(() => {
       return true;
@@ -359,6 +383,7 @@ export class AzureSQLDatabaseHandler implements IDatabaseHandler{
       .toString();
 
     let privilegesMap = new Map();
+    let connection = await this.connectionPool.getFreeConnection();
 
     return await new Promise(async (resolve,reject)=>{
       const request : Request = new Request(
@@ -385,7 +410,9 @@ export class AzureSQLDatabaseHandler implements IDatabaseHandler{
         })
       })
 
-      this.connections[5].execSql(request);
+      connection.getConnection().execSql(request);
+
+      this.connectionPool.returnConnection(connection);
 
       request.on('requestCompleted',()=>{
         resolve(privilegesMap);
