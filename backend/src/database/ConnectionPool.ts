@@ -1,5 +1,6 @@
 import * as azureConfig from "./config/azureconfig.json"
 import { DBConnection } from "./DBConnection";
+import { Request } from 'tedious'
 
 export class ConnectionPool {
     connections = [];
@@ -32,26 +33,45 @@ export class ConnectionPool {
       
       
       
-      let con = this.connections.pop();
-      
-      if (con != null) { 
+      let connection = null;
+
+      for (let i: number = 0; i < this.connections.length; i++) {
+        console.log(this.connections[i].getConnection().state.name);
+        console.log(this.connections[i].getIsLocked());
+        if (!this.connections[i].getIsLocked() && this.connections[i].getConnection().state.name == "LoggedIn") {
+          console.log("im not locked");
+          connection = this.connections[i];
+          connection.setIsLocked(true);
+          break;
+        }
+      }
+
+      if (connection != null) { 
         //con = await con.restartConnectionIfClosed();
-        return con;
+        return connection;
       } else {
         let connection: DBConnection = new DBConnection(this.config);
         connection = await connection.connectToDB();
         console.log("jjjj");
         
 
-        this.connections.push(connection);
+        let conIndex = this.connections.push(connection)-1;
         this.connectionAmount++;
-        return this.getFreeConnection();
+        return this.connections[conIndex];
       }
 
     }
 
-    returnConnection(connection) {
-      this.connections.push(connection);
+    async executeRequest(request) {
+      let connection = await this.getFreeConnection();
+
+
+
+      connection.getConnection().execSql(request);
+    }
+
+    returnConnection(conIndex) {
+      this.connections[conIndex].setIsLocked(false);
     }
 
 }

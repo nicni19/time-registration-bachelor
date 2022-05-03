@@ -4,6 +4,7 @@ import { Connection, Request } from 'tedious'
 export class DBConnection {
   connection;
   config;
+  isLocked: boolean = false;
 
   constructor(config){
     this.config = config;
@@ -41,5 +42,13 @@ export class DBConnection {
 
   getConnection() {
     return this.connection;
+  }
+
+  setIsLocked(isLocked:boolean) {
+    this.isLocked = isLocked;
+  }
+
+  getIsLocked():boolean {
+    return this.isLocked;
   }
 }

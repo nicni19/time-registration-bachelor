@@ -74,7 +74,7 @@ export class AzureSQLDatabaseHandler implements IDatabaseHandler{
         })
 
         connection.getConnection().execSql(request);
-        this.connectionPool.returnConnection(connection);
+        connection.setIsLocked(false);
 
       }).then(()=>{return userExist});
   }
@@ -122,7 +122,7 @@ export class AzureSQLDatabaseHandler implements IDatabaseHandler{
         
 
         connection.getConnection().execSql(request);
-        this.connectionPool.returnConnection(connection);
+        connection.setIsLocked(false);
         
         request.on("row", columns => {
           let logElement: LogElement = new LogElement(columns['user_id'].value,Type[columns['element_type'].value as keyof typeof Type],
@@ -187,7 +187,7 @@ export class AzureSQLDatabaseHandler implements IDatabaseHandler{
 
       connection.getConnection().execSql(request);
 
-      this.connectionPool.returnConnection(connection);
+      connection.setIsLocked(false);
       success = true;
       resolve(true);
     }).then(() => {
@@ -220,7 +220,7 @@ export class AzureSQLDatabaseHandler implements IDatabaseHandler{
 
       connection.getConnection().execSql(request);
 
-      this.connectionPool.returnConnection(connection);
+      connection.setIsLocked(false);
 
       success = true;
       resolve(true);
@@ -251,7 +251,7 @@ export class AzureSQLDatabaseHandler implements IDatabaseHandler{
       const request : Request = new Request(
         queryString, (err) => {
           if(err){
-            console.log(err.message)
+            console.log(err.message, "wow")
           }
         }
       );
@@ -263,8 +263,8 @@ export class AzureSQLDatabaseHandler implements IDatabaseHandler{
       });
 
       connection.getConnection().execSql(request);
-
-      this.connectionPool.returnConnection(connection);
+      connection.setIsLocked(false);
+      
     }).then(()=>{return returnString});    
   }
 
@@ -281,7 +281,7 @@ export class AzureSQLDatabaseHandler implements IDatabaseHandler{
 
     connection.getConnection().execSql(request);
 
-    this.connectionPool.returnConnection();
+    connection.setIsLocked(false);
   }
 
   async getLastGraphCalendarLookup(userID: string): Promise<string> {
@@ -305,7 +305,7 @@ export class AzureSQLDatabaseHandler implements IDatabaseHandler{
 
       connection.getConnection().execSql(request);
 
-      this.connectionPool.returnConnection(connection);
+      connection.setIsLocked(false);
     }).then(()=>{return returnString});
   }
 
@@ -322,7 +322,7 @@ export class AzureSQLDatabaseHandler implements IDatabaseHandler{
 
     connection.getConnection().execSql(request);
 
-    this.connectionPool.returnConnection();
+    connection.setIsLocked(false);
   }
 
   async insertFromGraph(logArray: LogElement[]): Promise<any> {
@@ -365,10 +365,11 @@ export class AzureSQLDatabaseHandler implements IDatabaseHandler{
           }
         }
       );
+      
 
       connection.getConnection().execSql(request);
 
-      this.connectionPool.returnConnection(connection);
+      connection.setIsLocked(false);
       resolve(true);
     }).then(() => {
       return true;
@@ -412,7 +413,7 @@ export class AzureSQLDatabaseHandler implements IDatabaseHandler{
 
       connection.getConnection().execSql(request);
 
-      this.connectionPool.returnConnection(connection);
+      connection.setIsLocked(false);
 
       request.on('requestCompleted',()=>{
         resolve(privilegesMap);
