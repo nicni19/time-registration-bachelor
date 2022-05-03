@@ -10,11 +10,14 @@ import UserBox from './components/UserBox';
 import { ClientHandler } from './common/ClientHandler';
 import relateITLogo from './public/RelateIT_logo_big.svg';
 import msLoginLogo from './public/ms_sign_in_light.svg'
+import { LogView } from './components/LogView';
+import { BackendAPI } from './common/BackendAPI';
 
 class App extends React.Component<{},{error:any,isAuthenticated:boolean,user:any}> {
   
   graph = require('@microsoft/microsoft-graph-client');
   clientHandler = new ClientHandler;
+  backendAPI = new BackendAPI(this.clientHandler);
 
   constructor(props:any){
     super(props)
@@ -53,13 +56,19 @@ class App extends React.Component<{},{error:any,isAuthenticated:boolean,user:any
     return (
       <div className="Wrapper">
         {this.state.isAuthenticated ? 
-          <div className='App'>
-            <div id="sidebar" style={{backgroundColor:"#282c34",width:"20%",height:"99.5vh",display:"inline-block",alignContent:"center"}}>
+          <div className='App' style={{display:'flex'}}>
+            <div id="sidebar" style={{backgroundColor:"#282c34",width:"20%",height:"100vh",alignContent:"center"}}>
               <img src={heimdalLogo} style={{width:"95%",height:"auto"}}></img> 
               <UserBox isLoggedIn={this.state.isAuthenticated} clientHandler={this.clientHandler} logout={this.logout}/>
+              <nav style={{display:"flex",flexDirection:"column", width:"100%"}}>
+                <button className='Nav-button'>Test</button>
+                <button className='Nav-button'>Test</button>
+                <button className='Nav-button'>Test</button>
+                <button className='Nav-button'>Test</button>
+              </nav>
             </div>
-            <div id='MainView' style={{backgroundColor:"gray",width:"80%",height:"99.5vh",display:"inline-block",boxShadow:"inset 0 0 10px 0px"}}>
-              
+            <div id='MainView' style={{backgroundColor:"gray",width:"80%",height:"100vh",boxShadow:"inset 0 0 10px 0px",display:"flex",justifyContent:"center"}}>
+              <LogView backendAPI={this.backendAPI}></LogView> 
             </div>
           </div>
           :

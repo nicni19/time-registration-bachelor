@@ -11,6 +11,17 @@
   margin: 15px;
   color: white;
   background-color: rgb(210, 84, 84);
+  border-color: transparent;
+}
+
+.Nav-button {
+  background-color: blueviolet;
+  border-color: transparent;
+  font-size: x-large;
+  color: white;
+  font-family: 'Roboto', sans-serif;
+  margin-top: 5vh;
+  height: 5vh;
 }
 
 
@@ -39,6 +50,7 @@
   font-size: calc(10px + 2vmin);
   color: white;
 }
+
 
 .App-link {
   color: #61dafb;

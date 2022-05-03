@@ -49,6 +49,10 @@ export class ClientHandler{
       
     }
 
+    getUserId():string{
+      return this.globalID;
+    }
+
     async logout():Promise<boolean>{
         return new Promise((resolve,reject)=>{
           this.publicClientApplication.logoutPopup().then(()=>{resolve(true)})
