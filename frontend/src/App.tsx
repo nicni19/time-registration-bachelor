@@ -48,6 +48,7 @@ class App extends React.Component<{},{error:any,isAuthenticated:boolean,user:any
         isAuthenticated:false,
         user:{}
       })
+      alert('The user could not be authenticated \n Please try again');
     }
   }
 

@@ -43,7 +43,9 @@ export class ClientHandler{
             }              
         }).catch(function (error) { 
             //login failure
-            console.log(error);
+            alert('An error occured during login \n Error: ' + error);
+            reject()
+            
         });
       })
       

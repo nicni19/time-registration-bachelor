@@ -36,8 +36,9 @@ export class LogElementComponent extends React.Component<LogElementComponentProp
   }
 
   convertStartTimestamp():string{
-    let date = new Date(this.props.logElement.getStartTimestamp())
-    return date.toDateString();
+    let date = new Date(this.props.logElement.getStartTimestamp() * 1000)
+    let finalDate:string = date.getDay() + " | " + date.getMonth() + " | " + date.getFullYear()
+    return finalDate;
   }
 
   render(){
@@ -49,9 +50,9 @@ export class LogElementComponent extends React.Component<LogElementComponentProp
           <div ref={this.typeRef} className="Log-element-generic" style={{width:"10%"}}>{this.props.logElement.getType()}</div>
           <div ref={this.durationRef} className="Log-element-generic" contentEditable="true" style={{width:"3%"}}>{this.props.logElement.getDuration()}</div>
           <div ref={this.customerRef} className="Log-element-generic" contentEditable="true" style={{width:"15%"}}>{this.props.logElement.getCustomer()}</div>
-          <div ref={this.ritNumRef} className="Log-element-generic" style={{width:"5%"}}>{this.props.logElement.getRitNum()}</div>
-          <div ref={this.caseNumRef} className="Log-element-generic" style={{width:"5%"}}>{this.props.logElement.getCaseNum()}</div>
-          <div ref={this.caseTaskNumRef} className="Log-element-generic" style={{width:"5%"}}>{this.props.logElement.getCaseTaskNum()}</div>
+          <div ref={this.ritNumRef} className="Log-element-generic" contentEditable="true" style={{width:"5%"}}>{this.props.logElement.getRitNum()}</div>
+          <div ref={this.caseNumRef} className="Log-element-generic" contentEditable="true" style={{width:"5%"}}>{this.props.logElement.getCaseNum()}</div>
+          <div ref={this.caseTaskNumRef} className="Log-element-generic" contentEditable="true" style={{width:"5%"}}>{this.props.logElement.getCaseTaskNum()}</div>
           <input ref={this.internalRef} className="Log-element-checkbox" type="checkbox" defaultChecked={this.props.logElement.getInternalTask()}></input>
           <input ref={this.unpaidRef} className="Log-element-checkbox" type="checkbox" defaultChecked={this.props.logElement.getUnpaid()}></input>
           <input ref={this.bookKeepReadyRef} className="Log-element-checkbox" type="checkbox" defaultChecked={this.props.logElement.getBookKeepReady()}></input>
