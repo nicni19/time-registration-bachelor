@@ -1,3 +1,4 @@
+import { resolve } from "path";
 import { ClientHandler } from "./ClientHandler";
 
 export class BackendAPI{
@@ -8,24 +9,23 @@ export class BackendAPI{
     this.clientHandler = clientHandler;
   }
 
-  async getLogElements(){
-    let responseJson = {};
-    await fetch('http://localhost:3000/GetLogElements',{
+  async getLogElements():Promise<JSON>{
+    let token = await this.clientHandler.getSilentAccessToken();
+    let userId = this.clientHandler.getUserId();
+
+    return new Promise<JSON>(async (resolve,reject)=>{
+      await fetch('http://localhost:3000/getLogElements',{
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + await this.clientHandler.getSilentAccessToken(),
-            'userid' : this.clientHandler.getUserId()
+            'Authorization': 'Bearer ' + token,
+            'userid' : userId
         },
         //body: JSON.stringify(data),
         mode: 'cors'
-    }).then(response => response.json()).then(data=>{
-      
-      for(let i = 0; i < data.length; i++){
-        console.log(data[i])
-      }
-
-    });
-
+      }).then(response => response.json()).then(data=>{
+        resolve(data)
+      });
+  })
   }
 }

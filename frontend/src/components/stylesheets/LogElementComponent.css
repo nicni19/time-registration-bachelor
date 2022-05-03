@@ -1,0 +1,9 @@
+.Element-shell {
+  width: 98%;
+  height: 5vh;
+  background-color: #d6d6d6;
+  max-height: 500px;
+  margin-top: 0.3vh;
+  display: flex;
+  align-items: center;
+}

@@ -23,7 +23,7 @@ class App extends React.Component<{},{error:any,isAuthenticated:boolean,user:any
     super(props)
     this.state = {
       error:null,
-      isAuthenticated:true,
+      isAuthenticated:false,
       user:{}
     };
     this.logout = this.logout.bind(this)
