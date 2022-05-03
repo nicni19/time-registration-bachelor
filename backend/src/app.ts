@@ -13,17 +13,6 @@ app.use(cors());
 const core: Core = new Core();
 let lastLookup: string = '202022-01-16T01:03:21.347Z';
 
-//Azure test
-app.get('/azureTest', async (req, res) => {
-    /*
-    console.log(req.headers.authorization)
-    res.setHeader('Access-Control-Allow-Origin','*');
-    res.status(201);
-    res.send(req.header.toString())
-    */
-   //console.log("END RESULT: ",await core.authorizeUser('615498f0dae8d115',Actions.get_all_logs))
-});
-
 app.get('/doesCurrentUserExist', async (req, res) => {
   res.setHeader('Content-Type', 'application/json');
   let responseJSON = JSON.parse(JSON.stringify(req.headers))
@@ -62,19 +51,6 @@ app.use(async (req,res,next)=>{
     res.status(401);
     res.send(false);
   }
-});
-
-app.get('/authTest', async (req, res) => {
-  let resVal:boolean = await core.authTest()
-
-  if(await resVal == true){
-    res.status(200);
-    res.send(await resVal);
-  }else{
-    res.status(401);
-    res.send(await resVal);
-  }
-  
 });
 
 app.get('/getLogElements/:startDate/:endDate', async (req, res) => {
@@ -138,7 +114,7 @@ app.get('/getLogElements', async (req, res) => {
     queryMap.set("userid",requestJSON.userid);
 
     await core.graphUpdate(requestJSON.userid as string, token).then( async () => {
-      logElements = await core.getLogElements(requestJSON.userid);
+      logElements = await core.getLogElements(queryMap);
     });
     
     res.status(200);
@@ -150,32 +126,44 @@ app.get('/getLogElements', async (req, res) => {
 
 app.post('/insertLogElements', (req, res) => {
   
-  core.insertLogElements(req.body);
+  if (core.insertLogElements(req.body.logelements)) {
+    res.status(200)
+    res.send('Log elements inserted'); 
+  } else {
+    res.status(500);
+    res.send('An error occured. Log elements not saved!')
+  }
+});
 
-  /*
-  res.send('success')
-  */
-  res.send('Log elements inserted');
+app.post('/deleteLogElements', async (req, res) => {
+  let responseJSON = JSON.parse(JSON.stringify(req.headers));
+
+  if (core.deleteLogElements(req.body.ids,responseJSON.userid)) {
+    res.status(200)
+    res.send('Log elements deleted'); 
+  } else {
+    res.status(500);
+    res.send('An error occured. Log elements not deleted!')
+  }
+});
+
+app.get('/deleteTimerRun', async (req, res) => {
+
 });
 
 app.get('/getTimerRuns', (req, res) => {
   /*
   core.fetchTimerRuns
   */
-  res.send('Timer runs');
+  res.send('Endpoint not implemented');
 });
 
 app.post('/insertTimerRun', (req, res) => {
   /*
   core.insertTimerRun
   */
-  res.send('Timer run inserted');
+  res.send('Endpoint not implemented');
 });
-
-app.get('/getCalendar', async (req, res) => {
-
-});
-
 
 
 app.listen(port, () => {

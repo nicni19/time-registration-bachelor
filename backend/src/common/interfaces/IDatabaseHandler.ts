@@ -13,7 +13,7 @@ export interface IDatabaseHandler{
 
     insertFromGraph(logArray: LogElement[]): Promise<any>
 
-    deleteLogElements(logIDs: number[]);
+    deleteLogElements(logIDs: number[], userID:string): Promise<boolean>;
 
     insertTimerRun(runArray: TimerRun[]);
 
