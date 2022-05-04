@@ -11,7 +11,7 @@ type LogViewProps = {
 export class LogView extends React.Component<LogViewProps>{
 
   elementViewRef:any;
-  globalLogElements:any[];
+  globalLogElements:LogElementComponent[];
 
   constructor(props:any){
     super(props)
@@ -19,6 +19,10 @@ export class LogView extends React.Component<LogViewProps>{
     this.elementViewRef = React.createRef();
     this.globalLogElements = []
 
+    //let testElement = new LogElement("123456",0,"Test",0,800,true,true,0,"rit1",0,"Jondog",false,false,"","");
+    //this.elementTest = new LogElementComponent({logElement:testElement,index:0,markElementForDeletion:this.markElementForDeletion})
+    //this.globalLogElements.push(this.elementTest);
+    
     this.markElementForDeletion = this.markElementForDeletion.bind(this);
   }
 
@@ -27,35 +31,46 @@ export class LogView extends React.Component<LogViewProps>{
     let newArray:any[] = [];
     for(let i = 0; i < this.globalLogElements.length;i++){
       if(this.globalLogElements[i] != undefined){
-        let current:LogElementComponent = this.globalLogElements[i];        
+        let current:LogElementComponent = this.globalLogElements[i];      
         
-        newArray.push(<LogElementComponent logElement={current.props.logElement} index={i} markElementForDeletion={this.markElementForDeletion}></LogElementComponent>)
+        newArray.push(new LogElementComponent({logElement:current.props.logElement,index:i,markElementForDeletion:this.markElementForDeletion}))
       }
     }
     this.globalLogElements = newArray;
   }
 
+  //TODO: Indsæt elementet som skal slettes i et separat array -> query til db
   markElementForDeletion(index:number){
-    this.globalLogElements[index] = undefined;
+    //this.globalLogElements[index] = undefined;
+    this.globalLogElements.map(log =>{
+      log.updateLogElementState();
+    });
+    this.globalLogElements.splice(index,1);
+    console.log("Index removed: " + index);
     this.rearrangeElementsArray();
     this.forceUpdate()
   }
 
-  async fetchLogElements(){
+  insertEmptyElement(){
+    let newLogElement = new LogElement("",0,"",0,0,false,false,0,"",0,"",false,false,"","");
+    let newLogElementComponent = new LogElementComponent({logElement:newLogElement,index:0,markElementForDeletion:this.markElementForDeletion});
+    this.globalLogElements.unshift(newLogElementComponent)
+    this.rearrangeElementsArray()
+    this.forceUpdate()
+  }
 
+  async fetchLogElements(){
     this.globalLogElements = []
     this.forceUpdate();
 
     let elements:any = await this.props.backendAPI.getLogElements();
-    //console.log(await elements);
     if(elements){
       for(let i = 0; i < elements.logElements.length; i++){
 
         let current = elements.logElements[i];
-        let logElement = new LogElement(current.userID,current.type,current.description,current.startTimestamp,current.duration,current.internalTask,current.unpaid,current.ritNum,current.caseNum,current.caseTaskNum,current.customer,current.edited,current.bookKeepReady,current.calendarid,current.mailid,current.id);
-        let currentComponent = <LogElementComponent logElement={logElement} index={i} markElementForDeletion={this.markElementForDeletion}></LogElementComponent>
+        let newLogElement = new LogElement(current.userID,current.type,current.description,current.startTimestamp,current.duration,current.internalTask,current.unpaid,current.ritNum,current.caseNum,current.caseTaskNum,current.customer,current.edited,current.bookKeepReady,current.calendarid,current.mailid,current.id);
         
-        this.globalLogElements.push(currentComponent);
+        this.globalLogElements.push(new LogElementComponent({logElement:newLogElement,index:i,markElementForDeletion:this.markElementForDeletion}));
 
       }
       this.forceUpdate();
@@ -63,12 +78,19 @@ export class LogView extends React.Component<LogViewProps>{
 
   }
 
+  testChangeDescription(){
+    this.globalLogElements[0].props.logElement.setDescription("Heej!!")
+    //this.globalLogElements[0].updateLogElementState();
+    this.forceUpdate();
+  }
+
   render(){
     return(
       <div id="outerView" className="Outer-view">
-        <p style={{height:"4vh"}}>(DATE PICKER)</p>
+        <p style={{height:"4vh"}}>(DATE PICKER)<div style={{backgroundColor:"purple",height:"100%",width:"4vh"}} onClick={()=>{this.insertEmptyElement()}}>+</div></p>
         <div className="Field-identifier">
-          <p className="Identifier-generic" style={{width:"29%",borderRightWidth:"0.1vh"}}>Description</p>
+          <p className="Identifier-generic" style={{width:"4%",borderRightWidth:"0.1vh"}}>SAVE</p>
+          <p className="Identifier-generic" style={{width:"26%",borderRightWidth:"0.1vh"}}>Description</p>
           <p className="Identifier-generic" style={{width:"6%",borderRightWidth:"0.1vh"}}>Start time</p>
           <p className="Identifier-generic" style={{width:"10%",borderRightWidth:"0.1vh"}}>Type</p>
           <p className="Identifier-generic" style={{width:"3.5%",borderRightWidth:"0.1vh"}}>Dur.</p>
@@ -79,10 +101,13 @@ export class LogView extends React.Component<LogViewProps>{
           <p className="Identifier-generic" style={{width:"5%",borderRightWidth:"0.1vh"}}>Internal</p>
           <p className="Identifier-generic" style={{width:"5%",borderRightWidth:"0.1vh",marginLeft:"-0.2vw"}}>Unpaid</p>
           <p className="Identifier-generic" style={{width:"5%",borderRightWidth:"0.1vh",marginLeft:"-0.2vw"}}>Ready</p>
+          <p className="Identifier-generic" style={{width:"4%",borderRightWidth:"0.1vh"}}>DELETE</p>
         </div>
         <div ref={this.elementViewRef} id="elementView" className="Element-view">
           {
-            this.globalLogElements
+            this.globalLogElements.map(log =>{
+              return log.render();
+            })
           }
         </div>
         <button className="Commit-button" onClick={async()=>{this.fetchLogElements()}}>Submit changes to database</button>

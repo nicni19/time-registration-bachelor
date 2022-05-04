@@ -36,24 +36,35 @@ export class LogElementComponent extends React.Component<LogElementComponentProp
     this.unpaidRef = React.createRef()
     this.bookKeepReadyRef = React.createRef()
     this.updateLogElementState = this.updateLogElementState.bind(this)
-    this.forceUpdate()
+    //this.forceUpdate()
   }
 
-  updateLogElementState(){
-    this.props.logElement.setDescription(this.descriptionRef.current.innerHTML)
+
+  componentDidMount(){
+    this.setState({checkBoxValue:true})
     
   }
 
+  //TODO: Check on indhold fra div'erne er null, undefined, whatever. Måske relevant på nogle af dem?
+  updateLogElementState(){
+    if(this.descriptionRef.innerHTML != this.props.logElement.getDescription()){this.props.logElement.setDescription("" + this.descriptionRef.current.innerHTML)}
+    if(this.durationRef.innerHTML != this.props.logElement.getDuration() && typeof this.durationRef.innerHTML == 'number'){this.props.logElement.setDuration(this.durationRef.innerHTML)}
+  }
+
   convertStartTimestamp():string{
-    let date = new Date(this.props.logElement.getStartTimestamp() * 1000)
-    let finalDate:string = date.getDay() + " | " + date.getMonth() + " | " + date.getFullYear()
-    return finalDate;
+    if(this.props.logElement.getStartTimestamp() != 0){
+      let date = new Date(this.props.logElement.getStartTimestamp() * 1000)
+      let finalDate:string = date.getDay() + " | " + date.getMonth() + " | " + date.getFullYear()
+      return finalDate;
+    }else{
+      return "";
+    }
   }
 
   render(){
     return(
           <div id="elementShell" className="Element-shell">
-            <div className="Indicator" onClick={()=>{this.updateLogElementState()}} style={{width:"1%",height:"100%",backgroundColor:"green"}}></div>
+            <div className="Indicator" style={{width:"1%",height:"100%",backgroundColor:"green"}}></div>
             <div ref={this.descriptionRef} className="Log-element-generic" contentEditable="true" style={{width:"28%"}}>{this.props.logElement.getDescription()}</div>
             <div ref={this.startTimestampRef} className="Log-element-generic" style={{width:"6%"}}>{this.convertStartTimestamp()}</div>
             <div ref={this.typeRef} className="Log-element-generic" style={{width:"10%"}}>{this.props.logElement.getType()}</div>
@@ -62,9 +73,9 @@ export class LogElementComponent extends React.Component<LogElementComponentProp
             <div ref={this.ritNumRef} className="Log-element-generic" contentEditable="true" style={{width:"5%"}}>{this.props.logElement.getRitNum()}</div>
             <div ref={this.caseNumRef} className="Log-element-generic" contentEditable="true" style={{width:"5%"}}>{this.props.logElement.getCaseNum()}</div>
             <div ref={this.caseTaskNumRef} className="Log-element-generic" contentEditable="true" style={{width:"5%"}}>{this.props.logElement.getCaseTaskNum()}</div>
-            <input ref={this.internalRef} className="Log-element-checkbox" type="checkbox" defaultChecked={this.props.logElement.getInternalTask()}></input>
-            <input ref={this.unpaidRef} className="Log-element-checkbox" type="checkbox" defaultChecked={this.props.logElement.getUnpaid()}></input>
-            <input ref={this.bookKeepReadyRef} className="Log-element-checkbox" type="checkbox" defaultChecked={this.props.logElement.getBookKeepReady()}></input>
+            <input ref={this.internalRef} className="Log-element-checkbox" type="checkbox" checked={this.props.logElement.getInternalTask()} onClick={()=>{this.props.logElement.setInternalTask(!this.props.logElement.getInternalTask()); this.forceUpdate()}}></input>
+            <input ref={this.unpaidRef} className="Log-element-checkbox" type="checkbox" checked={this.props.logElement.getUnpaid()} onClick={()=>{this.props.logElement.setUnpaid(!this.props.logElement.getUnpaid()); this.forceUpdate()}}></input>
+            <input ref={this.bookKeepReadyRef} className="Log-element-checkbox" type="checkbox" checked={this.props.logElement.getBookKeepReady()} onClick={()=>{this.props.logElement.setBookKeepReady(!this.props.logElement.getBookKeepReady()); this.forceUpdate()}}></input>
             <button className="Delete-button" onClick={()=>{this.props.markElementForDeletion(this.props.index)}}>|_|</button>
           </div>
     )
