@@ -33,6 +33,8 @@ export class DBConnection {
       if (err) {
         console.log(err.message);
       } else {
+        console.log("Restarting");
+        
         return this.connection.connectToDB();
       }
     });

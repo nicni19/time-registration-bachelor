@@ -16,7 +16,7 @@ export class AzureSQLDatabaseHandler implements IDatabaseHandler{
   connectionPool;
 
   constructor(){
-    this.connectionPool = new ConnectionPool(this.config, 3,10);
+    this.connectionPool = new ConnectionPool(this.config, 3,15);
     this.connectionPool.initConnections();
   }
 
