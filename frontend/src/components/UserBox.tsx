@@ -6,7 +6,7 @@ import './stylesheets/UserBox.css'
 type UserBoxProps = {
     isLoggedIn:boolean;
     clientHandler:ClientHandler;
-    logout:any;
+    logout:Function;
 }
 
 class UserBox extends React.Component<UserBoxProps>{

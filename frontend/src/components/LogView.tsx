@@ -18,6 +18,27 @@ export class LogView extends React.Component<LogViewProps>{
 
     this.elementViewRef = React.createRef();
     this.globalLogElements = []
+
+    this.markElementForDeletion = this.markElementForDeletion.bind(this);
+  }
+
+  rearrangeElementsArray(){
+    //Tag globalElements, smid dem én efter én i et nyt array hvor deres prop.index opdateres til deres nye plads. Lad globalElements == temp aray
+    let newArray:any[] = [];
+    for(let i = 0; i < this.globalLogElements.length;i++){
+      if(this.globalLogElements[i] != undefined){
+        let current:LogElementComponent = this.globalLogElements[i];        
+        
+        newArray.push(<LogElementComponent logElement={current.props.logElement} index={i} markElementForDeletion={this.markElementForDeletion}></LogElementComponent>)
+      }
+    }
+    this.globalLogElements = newArray;
+  }
+
+  markElementForDeletion(index:number){
+    this.globalLogElements[index] = undefined;
+    this.rearrangeElementsArray();
+    this.forceUpdate()
   }
 
   async fetchLogElements(){
@@ -32,10 +53,11 @@ export class LogView extends React.Component<LogViewProps>{
 
         let current = elements.logElements[i];
         let logElement = new LogElement(current.userID,current.type,current.description,current.startTimestamp,current.duration,current.internalTask,current.unpaid,current.ritNum,current.caseNum,current.caseTaskNum,current.customer,current.edited,current.bookKeepReady,current.calendarid,current.mailid,current.id);
+        let currentComponent = <LogElementComponent logElement={logElement} index={i} markElementForDeletion={this.markElementForDeletion}></LogElementComponent>
+        
+        this.globalLogElements.push(currentComponent);
 
-        this.globalLogElements.push(<LogElementComponent logElement={logElement}></LogElementComponent>);
       }
-
       this.forceUpdate();
     }
 
