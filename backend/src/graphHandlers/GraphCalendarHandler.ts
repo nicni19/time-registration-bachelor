@@ -24,8 +24,6 @@ export class GraphCalendarHandler implements IGraphHandler {
         databaseHandler.insertFromGraph(logElements).then(
             databaseHandler.setLastGraphCalendarLookup(userID, new Date(Date.now()).toISOString())
         );
-        
-        console.log(logElements);
         return logElements;
     }
 
