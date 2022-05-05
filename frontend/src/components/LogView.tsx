@@ -12,6 +12,7 @@ export class LogView extends React.Component<LogViewProps>{
 
   elementViewRef:any;
   startPickerRef:any;
+  endPickerRef:any;
 
   globalLogElements:LogElementComponent[];
 
@@ -20,6 +21,7 @@ export class LogView extends React.Component<LogViewProps>{
 
     this.elementViewRef = React.createRef();
     this.startPickerRef = React.createRef();
+    this.endPickerRef = React.createRef();
 
     this.globalLogElements = []
     
@@ -28,8 +30,12 @@ export class LogView extends React.Component<LogViewProps>{
   }
 
   componentDidMount(){
-    let today = new Date()
+    let today = new Date();
+    let days = 5, endDate = days * 86400000;
+    let fiveDaysLater = new Date((Date.now() + endDate));
+    
     this.startPickerRef.current.defaultValue = today.toISOString().split('T')[0];
+    this.endPickerRef.current.defaultValue = fiveDaysLater.toISOString().split('T')[0];
     this.fetchLogElements();
   }
 
@@ -102,7 +108,7 @@ export class LogView extends React.Component<LogViewProps>{
         <div style={{height:"6vh",marginBottom:"1vh",backgroundColor:"blue",width:"100%",display:"flex"}}>
           <div style={{display:"flex",height:"100%",justifyContent:"flex-start",flexDirection:"row"}}> 
             <input ref={this.startPickerRef} type="date" style={{height:"auto"}}></input>
-            <input type="date" style={{height:"auto"}}></input>
+            <input ref={this.endPickerRef} type="date" style={{height:"auto"}}></input>
             <div style={{width:"4vw",height:"90%",backgroundColor:"purple",marginRight:"0.5vw",marginLeft:"50vw"}} onClick={()=>{this.insertEmptyElement()}}>NEW</div>
             <div style={{width:"4vw",height:"90%",backgroundColor:"purple",marginRight:"0.5vw"}}>REFRESH</div>
           </div>
