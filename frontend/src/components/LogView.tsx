@@ -11,16 +11,26 @@ type LogViewProps = {
 export class LogView extends React.Component<LogViewProps>{
 
   elementViewRef:any;
+  startPickerRef:any;
+
   globalLogElements:LogElementComponent[];
 
   constructor(props:any){
     super(props)
 
     this.elementViewRef = React.createRef();
+    this.startPickerRef = React.createRef();
+
     this.globalLogElements = []
     
     this.markElementForDeletion = this.markElementForDeletion.bind(this);
     this.updateSpecificComponent = this.updateSpecificComponent.bind(this);
+  }
+
+  componentDidMount(){
+    let today = new Date()
+    this.startPickerRef.current.defaultValue = today.toISOString().split('T')[0];
+    this.fetchLogElements();
   }
 
   rearrangeElementsArray(){
@@ -89,7 +99,14 @@ export class LogView extends React.Component<LogViewProps>{
   render(){
     return(
       <div id="outerView" className="Outer-view">
-        <p style={{height:"4vh"}}>(DATE PICKER)<div style={{backgroundColor:"purple",height:"100%",width:"4vh"}} onClick={()=>{this.insertEmptyElement()}}>+</div></p>
+        <div style={{height:"6vh",marginBottom:"1vh",backgroundColor:"blue",width:"100%",display:"flex"}}>
+          <div style={{display:"flex",height:"100%",justifyContent:"flex-start",flexDirection:"row"}}> 
+            <input ref={this.startPickerRef} type="date" style={{height:"auto"}}></input>
+            <input type="date" style={{height:"auto"}}></input>
+            <div style={{width:"4vw",height:"90%",backgroundColor:"purple",marginRight:"0.5vw",marginLeft:"50vw"}} onClick={()=>{this.insertEmptyElement()}}>NEW</div>
+            <div style={{width:"4vw",height:"90%",backgroundColor:"purple",marginRight:"0.5vw"}}>REFRESH</div>
+          </div>
+        </div>
         <div className="Field-identifier">
           <p className="Identifier-generic" style={{width:"4%",borderRightWidth:"0.1vh"}}>SAVE</p>
           <p className="Identifier-generic" style={{width:"26%",borderRightWidth:"0.1vh"}}>Description</p>
