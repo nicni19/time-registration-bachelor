@@ -47,8 +47,6 @@ export class Core{
     async graphUpdate(userID: string, authToken: string): Promise<boolean> {
         //Todo: Get preferences from database
         let prefArray = ['mail','calendar'];
-
-        console.log(new Date(Date.now()).toISOString());
         
         for (let i: number = 0; i < prefArray.length; i++) {
             try {
