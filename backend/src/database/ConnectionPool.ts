@@ -7,7 +7,6 @@ export class ConnectionPool {
     minCon: number;
     maxCon: number;
     config;
-    tal = 0;
 
     constructor(config, minCon: number, maxCon: number){
       this.config = config;
@@ -33,7 +32,7 @@ export class ConnectionPool {
 
     async deleteConnections() {
 
-      console.log("Connections before: ",this.connections.length, this.tal);
+      console.log("Connections before: ",this.connections.length);
       
       let conAmount = this.connections.length;
       if (conAmount > this.minCon) {
@@ -43,8 +42,6 @@ export class ConnectionPool {
         }
       }
       console.log("Connections after: ",this.connections.length);
-
-      this.tal++;
     }
 
     pingDB() {
@@ -68,17 +65,12 @@ export class ConnectionPool {
     }
 
     async getFreeConnection(): Promise<DBConnection> {
-      console.log(this.connections.length);
 
       let connection = null;
 
       for (let i: number = 0; i < this.connections.length; i++) {
-        console.log(this.connections[i].getConnection().state);
-        
-        //this.connections[i] = await this.connections[i].restartConnectionIfClosed();
 
         if (!this.connections[i].getIsLocked() && this.connections[i].getConnection().state.name == "LoggedIn") {
-          console.log("im not locked");
           connection = this.connections[i];
           connection.setIsLocked(true);
           break;
@@ -86,7 +78,6 @@ export class ConnectionPool {
       }
 
       if (connection != null) { 
-        //con = await con.restartConnectionIfClosed();
         return connection;
       } else if (this.connections.length < this.maxCon) {
         let connection: DBConnection = new DBConnection(this.config);

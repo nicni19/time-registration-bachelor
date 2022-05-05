@@ -54,7 +54,6 @@ export class MicrosoftAuthHandler implements IAuthHandler{
         let privileges:Map<any,any>;
         return await new Promise(async (resolve,reject)=>{
             privileges = await this.databaseHandler.getPrivileges(userID);
-            console.log("PRIVILEGES: ",await privileges)
             resolve(privileges)
         }).then(()=>{
             if(privileges.has(Actions[action])){

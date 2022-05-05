@@ -66,8 +66,6 @@ export class AzureSQLDatabaseHandler implements IDatabaseHandler{
         });
 
         request.on('requestCompleted',()=>{
-          console.log("Completed")
-          console.log(userExist);
           resolve(userExist);
         })
 
@@ -129,8 +127,6 @@ export class AzureSQLDatabaseHandler implements IDatabaseHandler{
         });
 
         request.on('requestCompleted',()=>{
-          console.log("Completed")
-          console.log(logElements)
           resolve(logElements);
         })
         
