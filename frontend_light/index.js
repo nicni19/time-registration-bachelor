@@ -16,7 +16,7 @@ function newTest(){
             userID: '6fc4dcd488b119e7',
             type: undefined,
             customer: null,
-            description: 'This iss the descrsiption of the element, and it is veeeeeeeeeeeeeeeeeeeeeeeeeeeeeery long and annoying to style lolz',
+            description: 'This is the descrsiption of the element',
             startTimestamp: '1648797418621',
             duration: '22',
             internalTask: true,

@@ -1,0 +1,9 @@
+.sign-out-button {
+  width: 50%;
+  background-color: rgb(156, 82, 82);
+  border-color: transparent;
+  color: white;
+  font-family: 'Roboto', sans-serif;
+  font-size: large;
+  margin-top: 1vh;
+}

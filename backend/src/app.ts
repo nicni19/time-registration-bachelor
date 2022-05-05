@@ -124,7 +124,7 @@ app.get('/getLogElements', async (req, res) => {
     
     res.status(200);
     res.send({
-      'logElements': logElements
+      'logElements':logElements
     });
   }else{
     res.status(401).send("User: " + requestJSON.userid +" does not have privilege to perform this action");

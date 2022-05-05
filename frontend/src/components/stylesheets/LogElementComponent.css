@@ -1,0 +1,40 @@
+.Element-shell {
+  width: 98%;
+  min-height: 5vh;
+  max-height: 5vh;
+  background-color: #d6d6d6;
+  max-height: 500px;
+  margin-top: 0.3vh;
+  padding: 0.1vh;
+  display: flex;
+  align-items: center;
+}
+
+.Log-element-generic {
+  font-size: 1.5vh;
+  background-color: white;
+  height: 90%;
+  align-self: flex-start;
+  margin-top: 0.3vh;
+  margin-right: 0.3vw;
+  overflow-x: hidden;
+  overflow-y: hidden;
+}
+
+.Log-element-checkbox {
+  background-color: white;
+  height: 90%;
+  margin-top: 0.3vh;
+  margin-left: 2vw;
+  transform: scale(2);
+}
+
+.Delete-button {
+  width: 3%;
+  height:90%;
+  border-color: transparent;
+  margin-left: 2vw;
+  background-color: rgb(253, 135, 135);
+  color: black;
+  
+}
