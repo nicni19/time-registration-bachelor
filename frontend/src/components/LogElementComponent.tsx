@@ -5,7 +5,8 @@ import './stylesheets/LogElementComponent.css'
 type LogElementComponentProps = {
   logElement:LogElement;
   index:number;
-  markElementForDeletion:Function
+  markElementForDeletion:Function;
+  updateSpecificComponent:Function;
 }
 
 export class LogElementComponent extends React.Component<LogElementComponentProps>{
@@ -42,7 +43,12 @@ export class LogElementComponent extends React.Component<LogElementComponentProp
 
   componentDidMount(){
     this.setState({checkBoxValue:true})
-    
+  }
+
+  componentDidUpdate(prevProps:any){
+    if(prevProps.logElement != this.props.logElement){
+      this.setState({logElement:this.props.logElement})
+    }
   }
 
   //TODO: Check on indhold fra div'erne er null, undefined, whatever. Måske relevant på nogle af dem?
@@ -73,9 +79,9 @@ export class LogElementComponent extends React.Component<LogElementComponentProp
             <div ref={this.ritNumRef} className="Log-element-generic" contentEditable="true" style={{width:"5%"}}>{this.props.logElement.getRitNum()}</div>
             <div ref={this.caseNumRef} className="Log-element-generic" contentEditable="true" style={{width:"5%"}}>{this.props.logElement.getCaseNum()}</div>
             <div ref={this.caseTaskNumRef} className="Log-element-generic" contentEditable="true" style={{width:"5%"}}>{this.props.logElement.getCaseTaskNum()}</div>
-            <input ref={this.internalRef} className="Log-element-checkbox" type="checkbox" checked={this.props.logElement.getInternalTask()} onClick={()=>{this.props.logElement.setInternalTask(!this.props.logElement.getInternalTask()); this.forceUpdate()}}></input>
-            <input ref={this.unpaidRef} className="Log-element-checkbox" type="checkbox" checked={this.props.logElement.getUnpaid()} onClick={()=>{this.props.logElement.setUnpaid(!this.props.logElement.getUnpaid()); this.forceUpdate()}}></input>
-            <input ref={this.bookKeepReadyRef} className="Log-element-checkbox" type="checkbox" checked={this.props.logElement.getBookKeepReady()} onClick={()=>{this.props.logElement.setBookKeepReady(!this.props.logElement.getBookKeepReady()); this.forceUpdate()}}></input>
+            <input ref={this.internalRef} className="Log-element-checkbox" type="checkbox" checked={this.props.logElement.getInternalTask()} onChange={()=>{this.props.logElement.setInternalTask(!this.props.logElement.getInternalTask()); this.props.updateSpecificComponent(this.props.index)}}></input>
+            <input ref={this.unpaidRef} className="Log-element-checkbox" type="checkbox" checked={this.props.logElement.getUnpaid()} onChange={()=>{this.props.logElement.setUnpaid(!this.props.logElement.getUnpaid()); this.forceUpdate(); this.props.updateSpecificComponent(this.props.index)}}></input>
+            <input ref={this.bookKeepReadyRef} className="Log-element-checkbox" type="checkbox" checked={this.props.logElement.getBookKeepReady()} onChange={()=>{this.props.logElement.setBookKeepReady(!this.props.logElement.getBookKeepReady()); this.props.updateSpecificComponent(this.props.index)}}></input>
             <button className="Delete-button" onClick={()=>{this.props.markElementForDeletion(this.props.index)}}>|_|</button>
           </div>
     )

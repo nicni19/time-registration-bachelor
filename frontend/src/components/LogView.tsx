@@ -18,12 +18,9 @@ export class LogView extends React.Component<LogViewProps>{
 
     this.elementViewRef = React.createRef();
     this.globalLogElements = []
-
-    //let testElement = new LogElement("123456",0,"Test",0,800,true,true,0,"rit1",0,"Jondog",false,false,"","");
-    //this.elementTest = new LogElementComponent({logElement:testElement,index:0,markElementForDeletion:this.markElementForDeletion})
-    //this.globalLogElements.push(this.elementTest);
     
     this.markElementForDeletion = this.markElementForDeletion.bind(this);
+    this.updateSpecificComponent = this.updateSpecificComponent.bind(this);
   }
 
   rearrangeElementsArray(){
@@ -33,7 +30,7 @@ export class LogView extends React.Component<LogViewProps>{
       if(this.globalLogElements[i] != undefined){
         let current:LogElementComponent = this.globalLogElements[i];      
         
-        newArray.push(new LogElementComponent({logElement:current.props.logElement,index:i,markElementForDeletion:this.markElementForDeletion}))
+        newArray.push(new LogElementComponent({logElement:current.props.logElement,index:i,markElementForDeletion:this.markElementForDeletion,updateSpecificComponent:this.updateSpecificComponent}))
       }
     }
     this.globalLogElements = newArray;
@@ -53,7 +50,7 @@ export class LogView extends React.Component<LogViewProps>{
 
   insertEmptyElement(){
     let newLogElement = new LogElement("",0,"",0,0,false,false,0,"",0,"",false,false,"","");
-    let newLogElementComponent = new LogElementComponent({logElement:newLogElement,index:0,markElementForDeletion:this.markElementForDeletion});
+    let newLogElementComponent = new LogElementComponent({logElement:newLogElement,index:0,markElementForDeletion:this.markElementForDeletion,updateSpecificComponent:this.updateSpecificComponent});
     this.globalLogElements.unshift(newLogElementComponent)
     this.rearrangeElementsArray()
     this.forceUpdate()
@@ -70,12 +67,17 @@ export class LogView extends React.Component<LogViewProps>{
         let current = elements.logElements[i];
         let newLogElement = new LogElement(current.userID,current.type,current.description,current.startTimestamp,current.duration,current.internalTask,current.unpaid,current.ritNum,current.caseNum,current.caseTaskNum,current.customer,current.edited,current.bookKeepReady,current.calendarid,current.mailid,current.id);
         
-        this.globalLogElements.push(new LogElementComponent({logElement:newLogElement,index:i,markElementForDeletion:this.markElementForDeletion}));
+        this.globalLogElements.push(new LogElementComponent({logElement:newLogElement,index:i,markElementForDeletion:this.markElementForDeletion,updateSpecificComponent:this.updateSpecificComponent}));
 
       }
       this.forceUpdate();
     }
 
+  }
+
+  updateSpecificComponent(currentIndex:number){
+    this.globalLogElements[currentIndex].forceUpdate();
+    this.forceUpdate()
   }
 
   testChangeDescription(){
