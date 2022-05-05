@@ -30,7 +30,8 @@ export class LogView extends React.Component<LogViewProps>{
   componentDidMount(){
     let today = new Date()
     this.startPickerRef.current.defaultValue = today.toISOString().split('T')[0];
-    this.fetchLogElements();
+    //this.fetchLogElements();
+    console.log("Mount")
   }
 
   rearrangeElementsArray(){
@@ -70,7 +71,7 @@ export class LogView extends React.Component<LogViewProps>{
     this.globalLogElements = []
     this.forceUpdate();
 
-    let elements:any = await this.props.backendAPI.getLogElements();
+    let elements:any = await this.props.backendAPI.getLogElements('2019-05-01','2022-05-05');
     if(elements){
       for(let i = 0; i < elements.logElements.length; i++){
 
