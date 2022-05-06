@@ -27,7 +27,7 @@ class App extends React.Component<{},{error:any,isAuthenticated:boolean,user:any
     this.state = {
       error:null,
       //CHANGE TO FALSE ON PRODUCTION!
-      isAuthenticated:true,
+      isAuthenticated:false,
       user:{}
     };
     this.logout = this.logout.bind(this)
