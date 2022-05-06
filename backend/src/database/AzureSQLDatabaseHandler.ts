@@ -119,8 +119,11 @@ export class AzureSQLDatabaseHandler implements IDatabaseHandler{
         this.connectionPool.executeRequest(request);
         
         request.on("row", columns => {
+          let startTimestamp:number = parseInt(columns['start_timestamp'].value,10);
+          let duration:number = parseInt(columns['duration'].value,10);
+          
           let logElement: LogElement = new LogElement(columns['user_id'].value,Type[columns['element_type'].value as keyof typeof Type],
-          columns['element_description'].value,columns['start_timestamp'].value,columns['duration'].value,columns['internal_task'].value,
+          columns['element_description'].value,startTimestamp,duration,columns['internal_task'].value,
           columns['unpaid'].value,columns['rit_num'].value,columns['case_num'].value,columns['case_task_num'].value,columns['customer'].value,
           columns['edited'].value,columns['book_keep_ready'].value,columns['calendar_id'].value,columns['mail_id'].value,columns['id'].value)
           logElements.push(logElement);
@@ -140,6 +143,8 @@ export class AzureSQLDatabaseHandler implements IDatabaseHandler{
     let array = [];
     console.log("log");
     let success: boolean;
+    console.log(logArray);
+    
 
     return await new Promise((resolve,reject) => {
       for (let i: number = 0; i < logArray.length; i++) {
@@ -310,6 +315,8 @@ export class AzureSQLDatabaseHandler implements IDatabaseHandler{
   async insertFromGraph(logArray: LogElement[]): Promise<any> {
     let array = [];
     console.log("log");
+    console.log(logArray);
+    
 
     return await new Promise((resolve,reject) => {
       for (let i: number = 0; i < logArray.length; i++) {

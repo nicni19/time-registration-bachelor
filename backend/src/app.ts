@@ -94,6 +94,8 @@ app.get('/getLogElements/:startDate/:endDate', async (req, res) => {
     await core.graphUpdate(requestJSON.userid as string, token).then( async () => {
       logElements = await core.getLogElements(queryMap);
     });
+
+    console.log(logElements);
     
     res.status(200);
     res.send({
@@ -133,6 +135,7 @@ app.get('/getLogElements', async (req, res) => {
 
 app.post('/insertLogElements', (req, res) => {
   console.log("Inserting...");
+  console.log(req.body.logElements);
   
   
   if (core.insertLogElements(req.body.logElements)) {

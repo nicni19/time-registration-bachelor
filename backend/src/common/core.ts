@@ -32,7 +32,7 @@ export class Core{
     }
 
 
-    insertLogElements(json): Promise<boolean>{
+    async insertLogElements(json): Promise<boolean>{
         return this.databaseHandler.insertLogElement(this.convertJSONToLogElements(json));
     }
 
@@ -72,13 +72,15 @@ export class Core{
     convertJSONToLogElements(json) {
         let log_elements: LogElement[] = [];
 
-        for (let i: number = 0; i < json.log_elements; i++) {
-            log_elements.push(new LogElement(json.log_elements[i].userID, json.log_elements[i].type, json.log_elements[i].description, 
-                json.log_elements[i].startTimestamp, json.log_elements[i].duration, json.log_elements[i].internalTask, json.log_elements[i].unpaid,
-                json.log_elements[i].ritNum, json.log_elements[i].caseNum, json.log_elements[i].caseTaskNum, json.log_elements[i].customer,
-                json.log_elements[i].edited, json.log_elements[i].bookKeepReady, json.log_elements[i].calendarid, json.log_elements[i].mailid,
-                json.log_elements[i].id))
+        for (let i: number = 0; i < json.length; i++) {
+            log_elements.push(new LogElement(json[i].userID, json[i].type, json[i].description, 
+                json[i].startTimestamp, json[i].duration, json[i].internalTask, json[i].unpaid,
+                json[i].ritNum, json[i].caseNum, json[i].caseTaskNum, json[i].customer,
+                json[i].edited, json[i].bookKeepReady, json[i].calendarid, json[i].mailid,
+                json[i].id))
         }
+        console.log(log_elements);
+        
 
         return log_elements;
     }
