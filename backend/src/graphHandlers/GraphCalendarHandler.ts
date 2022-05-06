@@ -46,6 +46,8 @@ export class GraphCalendarHandler implements IGraphHandler {
 
                 let startTimeString = ((body.value[i].start.dateTime).replace(/-/g,'/'));
                 let startTime = new Date(startTimeString.replace('T', ' ')).getTime();
+                console.log(startTimeString)
+                console.log(startTime)
                 let endTime = new Date((body.value[i].end.dateTime).replace('T', ' ')).getTime();
                 let duration: number = endTime - startTime;
                 let description = body.value[i].subject + ': ' + event;

@@ -36,7 +36,6 @@ export class LogView extends React.Component<LogViewProps>{
     
     this.startPickerRef.current.defaultValue = today.toISOString().split('T')[0];
     this.endPickerRef.current.defaultValue = fiveDaysLater.toISOString().split('T')[0];
-    this.fetchLogElements();
   }
 
   rearrangeElementsArray(){
@@ -67,6 +66,7 @@ export class LogView extends React.Component<LogViewProps>{
   insertEmptyElement(){
     let newLogElement = new LogElement("",0,"",0,0,false,false,0,"",0,"",false,false,"","");
     let newLogElementComponent = new LogElementComponent({logElement:newLogElement,index:0,markElementForDeletion:this.markElementForDeletion,updateSpecificComponent:this.updateSpecificComponent});
+    this.updateAllComponents()
     this.globalLogElements.unshift(newLogElementComponent)
     this.rearrangeElementsArray()
     this.forceUpdate()
@@ -76,7 +76,7 @@ export class LogView extends React.Component<LogViewProps>{
     this.globalLogElements = []
     this.forceUpdate();
 
-    let elements:any = await this.props.backendAPI.getLogElements();
+    let elements:any = await this.props.backendAPI.getLogElements('2020-01-01','2022-12-12');
     if(elements){
       for(let i = 0; i < elements.logElements.length; i++){
 
@@ -101,8 +101,15 @@ export class LogView extends React.Component<LogViewProps>{
   }
 
   updateSpecificComponent(currentIndex:number){
+    this.globalLogElements[currentIndex].updateLogElementState();
     this.globalLogElements[currentIndex].forceUpdate();
     this.forceUpdate()
+  }
+
+  updateAllComponents(){
+    this.globalLogElements.map(element => {
+      element.updateLogElementState()
+    })
   }
 
   testChangeDescription(){

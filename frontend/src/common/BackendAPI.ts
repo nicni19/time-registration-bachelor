@@ -10,12 +10,12 @@ export class BackendAPI{
     this.clientHandler = clientHandler;
   }
 
-  async getLogElements():Promise<JSON>{
+  async getLogElements(startStamp:string,endStamp:string):Promise<JSON>{
     let token = await this.clientHandler.getSilentAccessToken();
     let userId = this.clientHandler.getUserId();
 
     return new Promise<JSON>(async (resolve,reject)=>{
-      await fetch('http://localhost:3000/getLogElements',{
+      await fetch('http://localhost:3000/getLogElements/' + startStamp + 'T00:00:00.0000000' + '/' + endStamp + 'T00:00:00.0000000',{
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -25,6 +25,7 @@ export class BackendAPI{
         //body: JSON.stringify(data),
         mode: 'cors'
       }).then(response => response.json()).then(data=>{
+        console.log(data)
         resolve(data)
       }).catch((err)=>{
         alert('Could not fetch elements from backend \n Error: ' + err)

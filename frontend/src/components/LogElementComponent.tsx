@@ -53,15 +53,33 @@ export class LogElementComponent extends React.Component<LogElementComponentProp
 
   //TODO: Check on indhold fra div'erne er null, undefined, whatever. Måske relevant på nogle af dem?
   updateLogElementState(){
-    if(this.descriptionRef.innerHTML != this.props.logElement.getDescription()){this.props.logElement.setDescription("" + this.descriptionRef.current.innerHTML)}
-    if(this.durationRef.innerHTML != this.props.logElement.getDuration() && typeof this.durationRef.innerHTML == 'number'){this.props.logElement.setDuration(this.durationRef.innerHTML)}
+    if(this.descriptionRef.current.innerHTML != this.props.logElement.getDescription()){this.props.logElement.setDescription("" + this.descriptionRef.current.innerHTML)}
+    if(this.durationRef.current.innerHTML != this.props.logElement.getDuration() && typeof this.durationRef.innerHTML == 'number'){this.props.logElement.setDuration(this.durationRef.innerHTML)}
+    if(this.startTimestampRef.current.value != 0){
+      let tempDate = new Date(this.startTimestampRef.current.value)
+      this.props.logElement.setStartTimestamp(tempDate.getTime())
+    }
+    if(this.customerRef.current.innerHTML != this.props.logElement.getCustomer()){this.props.logElement.setCustomer(this.customerRef.current.innerHTML)}
+    if(this.durationRef.current.innerHTML != 0){this.props.logElement.setDuration(Math.abs(this.durationRef.current.innerHTML) * 1000 * 60 * 60)}
+    if(this.customerRef.current.innerHTML != this.props.logElement.getCustomer()){this.props.logElement.setDescription(this.customerRef.innerHTML)}
+    this.props.logElement.setRitNum(this.ritNumRef.current.innerHTML)
+    this.props.logElement.setCaseNum(this.caseNumRef.current.innerHTML)
+    this.props.logElement.setCaseTaskNum(this.caseTaskNumRef.current.innerHTML)
+    this.props.logElement.setInternalTask(this.internalRef.current.checked);
+    this.props.logElement.setUnpaid(this.unpaidRef.current.checked);
+    this.props.logElement.setBookKeepReady(this.bookKeepReadyRef.current.checked);
+  }
+
+  printLogElement(){
+    console.log(this.props.logElement)
   }
 
   convertStartTimestamp():string{
     if(this.props.logElement.getStartTimestamp() != 0){
-      let date = new Date(this.props.logElement.getStartTimestamp() * 1000)
+      let date = new Date(this.props.logElement.getStartTimestamp() * 1)
+      console.log(this.props.logElement.getStartTimestamp())
       let finalDate:string = date.getDay() + " | " + date.getMonth() + " | " + date.getFullYear()
-      return finalDate;
+      return date.toDateString();
     }else{
       return "";
     }
@@ -70,9 +88,10 @@ export class LogElementComponent extends React.Component<LogElementComponentProp
   render(){
     return(
           <div id="elementShell" className="Element-shell">
-            <div className="Indicator" style={{width:"1%",height:"100%",backgroundColor:"green"}}></div>
-            <div ref={this.descriptionRef} className="Log-element-generic" contentEditable="true" style={{width:"28%"}}>{this.props.logElement.getDescription()}</div>
-            <div ref={this.startTimestampRef} className="Log-element-generic" style={{width:"6%"}}>{this.convertStartTimestamp()}</div>
+            <div style={{width:"1%", backgroundColor:"green",height:"100%"}} onClick={()=>{this.updateLogElementState()}}></div>
+            <div style={{width:"1%", backgroundColor:"red",height:"100%"}} onClick={()=>{this.printLogElement()}}></div>
+            <div ref={this.descriptionRef} className="Log-element-generic" contentEditable="true" style={{width:"24%",overflowY:"hidden"}}>{this.props.logElement.getDescription()}</div>
+            <input ref={this.startTimestampRef} type="datetime-local" className="Date-picker"></input>
             <div ref={this.typeRef} className="Log-element-generic" style={{width:"10%"}}>{this.props.logElement.getType()}</div>
             <div ref={this.durationRef} className="Log-element-generic" contentEditable="true" style={{width:"3%"}}>{this.props.logElement.getDuration()}</div>
             <div ref={this.customerRef} className="Log-element-generic" contentEditable="true" style={{width:"15%"}}>{this.props.logElement.getCustomer()}</div>
