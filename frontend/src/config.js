@@ -3,7 +3,8 @@ export const config = {
     redirectUri: 'http://localhost:3005',
     scopes:[
         'user.read',
-        'mail.read'
+        'mail.read',
+        'calendars.read'
     ],
     authority:'https://login.microsoftonline.com/consumers/'
 }
