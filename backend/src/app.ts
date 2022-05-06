@@ -132,13 +132,19 @@ app.get('/getLogElements', async (req, res) => {
 });
 
 app.post('/insertLogElements', (req, res) => {
+  console.log("Inserting...");
   
-  if (core.insertLogElements(req.body.logelements)) {
+  
+  if (core.insertLogElements(req.body.logElements)) {
     res.status(200)
-    res.send('Log elements inserted'); 
+    res.send({
+      message: 'Log elements inserted'
+    }); 
   } else {
     res.status(500);
-    res.send('An error occured. Log elements not saved!')
+    res.send({
+      message: 'An error occured. Log elements not saved!'
+    });
   }
 });
 
@@ -147,10 +153,14 @@ app.post('/deleteLogElements', async (req, res) => {
 
   if (core.deleteLogElements(req.body.ids,responseJSON.userid)) {
     res.status(200)
-    res.send('Log elements deleted'); 
+    res.send({
+      message: 'Log elements deleted'
+    }); 
   } else {
     res.status(500);
-    res.send('An error occured. Log elements not deleted!')
+    res.send({
+      message: 'An error occured. Log elements not deleted!'
+    });
   }
 });
 
