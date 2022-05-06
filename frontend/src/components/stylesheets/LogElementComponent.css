@@ -38,3 +38,10 @@
   color: black;
   
 }
+
+.Date-picker {
+  height: 75%;
+  border-color: transparent;
+  margin-top: 0.3vh;
+  margin-right: 0.3vw;
+}

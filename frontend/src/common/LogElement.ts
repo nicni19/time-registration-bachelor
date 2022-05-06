@@ -164,6 +164,10 @@ export class LogElement{
         return this.caseTaskNum;
     }
 
+    public setCaseTaskNum(caseTaskNum:number){
+        this.caseTaskNum = caseTaskNum;
+    }
+
     public getCalendarid():string {
         return this.calendarid;
     }

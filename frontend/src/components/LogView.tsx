@@ -62,6 +62,7 @@ export class LogView extends React.Component<LogViewProps>{
   insertEmptyElement(){
     let newLogElement = new LogElement("",0,"",0,0,false,false,0,"",0,"",false,false,"","");
     let newLogElementComponent = new LogElementComponent({logElement:newLogElement,index:0,markElementForDeletion:this.markElementForDeletion,updateSpecificComponent:this.updateSpecificComponent});
+    this.updateAllComponents()
     this.globalLogElements.unshift(newLogElementComponent)
     this.rearrangeElementsArray()
     this.forceUpdate()
@@ -87,8 +88,15 @@ export class LogView extends React.Component<LogViewProps>{
   }
 
   updateSpecificComponent(currentIndex:number){
+    this.globalLogElements[currentIndex].updateLogElementState();
     this.globalLogElements[currentIndex].forceUpdate();
     this.forceUpdate()
+  }
+
+  updateAllComponents(){
+    this.globalLogElements.map(element => {
+      element.updateLogElementState()
+    })
   }
 
   testChangeDescription(){
