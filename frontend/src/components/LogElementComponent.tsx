@@ -91,7 +91,7 @@ export class LogElementComponent extends React.Component<LogElementComponentProp
   returnDateString():string {
     console.log(typeof this.props.logElement.getStartTimestamp());
     
-    let dateString = new Date(this.props.logElement.getStartTimestamp()).toLocaleString();
+    let dateString = new Date(this.props.logElement.getStartTimestamp()).toISOString().split('Z')[0];
     console.log(dateString);
     
     return dateString;

@@ -82,9 +82,8 @@ export class LogView extends React.Component<LogViewProps>{
       for(let i = 0; i < elements.logElements.length; i++){
 
         let current = elements.logElements[i];
-        console.log(current.startTimeStamp);
         
-        let newLogElement = new LogElement(current.userID,current.type,current.description,current.startTimeStamp,current.duration,current.internalTask,current.unpaid,current.ritNum,current.caseNum,current.caseTaskNum,current.customer,current.edited,current.bookKeepReady,current.calendarid,current.mailid,current.id);
+        let newLogElement = new LogElement(current.userID,current.type,current.description,current.startTimestamp,current.duration,current.internalTask,current.unpaid,current.ritNum,current.caseNum,current.caseTaskNum,current.customer,current.edited,current.bookKeepReady,current.calendarid,current.mailid,current.id);
         
         this.globalLogElements.push(new LogElementComponent({logElement:newLogElement,index:i,markElementForDeletion:this.markElementForDeletion,updateSpecificComponent:this.updateSpecificComponent}));
 
