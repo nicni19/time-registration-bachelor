@@ -26,6 +26,7 @@ class App extends React.Component<{},{error:any,isAuthenticated:boolean,user:any
     super(props)
     this.state = {
       error:null,
+      //CHANGE TO FALSE ON PRODUCTION!
       isAuthenticated:true,
       user:{}
     };
@@ -101,42 +102,6 @@ class App extends React.Component<{},{error:any,isAuthenticated:boolean,user:any
       </div>
     );
   }
-
-  /*
-    render(){
-    return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.tsx</code> and save to reload.
-          </p>
-          {this.state.isAuthenticated ? 
-            <p>
-              Login successfull
-              <button onClick={()=>{this.test()}}>Show token</button>
-              <button onClick={()=>{this.backendDoesUserExsist(this.globalID)}}>testQuery</button>
-              <button onClick={async()=>{this.getGraphUserID(await this.getSilentAccessToken())}}>Returnval</button>
-              <button onClick={()=>{this.logout()}}>Log out</button>
-            </p>
-            :
-            <p>
-              <button onClick={()=>{this.login()}}>Click here to login like a true Jondog!</button>
-            </p>
-          }
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Jondogs click here
-          </a>
-        </header>
-      </div>
-    );
-  }
-  */
 }
 
 export default App;

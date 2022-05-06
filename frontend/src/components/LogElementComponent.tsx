@@ -1,6 +1,7 @@
 import React from "react";
 import { LogElement } from "../common/LogElement";
 import './stylesheets/LogElementComponent.css'
+import trashcan from '../public/trashcan.png'
 
 type LogElementComponentProps = {
   logElement:LogElement;
@@ -78,7 +79,6 @@ export class LogElementComponent extends React.Component<LogElementComponentProp
     if(this.props.logElement.getStartTimestamp() != 0){
       let date = new Date(this.props.logElement.getStartTimestamp() * 1)
       console.log(this.props.logElement.getStartTimestamp())
-      let finalDate:string = date.getDay() + " | " + date.getMonth() + " | " + date.getFullYear()
       return date.toDateString();
     }else{
       return "";
@@ -90,9 +90,9 @@ export class LogElementComponent extends React.Component<LogElementComponentProp
           <div id="elementShell" className="Element-shell">
             <div style={{width:"1%", backgroundColor:"green",height:"100%"}} onClick={()=>{this.updateLogElementState()}}></div>
             <div style={{width:"1%", backgroundColor:"red",height:"100%"}} onClick={()=>{this.printLogElement()}}></div>
-            <div ref={this.descriptionRef} className="Log-element-generic" contentEditable="true" style={{width:"24%",overflowY:"hidden"}}>{this.props.logElement.getDescription()}</div>
+            <div ref={this.descriptionRef} className="Log-element-generic" contentEditable="true" style={{width:"30%",overflowY:"hidden"}}>{this.props.logElement.getDescription()}</div>
             <input ref={this.startTimestampRef} type="datetime-local" className="Date-picker"></input>
-            <div ref={this.typeRef} className="Log-element-generic" style={{width:"10%"}}>{this.props.logElement.getType()}</div>
+            <div ref={this.typeRef} className="Log-element-generic" style={{width:"14%"}}>{this.props.logElement.getType()}</div>
             <div ref={this.durationRef} className="Log-element-generic" contentEditable="true" style={{width:"3%"}}>{this.props.logElement.getDuration()}</div>
             <div ref={this.customerRef} className="Log-element-generic" contentEditable="true" style={{width:"15%"}}>{this.props.logElement.getCustomer()}</div>
             <div ref={this.ritNumRef} className="Log-element-generic" contentEditable="true" style={{width:"5%"}}>{this.props.logElement.getRitNum()}</div>
@@ -101,7 +101,7 @@ export class LogElementComponent extends React.Component<LogElementComponentProp
             <input ref={this.internalRef} className="Log-element-checkbox" type="checkbox" checked={this.props.logElement.getInternalTask()} onChange={()=>{this.props.logElement.setInternalTask(!this.props.logElement.getInternalTask()); this.props.updateSpecificComponent(this.props.index)}}></input>
             <input ref={this.unpaidRef} className="Log-element-checkbox" type="checkbox" checked={this.props.logElement.getUnpaid()} onChange={()=>{this.props.logElement.setUnpaid(!this.props.logElement.getUnpaid()); this.forceUpdate(); this.props.updateSpecificComponent(this.props.index)}}></input>
             <input ref={this.bookKeepReadyRef} className="Log-element-checkbox" type="checkbox" checked={this.props.logElement.getBookKeepReady()} onChange={()=>{this.props.logElement.setBookKeepReady(!this.props.logElement.getBookKeepReady()); this.props.updateSpecificComponent(this.props.index)}}></input>
-            <button className="Delete-button" onClick={()=>{this.props.markElementForDeletion(this.props.index)}}>|_|</button>
+            <button className="Delete-button" onClick={()=>{this.props.markElementForDeletion(this.props.index)}}><img src={trashcan} style={{height:"100%",width:"200%",marginLeft:"-40%"}}></img></button>
           </div>
     )
   }
