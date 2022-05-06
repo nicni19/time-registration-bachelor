@@ -71,7 +71,7 @@ export class LogView extends React.Component<LogViewProps>{
     this.globalLogElements = []
     this.forceUpdate();
 
-    let elements:any = await this.props.backendAPI.getLogElements('2019-05-01','2022-05-05');
+    let elements:any = await this.props.backendAPI.getLogElements('2020-01-01','2022-12-12');
     if(elements){
       for(let i = 0; i < elements.logElements.length; i++){
 

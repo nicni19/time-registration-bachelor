@@ -24,6 +24,7 @@ export class BackendAPI{
         //body: JSON.stringify(data),
         mode: 'cors'
       }).then(response => response.json()).then(data=>{
+        console.log(data)
         resolve(data)
       }).catch((err)=>{
         alert('Could not fetch elements from backend \n Error: ' + err)

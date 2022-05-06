@@ -59,9 +59,10 @@ export class LogElementComponent extends React.Component<LogElementComponentProp
 
   convertStartTimestamp():string{
     if(this.props.logElement.getStartTimestamp() != 0){
-      let date = new Date(this.props.logElement.getStartTimestamp() * 1000)
+      let date = new Date(this.props.logElement.getStartTimestamp() * 1)
+      console.log(this.props.logElement.getStartTimestamp())
       let finalDate:string = date.getDay() + " | " + date.getMonth() + " | " + date.getFullYear()
-      return finalDate;
+      return date.toDateString();
     }else{
       return "";
     }
@@ -71,7 +72,7 @@ export class LogElementComponent extends React.Component<LogElementComponentProp
     return(
           <div id="elementShell" className="Element-shell">
             <div className="Indicator" style={{width:"1%",height:"100%",backgroundColor:"green"}}></div>
-            <div ref={this.descriptionRef} className="Log-element-generic" contentEditable="true" style={{width:"28%"}}>{this.props.logElement.getDescription()}</div>
+            <div ref={this.descriptionRef} className="Log-element-generic" contentEditable="true" style={{width:"28%",overflowY:"hidden"}}>{this.props.logElement.getDescription()}</div>
             <div ref={this.startTimestampRef} className="Log-element-generic" style={{width:"6%"}}>{this.convertStartTimestamp()}</div>
             <div ref={this.typeRef} className="Log-element-generic" style={{width:"10%"}}>{this.props.logElement.getType()}</div>
             <div ref={this.durationRef} className="Log-element-generic" contentEditable="true" style={{width:"3%"}}>{this.props.logElement.getDuration()}</div>
