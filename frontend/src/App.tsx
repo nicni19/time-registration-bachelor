@@ -35,8 +35,6 @@ class App extends React.Component<{},{error:any,isAuthenticated:boolean,user:any
     this.viewsArray = []
     this.currentView = 0;
     //Inserts the views into the view array. Buttons change between these views!
-    this.viewsArray.push(<LogView backendAPI={this.backendAPI}></LogView>)
-    this.viewsArray.push(<PreferencesView backendAPI={this.backendAPI}></PreferencesView>)
   }
   
   async login(){
@@ -44,7 +42,7 @@ class App extends React.Component<{},{error:any,isAuthenticated:boolean,user:any
     if(loginResult){
       this.setState({isAuthenticated:true}); 
       this.viewsArray.push(<LogView backendAPI={this.backendAPI} userID={this.clientHandler.getUserId()}></LogView>)
-      this.viewsArray.push(<PreferencesView></PreferencesView>)
+      this.viewsArray.push(<PreferencesView backendAPI={this.backendAPI}></PreferencesView>)
     }else{
       console.log(loginResult)
       this.setState({
