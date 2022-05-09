@@ -1,6 +1,7 @@
 import React from "react";
 import { LogElement } from "../common/LogElement";
 import './stylesheets/LogElementComponent.css'
+import trashcan from '../public/trashcan.png'
 
 type LogElementComponentProps = {
   logElement:LogElement;
@@ -80,8 +81,7 @@ export class LogElementComponent extends React.Component<LogElementComponentProp
 
   convertStartTimestamp():string{
     if(this.props.logElement.getStartTimestamp() != 0){
-      let date = new Date(this.props.logElement.getStartTimestamp() * 1)
-      let finalDate:string = date.getDay() + " | " + date.getMonth() + " | " + date.getFullYear()
+      let date = new Date(this.props.logElement.getStartTimestamp() * 1);
       return date.toDateString();
     }else{
       return "";
@@ -116,7 +116,7 @@ export class LogElementComponent extends React.Component<LogElementComponentProp
             <input ref={this.internalRef} className="Log-element-checkbox" type="checkbox" checked={this.props.logElement.getInternalTask()} onChange={()=>{this.props.logElement.setInternalTask(!this.props.logElement.getInternalTask()); this.props.updateSpecificComponent(this.props.index)}}></input>
             <input ref={this.unpaidRef} className="Log-element-checkbox" type="checkbox" checked={this.props.logElement.getUnpaid()} onChange={()=>{this.props.logElement.setUnpaid(!this.props.logElement.getUnpaid()); this.forceUpdate(); this.props.updateSpecificComponent(this.props.index)}}></input>
             <input ref={this.bookKeepReadyRef} className="Log-element-checkbox" type="checkbox" checked={this.props.logElement.getBookKeepReady()} onChange={()=>{this.props.logElement.setBookKeepReady(!this.props.logElement.getBookKeepReady()); this.props.updateSpecificComponent(this.props.index)}}></input>
-            <button className="Delete-button" onClick={()=>{this.props.markElementForDeletion(this.props.index)}}>|_|</button>
+            <button className="Delete-button" onClick={()=>{this.props.markElementForDeletion(this.props.index)}}><img src={trashcan} style={{height:"100%",width:"200%",marginLeft:"-40%"}}></img></button>
           </div>
     )
   }

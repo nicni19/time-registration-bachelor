@@ -14,6 +14,8 @@ export class BackendAPI{
     let token = await this.clientHandler.getSilentAccessToken();
     let userId = this.clientHandler.getUserId();
 
+    console.log(startStamp)
+
     return new Promise<JSON>(async (resolve,reject)=>{
       await fetch('http://localhost:3000/getLogElements/' + startStamp + 'T00:00:00.0000000' + '/' + endStamp + 'T00:00:00.0000000',{
         method: 'GET',
