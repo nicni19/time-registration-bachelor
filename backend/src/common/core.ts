@@ -96,6 +96,7 @@ export class Core{
             }
         }
         let logMap = new Map();
+        
         logMap.set('Old', logElements);
         logMap.set('New', newLogElements);
 

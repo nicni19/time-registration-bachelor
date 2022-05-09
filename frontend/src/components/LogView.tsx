@@ -65,10 +65,10 @@ export class LogView extends React.Component<LogViewProps>{
   }
 
   insertEmptyElement(){
-    let newLogElement = new LogElement(this.props.userID,0,"",0,0,false,false,0,"",0,"",false,false,"","");
+    let newLogElement = new LogElement(this.props.userID,0,"",Date.now(),0,false,false,0,"",0,"",false,false,"","");
     let newLogElementComponent = new LogElementComponent({logElement:newLogElement,index:0,markElementForDeletion:this.markElementForDeletion,updateSpecificComponent:this.updateSpecificComponent});
     this.updateAllComponents()
-    this.globalLogElements.unshift(newLogElementComponent)
+    this.globalLogElements.push(newLogElementComponent)
     this.rearrangeElementsArray()
     this.forceUpdate()
   }
@@ -96,9 +96,12 @@ export class LogView extends React.Component<LogViewProps>{
     let logElements: LogElement[] = [];
     for (let i: number = 0; i < this.globalLogElements.length; i++) {
       await this.globalLogElements[i].updateLogElementState();
+      console.log(this.globalLogElements[i].props.logElement);
+      
       logElements.push(this.globalLogElements[i].props.logElement)
     }
-
+    console.log("Before API",logElements);
+    
     this.props.backendAPI.insertLogElements(logElements);
   }
 

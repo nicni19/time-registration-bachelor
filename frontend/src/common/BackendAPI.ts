@@ -36,7 +36,8 @@ export class BackendAPI{
   async insertLogElements(logElements: LogElement[]):Promise<JSON>{
     let token = await this.clientHandler.getSilentAccessToken();
     let userId = this.clientHandler.getUserId();
-    console.log(logElements);
+    console.log("Backend", logElements);
+    
     
 
     return new Promise<JSON>(async (resolve,reject)=>{

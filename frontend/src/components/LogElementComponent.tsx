@@ -36,6 +36,7 @@ export class LogElementComponent extends React.Component<LogElementComponentProp
     this.internalRef = React.createRef()
     this.unpaidRef = React.createRef()
     this.bookKeepReadyRef = React.createRef()
+
     this.updateLogElementState = this.updateLogElementState.bind(this)
     //this.forceUpdate()
   }
@@ -53,14 +54,22 @@ export class LogElementComponent extends React.Component<LogElementComponentProp
 
   //TODO: Check on indhold fra div'erne er null, undefined, whatever. Måske relevant på nogle af dem?
   updateLogElementState(){
-    if(this.descriptionRef.current.innerHTML != this.props.logElement.getDescription()){this.props.logElement.setDescription("" + this.descriptionRef.current.innerHTML)}
+    //console.log("html",this.descriptionRef.current.innerText);
+    console.log("value");
+    
+    console.log("value",this.descriptionRef.current.value);
+    
+    
+    if(this.descriptionRef.current.value != this.props.logElement.getDescription()){
+      console.log("inside description");
+      this.props.logElement.setDescription("" + this.descriptionRef.current.value)
+    }
     if(this.durationRef.current.innerHTML != this.props.logElement.getDuration() && typeof this.durationRef.innerHTML == 'number'){this.props.logElement.setDuration(this.durationRef.innerHTML)}
     if(this.startTimestampRef.current.value != 0){
       let tempDate = new Date(this.startTimestampRef.current.value)
       
       this.props.logElement.setStartTimestamp(tempDate.getTime())
     }
-    console.log("Hello", this.startTimestampRef.current.value);
     
     if(this.customerRef.current.innerHTML != this.props.logElement.getCustomer()){this.props.logElement.setCustomer(this.customerRef.current.innerHTML)}
     if(this.durationRef.current.innerHTML != 0){this.props.logElement.setDuration(Math.abs(this.durationRef.current.innerHTML) * 1000 * 60 * 60)}
@@ -80,7 +89,6 @@ export class LogElementComponent extends React.Component<LogElementComponentProp
   convertStartTimestamp():string{
     if(this.props.logElement.getStartTimestamp() != 0){
       let date = new Date(this.props.logElement.getStartTimestamp() * 1)
-      console.log(this.props.logElement.getStartTimestamp())
       let finalDate:string = date.getDay() + " | " + date.getMonth() + " | " + date.getFullYear()
       return date.toDateString();
     }else{
@@ -89,10 +97,8 @@ export class LogElementComponent extends React.Component<LogElementComponentProp
   }
 
   returnDateString():string {
-    console.log(typeof this.props.logElement.getStartTimestamp());
     
     let dateString = new Date(this.props.logElement.getStartTimestamp()).toISOString().split('Z')[0];
-    console.log(dateString);
     
     return dateString;
   }
@@ -102,7 +108,7 @@ export class LogElementComponent extends React.Component<LogElementComponentProp
           <div id="elementShell" className="Element-shell">
             <div style={{width:"1%", backgroundColor:"green",height:"100%"}} onClick={()=>{this.updateLogElementState()}}></div>
             <div style={{width:"1%", backgroundColor:"red",height:"100%"}} onClick={()=>{this.printLogElement()}}></div>
-            <div ref={this.descriptionRef} className="Log-element-generic" contentEditable="true" style={{width:"24%",overflowY:"hidden"}}>{this.props.logElement.getDescription()}</div>
+            <textarea ref={this.descriptionRef} className="Log-element-generic" style={{width:"24%",overflowY:"hidden"}} defaultValue={this.props.logElement.getDescription()}></textarea>
             <input ref={this.startTimestampRef} type="datetime-local" className="Date-picker" defaultValue={this.returnDateString()}></input>
             <div ref={this.typeRef} className="Log-element-generic" style={{width:"10%"}}>{this.props.logElement.getType()}</div>
             <div ref={this.durationRef} className="Log-element-generic" contentEditable="true" style={{width:"3%"}}>{this.props.logElement.getDuration()}</div>
