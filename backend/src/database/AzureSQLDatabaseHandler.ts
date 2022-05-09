@@ -158,7 +158,7 @@ export class AzureSQLDatabaseHandler implements IDatabaseHandler{
           case_num: logArray[i].getCaseNum(),
           case_task_num: logArray[i].getCaseTaskNum(),
           customer: logArray[i].getCustomer(),
-          edited: +logArray[i].getEdited(),
+          edited: 1,
           book_keep_ready: +logArray[i].getBookKeepReady(),
           calendar_id: logArray[i].getCalendarid(),
           mail_id: logArray[i].getMailid()
