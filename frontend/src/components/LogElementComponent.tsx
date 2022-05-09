@@ -54,25 +54,18 @@ export class LogElementComponent extends React.Component<LogElementComponentProp
 
   //TODO: Check on indhold fra div'erne er null, undefined, whatever. Måske relevant på nogle af dem?
   updateLogElementState(){
-    //console.log("html",this.descriptionRef.current.innerText);
-    console.log("value");
-    
-    console.log("value",this.descriptionRef.current.value);
-    
     
     if(this.descriptionRef.current.value != this.props.logElement.getDescription()){
-      console.log("inside description");
       this.props.logElement.setDescription("" + this.descriptionRef.current.value)
     }
     if(this.durationRef.current.innerHTML != this.props.logElement.getDuration() && typeof this.durationRef.innerHTML == 'number'){this.props.logElement.setDuration(this.durationRef.innerHTML)}
     if(this.startTimestampRef.current.value != 0){
       let tempDate = new Date(this.startTimestampRef.current.value)
-      
       this.props.logElement.setStartTimestamp(tempDate.getTime())
     }
     
     if(this.customerRef.current.value != this.props.logElement.getCustomer()){this.props.logElement.setCustomer(this.customerRef.current.value)}
-    if(this.durationRef.current.innerHTML != 0){this.props.logElement.setDuration(Math.abs(this.durationRef.current.innerHTML) * 1000 * 60 * 60)}
+    if(this.durationRef.current.value != 0){this.props.logElement.setDuration(Math.abs(this.durationRef.current.value) * 1000 * 60 * 60)}
     this.props.logElement.setRitNum(this.ritNumRef.current.innerHTML)
     this.props.logElement.setCaseNum(this.caseNumRef.current.innerHTML)
     this.props.logElement.setCaseTaskNum(this.caseTaskNumRef.current.innerHTML)
@@ -102,6 +95,11 @@ export class LogElementComponent extends React.Component<LogElementComponentProp
     return dateString;
   }
 
+  returnHours() {
+    let hours = (((this.props.logElement.getDuration() / 1000)/60)/60);
+    return hours;
+  }
+
   render(){
     return(
           <div id="elementShell" className="Element-shell">
@@ -110,7 +108,7 @@ export class LogElementComponent extends React.Component<LogElementComponentProp
             <textarea ref={this.descriptionRef} className="Log-element-generic" style={{width:"24%",overflowY:"hidden"}} defaultValue={this.props.logElement.getDescription()}></textarea>
             <input ref={this.startTimestampRef} type="datetime-local" className="Date-picker" defaultValue={this.returnDateString()}></input>
             <div ref={this.typeRef} className="Log-element-generic" style={{width:"10%"}}>{this.props.logElement.getType()}</div>
-            <input ref={this.durationRef} className="Log-element-generic" onKeyPress={(event) => {if(!/[0-9,\,]/.test(event.key)){event.preventDefault();}}} style={{width:"3%"}} defaultValue={this.props.logElement.getDuration()}></input>
+            <input ref={this.durationRef} className="Log-element-generic" onKeyPress={(event) => {if(!/[0-9,\.]/.test(event.key)){event.preventDefault();}}} style={{width:"3%"}} defaultValue={this.returnHours()}></input>
             <textarea ref={this.customerRef} className="Log-element-generic" style={{width:"15%"}} defaultValue={this.props.logElement.getCustomer()}></textarea>
             <div ref={this.ritNumRef} className="Log-element-generic" contentEditable="true" style={{width:"5%"}}>{this.props.logElement.getRitNum()}</div>
             <div ref={this.caseNumRef} className="Log-element-generic" contentEditable="true" style={{width:"5%"}}>{this.props.logElement.getCaseNum()}</div>

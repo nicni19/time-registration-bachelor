@@ -96,11 +96,8 @@ export class LogView extends React.Component<LogViewProps>{
     let logElements: LogElement[] = [];
     for (let i: number = 0; i < this.globalLogElements.length; i++) {
       await this.globalLogElements[i].updateLogElementState();
-      console.log(this.globalLogElements[i].props.logElement);
-      
       logElements.push(this.globalLogElements[i].props.logElement)
     }
-    console.log("Before API",logElements);
     
     this.props.backendAPI.insertLogElements(logElements);
   }
