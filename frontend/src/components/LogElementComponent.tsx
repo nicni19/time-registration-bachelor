@@ -2,6 +2,7 @@ import React from "react";
 import { LogElement } from "../common/LogElement";
 import './stylesheets/LogElementComponent.css'
 import trashcan from '../public/trashcan.png'
+import { Type } from "../common/Type";
 
 type LogElementComponentProps = {
   logElement:LogElement;
@@ -64,9 +65,9 @@ export class LogElementComponent extends React.Component<LogElementComponentProp
       let tempDate = new Date(this.startTimestampRef.current.value)
       this.props.logElement.setStartTimestamp(tempDate.getTime())
     }
-    
     if(this.customerRef.current.value != this.props.logElement.getCustomer()){this.props.logElement.setCustomer(this.customerRef.current.value)}
     if(this.durationRef.current.value != 0){this.props.logElement.setDuration(Math.abs(this.durationRef.current.value) * 1000 * 60 * 60)}
+    this.props.logElement.setType(Type[this.typeRef.current.value as keyof typeof Type])
     this.props.logElement.setRitNum(this.ritNumRef.current.innerHTML)
     this.props.logElement.setCaseNum(this.caseNumRef.current.innerHTML)
     this.props.logElement.setCaseTaskNum(this.caseTaskNumRef.current.innerHTML)
@@ -74,9 +75,10 @@ export class LogElementComponent extends React.Component<LogElementComponentProp
     this.props.logElement.setUnpaid(this.unpaidRef.current.checked);
     this.props.logElement.setBookKeepReady(this.bookKeepReadyRef.current.checked);
   }
-
+  //Type[..].value as keyof typeof Type
   printLogElement(){
     console.log(this.props.logElement)
+    console.log(Type[this.typeRef.current.value as keyof typeof Type])
   }
 
   convertStartTimestamp():string{
@@ -107,7 +109,12 @@ export class LogElementComponent extends React.Component<LogElementComponentProp
             <div style={{width:"1%", backgroundColor:"red",height:"100%"}} onClick={()=>{this.printLogElement()}}></div>
             <textarea ref={this.descriptionRef} className="Log-element-generic" style={{width:"24%",overflowY:"hidden"}} defaultValue={this.props.logElement.getDescription()}></textarea>
             <input ref={this.startTimestampRef} type="datetime-local" className="Date-picker" defaultValue={this.returnDateString()}></input>
-            <div ref={this.typeRef} className="Log-element-generic" style={{width:"10%"}}>{this.props.logElement.getType()}</div>
+            <select ref={this.typeRef} className="Log-element-generic" style={{width:"14%",borderColor:"transparent"}}>
+              <option value="CalendarEvent">CalendarEvent</option>
+              <option value="Mail">Mail</option>
+              <option value="Meeting">Meeting</option>
+              <option value="Call">Call</option>
+            </select>
             <input ref={this.durationRef} className="Log-element-generic" onKeyPress={(event) => {if(!/[0-9,\.]/.test(event.key)){event.preventDefault();}}} style={{width:"3%"}} defaultValue={this.returnHours()}></input>
             <textarea ref={this.customerRef} className="Log-element-generic" style={{width:"15%"}} defaultValue={this.props.logElement.getCustomer()}></textarea>
             <div ref={this.ritNumRef} className="Log-element-generic" contentEditable="true" style={{width:"5%"}}>{this.props.logElement.getRitNum()}</div>

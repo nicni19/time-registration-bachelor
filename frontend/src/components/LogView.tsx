@@ -5,6 +5,7 @@ import { LogElementComponent } from "./LogElementComponent";
 import './stylesheets/LogView.css'
 import refreshIcon from '../public/refresh.png'
 import newIcon from '../public/new.png'
+import searchIcon from '../public/search.png'
 
 type LogViewProps = {
   backendAPI:BackendAPI;
@@ -18,6 +19,7 @@ export class LogView extends React.Component<LogViewProps>{
   endPickerRef:any;
 
   globalLogElements:LogElementComponent[];
+  iDsForDeletion:any[];
 
   constructor(props:any){
     super(props)
@@ -27,6 +29,7 @@ export class LogView extends React.Component<LogViewProps>{
     this.endPickerRef = React.createRef();
 
     this.globalLogElements = []
+    this.iDsForDeletion = []
     
     this.markElementForDeletion = this.markElementForDeletion.bind(this);
     this.updateSpecificComponent = this.updateSpecificComponent.bind(this);
@@ -56,7 +59,9 @@ export class LogView extends React.Component<LogViewProps>{
 
   //TODO: Indsæt elementet som skal slettes i et separat array -> query til db
   markElementForDeletion(index:number){
-    //this.globalLogElements[index] = undefined;
+    if(this.globalLogElements[index].props.logElement.getId() != undefined){
+      this.iDsForDeletion.push(this.globalLogElements[index].props.logElement.getId())
+    }
     this.globalLogElements.map(log =>{
       log.updateLogElementState();
     });
@@ -64,6 +69,7 @@ export class LogView extends React.Component<LogViewProps>{
     console.log("Index removed: " + index);
     this.rearrangeElementsArray();
     this.forceUpdate()
+    console.log(this.iDsForDeletion)
   }
 
   insertEmptyElement(){
@@ -77,6 +83,7 @@ export class LogView extends React.Component<LogViewProps>{
 
   async fetchLogElements(){
     this.globalLogElements = []
+    this.iDsForDeletion = []
     this.forceUpdate();
     let startStamp:string = this.startPickerRef.current.value;
     let endStamp:string = this.endPickerRef.current.value;
@@ -97,13 +104,18 @@ export class LogView extends React.Component<LogViewProps>{
   }
 
   async saveLogElements() {
+    //Send log elements to backend
     let logElements: LogElement[] = [];
     for (let i: number = 0; i < this.globalLogElements.length; i++) {
       await this.globalLogElements[i].updateLogElementState();
       logElements.push(this.globalLogElements[i].props.logElement)
     }
-    
+
     this.props.backendAPI.insertLogElements(logElements);
+    
+    //Send IDs for deletion to backend
+    this.props.backendAPI.deleteLogElements(this.iDsForDeletion)
+    this.iDsForDeletion = []
   }
 
   updateSpecificComponent(currentIndex:number){
@@ -127,25 +139,24 @@ export class LogView extends React.Component<LogViewProps>{
   render(){
     return(
       <div id="outerView" className="Outer-view">
-        <div style={{height:"8vh",marginBottom:"1vh",backgroundColor:"transparent",width:"100%",display:"flex"}}>
+        <div style={{height:"8vh",backgroundColor:"transparent",width:"100%",display:"flex"}}>
           <div style={{display:"flex",height:"100%",justifyContent:"flex-start",flexDirection:"row"}}> 
-            <input ref={this.startPickerRef} className="Date-picker" type="date"></input>
-            <input ref={this.endPickerRef} className="Date-picker" type="date"></input>
-            <div style={{width:"4vw",height:"100%",backgroundColor:"white",marginRight:"0.5vw",marginLeft:"52vw",borderRadius:"3px"}} onClick={()=>{this.insertEmptyElement()}}><img src={newIcon} style={{height:"90%",width:"90%"}}></img></div>
-            <div style={{width:"4vw",height:"100%",backgroundColor:"white",marginRight:"0.5vw",borderRadius:"3px",display:"flex",alignItems:"center"}} onClick={()=>{this.fetchLogElements()}}><img src={refreshIcon} style={{height:"100%",width:"100%"}}></img></div>
+            <input ref={this.startPickerRef} className="Date-picker" type="date" style={{height:"70%"}}></input>
+            <input ref={this.endPickerRef} className="Date-picker" type="date" style={{height:"70%"}}></input>
+            <div style={{width:"3vw",height:"78%",marginTop:"0.3vh",backgroundColor:"white",marginRight:"0.3vw",borderRadius:"3px",display:"flex",alignItems:"center",justifyContent:"center"}} onClick={()=>{this.fetchLogElements()}}><img src={searchIcon} style={{height:"80%",width:"80%"}}></img></div>
+            <div style={{width:"3vw",height:"78%",marginTop:"0.3vh",backgroundColor:"white",marginRight:"0.5vw",borderRadius:"3px",display:"flex",alignItems:"center",justifyContent:"center"}} onClick={()=>{this.insertEmptyElement()}}><img src={newIcon} style={{height:"90%",width:"90%"}}></img></div>
           </div>
         </div>
         <div className="Field-identifier">
-          <p className="Identifier-generic" style={{width:"4%",borderRightWidth:"0.1vh"}}>SAVE</p>
-          <p className="Identifier-generic" style={{width:"26%",borderRightWidth:"0.1vh"}}>Description</p>
-          <p className="Identifier-generic" style={{width:"6%",borderRightWidth:"0.1vh"}}>Start time</p>
-          <p className="Identifier-generic" style={{width:"10%",borderRightWidth:"0.1vh"}}>Type</p>
+          <p className="Identifier-generic" style={{width:"29.5%",borderRightWidth:"0.1vh"}}>Description</p>
+          <p className="Identifier-generic" style={{width:"12.5%",borderRightWidth:"0.1vh"}}>Start time</p>
+          <p className="Identifier-generic" style={{width:"12.5%",borderRightWidth:"0.1vh"}}>Type</p>
           <p className="Identifier-generic" style={{width:"3.5%",borderRightWidth:"0.1vh"}}>Dur.</p>
-          <p className="Identifier-generic" style={{width:"15%",borderRightWidth:"0.1vh"}}>Customer</p>
-          <p className="Identifier-generic" style={{width:"5%",borderRightWidth:"0.1vh"}}>Rit num</p>
-          <p className="Identifier-generic" style={{width:"5%",borderRightWidth:"0.1vh"}}>Case num</p>
-          <p className="Identifier-generic" style={{width:"5%",borderRightWidth:"0.1vh",marginRight:"0.3vw"}}>Case task</p>
-          <p className="Identifier-generic" style={{width:"5%",borderRightWidth:"0.1vh"}}>Internal</p>
+          <p className="Identifier-generic" style={{width:"12%",borderRightWidth:"0.1vh"}}>Customer</p>
+          <p className="Identifier-generic" style={{width:"0%",borderRightWidth:"0.1vh"}}>Rit num</p>
+          <p className="Identifier-generic" style={{width:"0%",borderRightWidth:"0.1vh"}}>Case num</p>
+          <p className="Identifier-generic" style={{width:"0%",borderRightWidth:"0.1vh",marginRight:"0.3vw"}}>Case task</p>
+          <p className="Identifier-generic" style={{width:"0%",borderRightWidth:"0.1vh"}}>Internal</p>
           <p className="Identifier-generic" style={{width:"5%",borderRightWidth:"0.1vh",marginLeft:"-0.2vw"}}>Unpaid</p>
           <p className="Identifier-generic" style={{width:"5%",borderRightWidth:"0.1vh",marginLeft:"-0.2vw"}}>Ready</p>
           <p className="Identifier-generic" style={{width:"4%",borderRightWidth:"0.1vh"}}>DELETE</p>

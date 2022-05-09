@@ -86,4 +86,35 @@ export class BackendAPI{
       });
   })
   }
+
+  async getPreferences(){
+    return new Promise<JSON>(async(resolve,reject)=>{
+
+
+      await fetch('http://localhost:3000/getPreferences',{
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + await this.clientHandler.getSilentAccessToken(),
+            'userid' : await this.clientHandler.getUserId()
+        }
+      }).then(Response => Response.json()).then(data =>{resolve(data)})
+      .catch((err)=>{alert(err)})
+    })
+  }
+  
+  async updatePreferences(prefArray:boolean[]){
+    fetch('http://localhost:3000/setPreferences',{
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + await this.clientHandler.getSilentAccessToken(),
+            'userid' : await this.clientHandler.getUserId()
+        },
+        body: JSON.stringify({
+          'preferences': prefArray,
+        }),
+        mode:'cors'
+      })
+  }
 }

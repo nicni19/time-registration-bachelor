@@ -53,6 +53,21 @@ app.use(async (req,res,next)=>{
   }
 });
 
+app.get('/getPreferences',async (req,res)=>{
+  res.setHeader('Content-Type', 'application/json');
+  let requestJSON = JSON.parse(JSON.stringify(req.headers));
+
+  res.status(200)
+  res.send(await core.getPreferences(requestJSON.userid))
+});
+
+app.post('/setPreferences',async(req,res)=>{
+  console.log(req.body.preferences)
+  let requestJSON = JSON.parse(JSON.stringify(req.headers))
+
+  core.updatePreferences(requestJSON.userid,[req.body.preferences[0],req.body.preferences[1]])
+});
+
 app.get('/getLogElements/:startDate/:endDate', async (req, res) => {
   res.setHeader('Content-Type', 'application/json');
   let startDate: Date;

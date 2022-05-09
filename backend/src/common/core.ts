@@ -53,7 +53,15 @@ export class Core{
 
     async graphUpdate(userID: string, authToken: string): Promise<boolean> {
         //Todo: Get preferences from database
-        let prefArray = ['mail','calendar'];
+        let prefJson = await this.getPreferences(userID);
+        let prefArray = [];
+        
+        if(prefJson.preferences[0].mail_enabled.value){
+            prefArray.push('mail')
+        }
+        if(prefJson.preferences[1].calendar_enabled.value){
+            prefArray.push('calendar')
+        }
         
         for (let i: number = 0; i < prefArray.length; i++) {
             try {
@@ -74,6 +82,14 @@ export class Core{
     
     async getPrivileges(userID:string){
         return await this.databaseHandler.getPrivileges(userID);
+    }
+
+    async getPreferences(userID:string){
+        return await this.databaseHandler.getPreferences(userID)
+    }
+
+    async updatePreferences(userID:string,preferences:boolean[]){
+        this.databaseHandler.updatePreferences(userID,preferences)
     }
 
     convertJSONToLogElements(json) {
