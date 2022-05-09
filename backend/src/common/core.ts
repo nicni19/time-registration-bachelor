@@ -32,8 +32,15 @@ export class Core{
     }
 
 
-    insertLogElements(json): Promise<boolean>{
-        return this.databaseHandler.insertLogElement(this.convertJSONToLogElements(json));
+    async insertLogElements(json): Promise<boolean>{
+        let newInserted = await this.databaseHandler.insertLogElement(this.convertJSONToLogElements(json).get('New'));
+        let oldUpdated = await this.databaseHandler.updateLogElement(this.convertJSONToLogElements(json).get('Old'));
+
+        if (newInserted && oldUpdated) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     deleteLogElements(ids: number[],userID:string): Promise<boolean>{
@@ -86,17 +93,30 @@ export class Core{
     }
 
     convertJSONToLogElements(json) {
-        let log_elements: LogElement[] = [];
+        let logElements: LogElement[] = [];
+        let newLogElements: LogElement[] = [];
 
-        for (let i: number = 0; i < json.log_elements; i++) {
-            log_elements.push(new LogElement(json.log_elements[i].userID, json.log_elements[i].type, json.log_elements[i].description, 
-                json.log_elements[i].startTimestamp, json.log_elements[i].duration, json.log_elements[i].internalTask, json.log_elements[i].unpaid,
-                json.log_elements[i].ritNum, json.log_elements[i].caseNum, json.log_elements[i].caseTaskNum, json.log_elements[i].customer,
-                json.log_elements[i].edited, json.log_elements[i].bookKeepReady, json.log_elements[i].calendarid, json.log_elements[i].mailid,
-                json.log_elements[i].id))
+        for (let i: number = 0; i < json.length; i++) {
+            if (json[i].id != null) {
+                logElements.push(new LogElement(json[i].userID, json[i].type, json[i].description, 
+                    json[i].startTimestamp, json[i].duration, json[i].internalTask, json[i].unpaid,
+                    json[i].ritNum, json[i].caseNum, json[i].caseTaskNum, json[i].customer,
+                    json[i].edited, json[i].bookKeepReady, json[i].calendarid, json[i].mailid,
+                    json[i].id))
+            } else {
+                newLogElements.push(new LogElement(json[i].userID, json[i].type, json[i].description, 
+                    json[i].startTimestamp, json[i].duration, json[i].internalTask, json[i].unpaid,
+                    json[i].ritNum, json[i].caseNum, json[i].caseTaskNum, json[i].customer,
+                    json[i].edited, json[i].bookKeepReady, json[i].calendarid, json[i].mailid,
+                    json[i].id))
+            }
         }
+        let logMap = new Map();
+        
+        logMap.set('Old', logElements);
+        logMap.set('New', newLogElements);
 
-        return log_elements;
+        return logMap;
     }
 
 

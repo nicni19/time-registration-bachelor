@@ -43,6 +43,8 @@ class App extends React.Component<{},{error:any,isAuthenticated:boolean,user:any
     let loginResult = await this.clientHandler.login();
     if(loginResult){
       this.setState({isAuthenticated:true}); 
+      this.viewsArray.push(<LogView backendAPI={this.backendAPI} userID={this.clientHandler.getUserId()}></LogView>)
+      this.viewsArray.push(<PreferencesView></PreferencesView>)
     }else{
       console.log(loginResult)
       this.setState({

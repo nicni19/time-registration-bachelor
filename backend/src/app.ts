@@ -147,8 +147,6 @@ app.get('/getLogElements', async (req, res) => {
 });
 
 app.post('/insertLogElements', (req, res) => {
-  console.log("Inserting...");
-  
   
   if (core.insertLogElements(req.body.logElements)) {
     res.status(200)

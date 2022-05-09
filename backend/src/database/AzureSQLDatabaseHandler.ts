@@ -115,8 +115,11 @@ export class AzureSQLDatabaseHandler implements IDatabaseHandler{
         this.connectionPool.executeRequest(request);
         
         request.on("row", columns => {
+          let startTimestamp:number = parseInt(columns['start_timestamp'].value,10);
+          let duration:number = parseInt(columns['duration'].value,10);
+          
           let logElement: LogElement = new LogElement(columns['user_id'].value,Type[columns['element_type'].value as keyof typeof Type],
-          columns['element_description'].value,columns['start_timestamp'].value,columns['duration'].value,columns['internal_task'].value,
+          columns['element_description'].value,startTimestamp,duration,columns['internal_task'].value,
           columns['unpaid'].value,columns['rit_num'].value,columns['case_num'].value,columns['case_task_num'].value,columns['customer'].value,
           columns['edited'].value,columns['book_keep_ready'].value,columns['calendar_id'].value,columns['mail_id'].value,columns['id'].value)
           logElements.push(logElement);
@@ -134,8 +137,8 @@ export class AzureSQLDatabaseHandler implements IDatabaseHandler{
   
   async insertLogElement(logArray: LogElement[]): Promise<boolean> {
     let array = [];
-    console.log("log");
     let success: boolean;
+
 
     return await new Promise((resolve,reject) => {
       for (let i: number = 0; i < logArray.length; i++) {
@@ -151,7 +154,7 @@ export class AzureSQLDatabaseHandler implements IDatabaseHandler{
           case_num: logArray[i].getCaseNum(),
           case_task_num: logArray[i].getCaseTaskNum(),
           customer: logArray[i].getCustomer(),
-          edited: +logArray[i].getEdited(),
+          edited: 1,
           book_keep_ready: +logArray[i].getBookKeepReady(),
           calendar_id: logArray[i].getCalendarid(),
           mail_id: logArray[i].getMailid()
@@ -162,7 +165,7 @@ export class AzureSQLDatabaseHandler implements IDatabaseHandler{
         let queryString = this.squel.insert()
           .into('log_elements')
           .setFieldsRows(array)
-          .toString() 
+          .toString();
 
       const request : Request = new Request(
         queryString, (err) => {
@@ -183,6 +186,74 @@ export class AzureSQLDatabaseHandler implements IDatabaseHandler{
     return err;
   });
 
+  }
+
+  async updateLogElement(logArray: LogElement[]): Promise<boolean> {
+    let array = []
+    console.log(logArray);
+
+    for (let i: number = 0; i < logArray.length; i++) {
+      array.push({
+        user_id: logArray[i].getUserID(),
+        element_type: Type[logArray[i].getType().valueOf()],
+        element_description: logArray[i].getDescription(),
+        start_timestamp: logArray[i].getStartTimestamp(),
+        duration: logArray[i].getDuration(),
+        internal_task: +logArray[i].getInternalTask(),
+        unpaid: +logArray[i].getUnpaid(),
+        rit_num: logArray[i].getRitNum(),
+        case_num: logArray[i].getCaseNum(),
+        case_task_num: logArray[i].getCaseTaskNum(),
+        customer: logArray[i].getCustomer(),
+        edited: +logArray[i].getEdited(),
+        book_keep_ready: +logArray[i].getBookKeepReady(),
+        calendar_id: logArray[i].getCalendarid(),
+        mail_id: logArray[i].getMailid()
+      })
+    
+    }
+
+    return this.updateHelper(0,array,logArray);
+  }
+
+  async updateHelper(index:number, array,logArray): Promise<boolean> {
+    let success: boolean;
+
+    return await new Promise((resolve,reject) => {
+      
+        let queryString = this.squel.update()
+          .table('log_elements')
+          .setFields(array[index])
+          .where("id = @id")
+          .toString();
+
+        const request : Request = new Request(
+          queryString, (err) => {
+            if(err){
+              console.log(err.message)
+              success = false;
+              reject(false)
+            }
+          }
+        );
+        
+
+        request.addParameter('id', this.TYPES.Int, logArray[index].getId());
+  
+        this.connectionPool.executeRequest(request);
+
+        request.on('requestCompleted',()=>{
+          this.updateHelper(index+1,array,logArray);
+        })  
+        
+
+      success = true;
+      resolve(true);
+    }).then(() => {
+      return success;
+  }).catch((err)=>{
+    return err;
+  });
   }
 
   async deleteLogElements(logIDs: number[], userID:string): Promise<boolean> {
@@ -306,6 +377,7 @@ export class AzureSQLDatabaseHandler implements IDatabaseHandler{
   async insertFromGraph(logArray: LogElement[]): Promise<any> {
     let array = [];
     console.log("log");
+    
 
     return await new Promise((resolve,reject) => {
       for (let i: number = 0; i < logArray.length; i++) {
