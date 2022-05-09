@@ -69,6 +69,14 @@ export class Core{
         return await this.databaseHandler.getPrivileges(userID);
     }
 
+    async getPreferences(userID:string){
+        return await this.databaseHandler.getPreferences(userID)
+    }
+
+    async updatePreferences(userID:string,preferences:boolean[]){
+        this.databaseHandler.updatePreferences(userID,preferences)
+    }
+
     convertJSONToLogElements(json) {
         let log_elements: LogElement[] = [];
 

@@ -45,8 +45,8 @@ CREATE TABLE temp_log_elements (
 CREATE TABLE preferences (
 	id int IDENTITY(1,1) PRIMARY KEY,
     user_id varchar(50) FOREIGN KEY REFERENCES users(id),
-	last_mail_lookup bigint NOT NULL,
-	last_calendar_lookup bigint NOT NULL
+	mail_enabled BIT NOT NULL,
+    calendar_enabled BIT NOT NULL,
 );
 
 CREATE TABLE action_permissions (

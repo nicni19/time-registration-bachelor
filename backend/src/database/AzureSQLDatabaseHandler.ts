@@ -76,10 +76,6 @@ export class AzureSQLDatabaseHandler implements IDatabaseHandler{
       });
   }
 
-  getPreferences(id: String): {} {
-    throw new Error('Method not implemented.');
-    
-  }
   /**
    * 
    * @param queryArguments TODO: Currently only supports user_id as query parameter..
@@ -357,6 +353,55 @@ export class AzureSQLDatabaseHandler implements IDatabaseHandler{
 
   }
 
+  
+  async getPreferences(userID:string):Promise<any>{
+    let queryString = this.squel.select()
+      .from('preferences')
+      .where('user_id = ' + "'" + userID + "'")
+      .toString();
+
+    let returnJson = {preferences:[]}
+    return await new Promise(async(resolve,reject)=>{
+      const request : Request = new Request(
+        queryString,(err)=>{
+          if(err){
+            console.log(err.message)
+          }
+        }
+      )
+      request.on('row',columns =>{
+        returnJson.preferences.push({
+          'mail_enabled':columns['mail_enabled'],
+        })
+        returnJson.preferences.push({
+          'calendar_enabled':columns['calendar_enabled']
+        })
+      })
+
+      this.connectionPool.executeRequest(request)
+
+      request.on('requestCompleted',()=>{
+        resolve(returnJson);
+      });
+    }).then(async()=>{return await returnJson})
+    .catch((err)=>{console.log(err)})
+  }
+
+  //this.squel.update().table('users').set('last_calendar_lookup',timestamp).where('id = ' + "'" + userID + "'");
+  updatePreferences(userID:string,preferences:boolean[]){
+    let queryString = this.squel.update().table('preferences').set('mail_enabled',+preferences[0]).set('calendar_enabled',+preferences[1]).where('user_id = ' + "'" + userID + "'").toString();
+    console.log(queryString)
+    const request : Request = new Request(
+      queryString, (err) => {
+        if(err){
+          console.log(err.message)
+        }
+      }
+    );
+    this.connectionPool.executeRequest(request);
+  }
+
+
   async getPrivileges(userID:string):Promise<any>{
     let queryString = this.squel.select()
       .from('action_permissions')
@@ -373,15 +418,7 @@ export class AzureSQLDatabaseHandler implements IDatabaseHandler{
           }
         }
       )
-      /*
-      request.on('columnMetadata',columns =>{
-        Object.keys(columns).forEach(col => {
-          if(col != "id" && col != "user_id"){
-            privilegesMap.set(col,false);
-          }
-        })
-      });
-      */
+
       request.on('row',columns =>{
         Object.keys(columns).forEach(element => {
           if(element != "id" && element != "user_id"){

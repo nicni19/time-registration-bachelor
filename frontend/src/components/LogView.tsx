@@ -145,16 +145,15 @@ export class LogView extends React.Component<LogViewProps>{
           </div>
         </div>
         <div className="Field-identifier">
-          <p className="Identifier-generic" style={{width:"4%",borderRightWidth:"0.1vh"}}>SAVE</p>
-          <p className="Identifier-generic" style={{width:"26%",borderRightWidth:"0.1vh"}}>Description</p>
-          <p className="Identifier-generic" style={{width:"6%",borderRightWidth:"0.1vh"}}>Start time</p>
-          <p className="Identifier-generic" style={{width:"10%",borderRightWidth:"0.1vh"}}>Type</p>
+          <p className="Identifier-generic" style={{width:"29.5%",borderRightWidth:"0.1vh"}}>Description</p>
+          <p className="Identifier-generic" style={{width:"12.5%",borderRightWidth:"0.1vh"}}>Start time</p>
+          <p className="Identifier-generic" style={{width:"12.5%",borderRightWidth:"0.1vh"}}>Type</p>
           <p className="Identifier-generic" style={{width:"3.5%",borderRightWidth:"0.1vh"}}>Dur.</p>
-          <p className="Identifier-generic" style={{width:"15%",borderRightWidth:"0.1vh"}}>Customer</p>
-          <p className="Identifier-generic" style={{width:"5%",borderRightWidth:"0.1vh"}}>Rit num</p>
-          <p className="Identifier-generic" style={{width:"5%",borderRightWidth:"0.1vh"}}>Case num</p>
-          <p className="Identifier-generic" style={{width:"5%",borderRightWidth:"0.1vh",marginRight:"0.3vw"}}>Case task</p>
-          <p className="Identifier-generic" style={{width:"5%",borderRightWidth:"0.1vh"}}>Internal</p>
+          <p className="Identifier-generic" style={{width:"12%",borderRightWidth:"0.1vh"}}>Customer</p>
+          <p className="Identifier-generic" style={{width:"0%",borderRightWidth:"0.1vh"}}>Rit num</p>
+          <p className="Identifier-generic" style={{width:"0%",borderRightWidth:"0.1vh"}}>Case num</p>
+          <p className="Identifier-generic" style={{width:"0%",borderRightWidth:"0.1vh",marginRight:"0.3vw"}}>Case task</p>
+          <p className="Identifier-generic" style={{width:"0%",borderRightWidth:"0.1vh"}}>Internal</p>
           <p className="Identifier-generic" style={{width:"5%",borderRightWidth:"0.1vh",marginLeft:"-0.2vw"}}>Unpaid</p>
           <p className="Identifier-generic" style={{width:"5%",borderRightWidth:"0.1vh",marginLeft:"-0.2vw"}}>Ready</p>
           <p className="Identifier-generic" style={{width:"4%",borderRightWidth:"0.1vh"}}>DELETE</p>
