@@ -171,7 +171,66 @@ export class AzureSQLDatabaseHandler implements IDatabaseHandler{
         let queryString = this.squel.insert()
           .into('log_elements')
           .setFieldsRows(array)
-          .toString() 
+          .toString();
+
+        queryString = queryString + " "
+
+      const request : Request = new Request(
+        queryString, (err) => {
+          if(err){
+            console.log(err.message)
+            success = false;
+            reject(false)
+          }
+        }
+      );
+
+      this.connectionPool.executeRequest(request);
+      success = true;
+      resolve(true);
+    }).then(() => {
+      return success;
+  }).catch((err)=>{
+    return err;
+  });
+
+  }
+
+  async updateLogElement(logArray: LogElement[]): Promise<boolean> {
+    let array = [];
+    console.log("log");
+    let success: boolean;
+    console.log(logArray);
+    
+
+    return await new Promise((resolve,reject) => {
+      for (let i: number = 0; i < logArray.length; i++) {
+        array.push({ 
+          user_id: logArray[i].getUserID(),
+          element_type: Type[logArray[i].getType().valueOf()],
+          element_description: logArray[i].getDescription(),
+          start_timestamp: logArray[i].getStartTimestamp(),
+          duration: logArray[i].getDuration(),
+          internal_task: +logArray[i].getInternalTask(),
+          unpaid: +logArray[i].getUnpaid(),
+          rit_num: logArray[i].getRitNum(),
+          case_num: logArray[i].getCaseNum(),
+          case_task_num: logArray[i].getCaseTaskNum(),
+          customer: logArray[i].getCustomer(),
+          edited: +logArray[i].getEdited(),
+          book_keep_ready: +logArray[i].getBookKeepReady(),
+          calendar_id: logArray[i].getCalendarid(),
+          mail_id: logArray[i].getMailid()
+        })
+      }    
+
+        //Created query string by using SQUEL
+        let queryString = this.squel.update()
+          .into('log_elements')
+          .setFieldsRows(array)
+          .toString();
+
+        queryString = queryString + " "
 
       const request : Request = new Request(
         queryString, (err) => {
