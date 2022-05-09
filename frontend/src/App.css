@@ -1,9 +1,8 @@
-#Sidebar {
-  background-color:lightgray;
-  width:20;
-  height:99.5vh;
-  display:inline-block;
-  align-content:center;
+.Sidebar {
+  background-color:#282c34;
+  width: 20%;
+  height: 100vh;
+  align-content: center;  
 }
 
 #signOutButton {

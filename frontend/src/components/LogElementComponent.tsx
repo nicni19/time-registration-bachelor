@@ -2,6 +2,7 @@ import React from "react";
 import { LogElement } from "../common/LogElement";
 import './stylesheets/LogElementComponent.css'
 import trashcan from '../public/trashcan.png'
+import { Type } from "../common/Type";
 
 type LogElementComponentProps = {
   logElement:LogElement;
@@ -63,6 +64,7 @@ export class LogElementComponent extends React.Component<LogElementComponentProp
     if(this.customerRef.current.innerHTML != this.props.logElement.getCustomer()){this.props.logElement.setCustomer(this.customerRef.current.innerHTML)}
     if(this.durationRef.current.innerHTML != 0){this.props.logElement.setDuration(Math.abs(this.durationRef.current.innerHTML) * 1000 * 60 * 60)}
     if(this.customerRef.current.innerHTML != this.props.logElement.getCustomer()){this.props.logElement.setDescription(this.customerRef.innerHTML)}
+    this.props.logElement.setType(Type[this.typeRef.current.value as keyof typeof Type])
     this.props.logElement.setRitNum(this.ritNumRef.current.innerHTML)
     this.props.logElement.setCaseNum(this.caseNumRef.current.innerHTML)
     this.props.logElement.setCaseTaskNum(this.caseTaskNumRef.current.innerHTML)
@@ -70,9 +72,10 @@ export class LogElementComponent extends React.Component<LogElementComponentProp
     this.props.logElement.setUnpaid(this.unpaidRef.current.checked);
     this.props.logElement.setBookKeepReady(this.bookKeepReadyRef.current.checked);
   }
-
+  //Type[..].value as keyof typeof Type
   printLogElement(){
     console.log(this.props.logElement)
+    console.log(Type[this.typeRef.current.value as keyof typeof Type])
   }
 
   convertStartTimestamp():string{
@@ -84,15 +87,20 @@ export class LogElementComponent extends React.Component<LogElementComponentProp
       return "";
     }
   }
-
+  //<div ref={this.typeRef} className="Log-element-generic" style={{width:"14%"}}>{Type[this.props.logElement.getType()]}</div>
   render(){
     return(
           <div id="elementShell" className="Element-shell">
             <div style={{width:"1%", backgroundColor:"green",height:"100%"}} onClick={()=>{this.updateLogElementState()}}></div>
             <div style={{width:"1%", backgroundColor:"red",height:"100%"}} onClick={()=>{this.printLogElement()}}></div>
             <div ref={this.descriptionRef} className="Log-element-generic" contentEditable="true" style={{width:"30%",overflowY:"hidden"}}>{this.props.logElement.getDescription()}</div>
-            <input ref={this.startTimestampRef} type="datetime-local" className="Date-picker"></input>
-            <div ref={this.typeRef} className="Log-element-generic" style={{width:"14%"}}>{this.props.logElement.getType()}</div>
+            <input ref={this.startTimestampRef} type="datetime-local" className="Date-picker" style={{height:"80%"}}></input>
+            <select ref={this.typeRef} className="Log-element-generic" style={{width:"14%",borderColor:"transparent"}}>
+              <option value="CalendarEvent">CalendarEvent</option>
+              <option value="Mail">Mail</option>
+              <option value="Meeting">Meeting</option>
+              <option value="Call">Call</option>
+            </select>
             <div ref={this.durationRef} className="Log-element-generic" contentEditable="true" style={{width:"3%"}}>{this.props.logElement.getDuration()}</div>
             <div ref={this.customerRef} className="Log-element-generic" contentEditable="true" style={{width:"15%"}}>{this.props.logElement.getCustomer()}</div>
             <div ref={this.ritNumRef} className="Log-element-generic" contentEditable="true" style={{width:"5%"}}>{this.props.logElement.getRitNum()}</div>

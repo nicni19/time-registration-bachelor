@@ -18,6 +18,7 @@ export class LogView extends React.Component<LogViewProps>{
   endPickerRef:any;
 
   globalLogElements:LogElementComponent[];
+  iDsForDeletion:any[];
 
   constructor(props:any){
     super(props)
@@ -27,6 +28,7 @@ export class LogView extends React.Component<LogViewProps>{
     this.endPickerRef = React.createRef();
 
     this.globalLogElements = []
+    this.iDsForDeletion = []
     
     this.markElementForDeletion = this.markElementForDeletion.bind(this);
     this.updateSpecificComponent = this.updateSpecificComponent.bind(this);
@@ -56,7 +58,9 @@ export class LogView extends React.Component<LogViewProps>{
 
   //TODO: Indsæt elementet som skal slettes i et separat array -> query til db
   markElementForDeletion(index:number){
-    //this.globalLogElements[index] = undefined;
+    if(this.globalLogElements[index].props.logElement.getId() != undefined){
+      this.iDsForDeletion.push(this.globalLogElements[index].props.logElement.getId())
+    }
     this.globalLogElements.map(log =>{
       log.updateLogElementState();
     });
@@ -64,6 +68,7 @@ export class LogView extends React.Component<LogViewProps>{
     console.log("Index removed: " + index);
     this.rearrangeElementsArray();
     this.forceUpdate()
+    console.log(this.iDsForDeletion)
   }
 
   insertEmptyElement(){
@@ -77,6 +82,7 @@ export class LogView extends React.Component<LogViewProps>{
 
   async fetchLogElements(){
     this.globalLogElements = []
+    this.iDsForDeletion = []
     this.forceUpdate();
     let startStamp:string = this.startPickerRef.current.value;
     let endStamp:string = this.endPickerRef.current.value;
@@ -96,13 +102,17 @@ export class LogView extends React.Component<LogViewProps>{
   }
 
   async saveLogElements() {
+    //Send log elements to backend
     let logElements: LogElement[] = [];
     for (let i: number = 0; i < this.globalLogElements.length; i++) {
       await this.updateSpecificComponent(i);
       logElements.push(this.globalLogElements[i].props.logElement)
     }
-
     this.props.backendAPI.insertLogElements(logElements);
+    
+    //Send IDs for deletion to backend
+    this.props.backendAPI.deleteLogElements(this.iDsForDeletion)
+    this.iDsForDeletion = []
   }
 
   updateSpecificComponent(currentIndex:number){

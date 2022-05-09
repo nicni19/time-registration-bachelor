@@ -74,14 +74,12 @@ class App extends React.Component<{},{error:any,isAuthenticated:boolean,user:any
       <div className="Wrapper">
         {this.state.isAuthenticated ? 
           <div className='App' style={{display:'flex'}}>
-            <div id="sidebar" style={{backgroundColor:"#282c34",width:"20%",height:"100vh",alignContent:"center"}}>
+            <div className="Sidebar">
               <img src={heimdalLogo} style={{width:"95%",height:"auto"}}></img> 
               <UserBox isLoggedIn={this.state.isAuthenticated} clientHandler={this.clientHandler} logout={this.logout}/>
               <nav style={{display:"flex",flexDirection:"column", width:"100%"}}>
                 <button className='Nav-button' onClick={()=>{this.changeView(0)}}>View Logs</button>
                 <button className='Nav-button' onClick={()=>{this.changeView(1)}}>Preferences</button>
-                <button className='Nav-button'>View 3</button>
-                <button className='Nav-button'>View 4</button>
               </nav>
             </div>
             <div id='MainView' style={{backgroundColor:"gray",width:"80%",height:"100vh",boxShadow:"inset 0 0 10px 0px",display:"flex",justifyContent:"center"}}>
