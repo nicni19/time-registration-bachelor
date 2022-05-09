@@ -10,8 +10,10 @@ export interface IDatabaseHandler{
     getLogElements(queryArguments:Map<string,any>);
 
     insertLogElement(logArray: LogElement[]): Promise<any>;
+    
+    updateLogElement(logArray: LogElement[]): Promise<boolean>;
 
-    insertFromGraph(logArray: LogElement[]): Promise<any>
+    insertFromGraph(logArray: LogElement[]): Promise<any>;
 
     deleteLogElements(logIDs: number[], userID:string): Promise<boolean>;
 
