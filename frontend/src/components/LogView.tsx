@@ -5,6 +5,7 @@ import { LogElementComponent } from "./LogElementComponent";
 import './stylesheets/LogView.css'
 import refreshIcon from '../public/refresh.png'
 import newIcon from '../public/new.png'
+import searchIcon from '../public/search.png'
 
 type LogViewProps = {
   backendAPI:BackendAPI;
@@ -125,12 +126,12 @@ export class LogView extends React.Component<LogViewProps>{
   render(){
     return(
       <div id="outerView" className="Outer-view">
-        <div style={{height:"8vh",marginBottom:"1vh",backgroundColor:"transparent",width:"100%",display:"flex"}}>
+        <div style={{height:"8vh",backgroundColor:"transparent",width:"100%",display:"flex"}}>
           <div style={{display:"flex",height:"100%",justifyContent:"flex-start",flexDirection:"row"}}> 
-            <input ref={this.startPickerRef} className="Date-picker" type="date"></input>
-            <input ref={this.endPickerRef} className="Date-picker" type="date"></input>
-            <div style={{width:"4vw",height:"100%",backgroundColor:"white",marginRight:"0.5vw",marginLeft:"52vw",borderRadius:"3px"}} onClick={()=>{this.insertEmptyElement()}}><img src={newIcon} style={{height:"90%",width:"90%"}}></img></div>
-            <div style={{width:"4vw",height:"100%",backgroundColor:"white",marginRight:"0.5vw",borderRadius:"3px",display:"flex",alignItems:"center"}} onClick={()=>{this.fetchLogElements()}}><img src={refreshIcon} style={{height:"100%",width:"100%"}}></img></div>
+            <input ref={this.startPickerRef} className="Date-picker" type="date" style={{height:"70%"}}></input>
+            <input ref={this.endPickerRef} className="Date-picker" type="date" style={{height:"70%"}}></input>
+            <div style={{width:"3vw",height:"78%",marginTop:"0.3vh",backgroundColor:"white",marginRight:"0.3vw",borderRadius:"3px",display:"flex",alignItems:"center",justifyContent:"center"}} onClick={()=>{this.fetchLogElements()}}><img src={searchIcon} style={{height:"80%",width:"80%"}}></img></div>
+            <div style={{width:"3vw",height:"78%",marginTop:"0.3vh",backgroundColor:"white",marginRight:"0.5vw",borderRadius:"3px",display:"flex",alignItems:"center",justifyContent:"center"}} onClick={()=>{this.insertEmptyElement()}}><img src={newIcon} style={{height:"90%",width:"90%"}}></img></div>
           </div>
         </div>
         <div className="Field-identifier">
