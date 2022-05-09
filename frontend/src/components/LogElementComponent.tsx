@@ -71,9 +71,8 @@ export class LogElementComponent extends React.Component<LogElementComponentProp
       this.props.logElement.setStartTimestamp(tempDate.getTime())
     }
     
-    if(this.customerRef.current.innerHTML != this.props.logElement.getCustomer()){this.props.logElement.setCustomer(this.customerRef.current.innerHTML)}
+    if(this.customerRef.current.value != this.props.logElement.getCustomer()){this.props.logElement.setCustomer(this.customerRef.current.value)}
     if(this.durationRef.current.innerHTML != 0){this.props.logElement.setDuration(Math.abs(this.durationRef.current.innerHTML) * 1000 * 60 * 60)}
-    if(this.customerRef.current.innerHTML != this.props.logElement.getCustomer()){this.props.logElement.setDescription(this.customerRef.innerHTML)}
     this.props.logElement.setRitNum(this.ritNumRef.current.innerHTML)
     this.props.logElement.setCaseNum(this.caseNumRef.current.innerHTML)
     this.props.logElement.setCaseTaskNum(this.caseTaskNumRef.current.innerHTML)
@@ -111,8 +110,8 @@ export class LogElementComponent extends React.Component<LogElementComponentProp
             <textarea ref={this.descriptionRef} className="Log-element-generic" style={{width:"24%",overflowY:"hidden"}} defaultValue={this.props.logElement.getDescription()}></textarea>
             <input ref={this.startTimestampRef} type="datetime-local" className="Date-picker" defaultValue={this.returnDateString()}></input>
             <div ref={this.typeRef} className="Log-element-generic" style={{width:"10%"}}>{this.props.logElement.getType()}</div>
-            <div ref={this.durationRef} className="Log-element-generic" contentEditable="true" style={{width:"3%"}}>{this.props.logElement.getDuration()}</div>
-            <div ref={this.customerRef} className="Log-element-generic" contentEditable="true" style={{width:"15%"}}>{this.props.logElement.getCustomer()}</div>
+            <input ref={this.durationRef} className="Log-element-generic" onKeyPress={(event) => {if(!/[0-9,\,]/.test(event.key)){event.preventDefault();}}} style={{width:"3%"}} defaultValue={this.props.logElement.getDuration()}></input>
+            <textarea ref={this.customerRef} className="Log-element-generic" style={{width:"15%"}} defaultValue={this.props.logElement.getCustomer()}></textarea>
             <div ref={this.ritNumRef} className="Log-element-generic" contentEditable="true" style={{width:"5%"}}>{this.props.logElement.getRitNum()}</div>
             <div ref={this.caseNumRef} className="Log-element-generic" contentEditable="true" style={{width:"5%"}}>{this.props.logElement.getCaseNum()}</div>
             <div ref={this.caseTaskNumRef} className="Log-element-generic" contentEditable="true" style={{width:"5%"}}>{this.props.logElement.getCaseTaskNum()}</div>
