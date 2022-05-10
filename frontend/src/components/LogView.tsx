@@ -141,24 +141,24 @@ export class LogView extends React.Component<LogViewProps>{
       <div id="outerView" className="Outer-view">
         <div style={{height:"8vh",backgroundColor:"transparent",width:"100%",display:"flex"}}>
           <div style={{display:"flex",height:"100%",justifyContent:"flex-start",flexDirection:"row"}}> 
-            <input ref={this.startPickerRef} className="Date-picker" type="date" style={{height:"70%"}}></input>
-            <input ref={this.endPickerRef} className="Date-picker" type="date" style={{height:"70%"}}></input>
-            <div style={{width:"3vw",height:"78%",marginTop:"0.3vh",backgroundColor:"white",marginRight:"0.3vw",borderRadius:"3px",display:"flex",alignItems:"center",justifyContent:"center"}} onClick={()=>{this.fetchLogElements()}}><img src={searchIcon} style={{height:"80%",width:"80%"}}></img></div>
-            <div style={{width:"3vw",height:"78%",marginTop:"0.3vh",backgroundColor:"white",marginRight:"0.5vw",borderRadius:"3px",display:"flex",alignItems:"center",justifyContent:"center"}} onClick={()=>{this.insertEmptyElement()}}><img src={newIcon} style={{height:"90%",width:"90%"}}></img></div>
+            <input ref={this.startPickerRef} className="Date-picker" type="date" style={{height:"70%",backgroundColor:"#d1d1d1"}}></input>
+            <input ref={this.endPickerRef} className="Date-picker" type="date" style={{height:"70%",backgroundColor:"#d1d1d1"}}></input>
+            <div style={{width:"3vw",height:"78%",marginTop:"0.3vh",backgroundColor:"#d1d1d1",marginRight:"0.3vw",borderRadius:"3px",display:"flex",alignItems:"center",justifyContent:"center"}} onClick={()=>{this.fetchLogElements()}}><img src={searchIcon} style={{height:"80%",width:"80%"}}></img></div>
+            <div style={{width:"3vw",height:"78%",marginTop:"0.3vh",backgroundColor:"#d1d1d1",marginRight:"0.5vw",borderRadius:"3px",display:"flex",alignItems:"center",justifyContent:"center"}} onClick={()=>{this.insertEmptyElement()}}><img src={newIcon} style={{height:"90%",width:"90%"}}></img></div>
           </div>
         </div>
         <div className="Field-identifier">
-          <p className="Identifier-generic" style={{width:"29.5%",borderRightWidth:"0.1vh"}}>Description</p>
-          <p className="Identifier-generic" style={{width:"12.5%",borderRightWidth:"0.1vh"}}>Start time</p>
+          <p className="Identifier-generic" style={{width:"25%",borderRightWidth:"0.1vh"}}>Description</p>
+          <p className="Identifier-generic" style={{width:"16%",borderRightWidth:"0.1vh"}}>Start time</p>
           <p className="Identifier-generic" style={{width:"12.5%",borderRightWidth:"0.1vh"}}>Type</p>
           <p className="Identifier-generic" style={{width:"3.5%",borderRightWidth:"0.1vh"}}>Dur.</p>
-          <p className="Identifier-generic" style={{width:"12%",borderRightWidth:"0.1vh"}}>Customer</p>
-          <p className="Identifier-generic" style={{width:"0%",borderRightWidth:"0.1vh"}}>Rit num</p>
-          <p className="Identifier-generic" style={{width:"0%",borderRightWidth:"0.1vh"}}>Case num</p>
-          <p className="Identifier-generic" style={{width:"0%",borderRightWidth:"0.1vh",marginRight:"0.3vw"}}>Case task</p>
-          <p className="Identifier-generic" style={{width:"0%",borderRightWidth:"0.1vh"}}>Internal</p>
-          <p className="Identifier-generic" style={{width:"5%",borderRightWidth:"0.1vh",marginLeft:"-0.2vw"}}>Unpaid</p>
-          <p className="Identifier-generic" style={{width:"5%",borderRightWidth:"0.1vh",marginLeft:"-0.2vw"}}>Ready</p>
+          <p className="Identifier-generic" style={{width:"14.5%",borderRightWidth:"0.1vh"}}>Customer</p>
+          <p className="Identifier-generic" style={{width:"5%",borderRightWidth:"0.1vh"}}>Rit num</p>
+          <p className="Identifier-generic" style={{width:"5%",borderRightWidth:"0.1vh"}}>Case num</p>
+          <p className="Identifier-generic" style={{width:"5%",borderRightWidth:"0.1vh",marginRight:"0.3vw"}}>Case task</p>
+          <p className="Identifier-generic" style={{width:"3%",borderRightWidth:"0.1vh"}}>Int.</p>
+          <p className="Identifier-generic" style={{width:"3%",borderRightWidth:"0.1vh",marginLeft:"-0.2vw"}}>Up.</p>
+          <p className="Identifier-generic" style={{width:"3%",borderRightWidth:"0.1vh",marginLeft:"-0.2vw"}}>Ready</p>
           <p className="Identifier-generic" style={{width:"4%",borderRightWidth:"0.1vh"}}>DELETE</p>
         </div>
         <div ref={this.elementViewRef} id="elementView" className="Element-view">
