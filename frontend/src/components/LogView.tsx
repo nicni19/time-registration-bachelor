@@ -148,17 +148,17 @@ export class LogView extends React.Component<LogViewProps>{
           </div>
         </div>
         <div className="Field-identifier">
-          <p className="Identifier-generic" style={{width:"29.5%",borderRightWidth:"0.1vh"}}>Description</p>
-          <p className="Identifier-generic" style={{width:"12.5%",borderRightWidth:"0.1vh"}}>Start time</p>
+          <p className="Identifier-generic" style={{width:"25%",borderRightWidth:"0.1vh"}}>Description</p>
+          <p className="Identifier-generic" style={{width:"16%",borderRightWidth:"0.1vh"}}>Start time</p>
           <p className="Identifier-generic" style={{width:"12.5%",borderRightWidth:"0.1vh"}}>Type</p>
           <p className="Identifier-generic" style={{width:"3.5%",borderRightWidth:"0.1vh"}}>Dur.</p>
-          <p className="Identifier-generic" style={{width:"12%",borderRightWidth:"0.1vh"}}>Customer</p>
-          <p className="Identifier-generic" style={{width:"0%",borderRightWidth:"0.1vh"}}>Rit num</p>
-          <p className="Identifier-generic" style={{width:"0%",borderRightWidth:"0.1vh"}}>Case num</p>
-          <p className="Identifier-generic" style={{width:"0%",borderRightWidth:"0.1vh",marginRight:"0.3vw"}}>Case task</p>
-          <p className="Identifier-generic" style={{width:"0%",borderRightWidth:"0.1vh"}}>Internal</p>
-          <p className="Identifier-generic" style={{width:"5%",borderRightWidth:"0.1vh",marginLeft:"-0.2vw"}}>Unpaid</p>
-          <p className="Identifier-generic" style={{width:"5%",borderRightWidth:"0.1vh",marginLeft:"-0.2vw"}}>Ready</p>
+          <p className="Identifier-generic" style={{width:"14.5%",borderRightWidth:"0.1vh"}}>Customer</p>
+          <p className="Identifier-generic" style={{width:"5%",borderRightWidth:"0.1vh"}}>Rit num</p>
+          <p className="Identifier-generic" style={{width:"5%",borderRightWidth:"0.1vh"}}>Case num</p>
+          <p className="Identifier-generic" style={{width:"5%",borderRightWidth:"0.1vh",marginRight:"0.3vw"}}>Case task</p>
+          <p className="Identifier-generic" style={{width:"3%",borderRightWidth:"0.1vh"}}>Int.</p>
+          <p className="Identifier-generic" style={{width:"3%",borderRightWidth:"0.1vh",marginLeft:"-0.2vw"}}>Up.</p>
+          <p className="Identifier-generic" style={{width:"3%",borderRightWidth:"0.1vh",marginLeft:"-0.2vw"}}>Ready</p>
           <p className="Identifier-generic" style={{width:"4%",borderRightWidth:"0.1vh"}}>DELETE</p>
         </div>
         <div ref={this.elementViewRef} id="elementView" className="Element-view">

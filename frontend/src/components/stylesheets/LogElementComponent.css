@@ -28,6 +28,7 @@
   margin-top: 0.3vh;
   margin-left: 1vw;
   transform: scale(2);
+  border-color: transparent;
 }
 
 .Delete-button {
