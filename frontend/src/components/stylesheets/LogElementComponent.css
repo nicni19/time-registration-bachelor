@@ -1,0 +1,50 @@
+.Element-shell {
+  width: 99%;
+  min-height: 6vh;
+  max-height: 6vh;
+  background-color: #d6d6d6;
+  margin-top: 0.3vh;
+  padding: 0.1vh;
+  display: flex;
+  align-items: center;
+  overflow-y: hidden;
+}
+
+.Log-element-generic {
+  font-size: 1.5vh;
+  background-color: white;
+  height: 90%;
+  align-self: flex-start;
+  margin-top: 0.3vh;
+  margin-right: 0.3vw;
+  overflow-x: hidden;
+  overflow-y: hidden;
+  border-radius: 3px;
+}
+
+.Log-element-checkbox {
+  background-color: white;
+  height: 90%;
+  margin-top: 0.3vh;
+  margin-left: 1vw;
+  transform: scale(2);
+  border-color: transparent;
+}
+
+.Delete-button {
+  width: 3%;
+  height:90%;
+  border-color: transparent;
+  margin-left: 0.5vw;
+  margin-right: 0.2vw;
+  background-color: rgb(253, 135, 135);
+  color: black;
+  border-radius: 3px;
+}
+
+.Date-picker {
+  height: 100%;
+  border-color: transparent;
+  margin-top: 0.3vh;
+  margin-right: 0.3vw;
+}

@@ -2,7 +2,7 @@ import { Type } from "./Type";
 
 export class LogElement{
     
-    private id:number;
+    private id:number|undefined;
     private userID:string;
     private type:Type;
     private customer:string;
@@ -56,7 +56,7 @@ export class LogElement{
     };
     
     
-    public getId() : number {
+    public getId() : number | undefined{
         return this.id;
     }
 
@@ -162,6 +162,10 @@ export class LogElement{
 
     public getCaseTaskNum():number{
         return this.caseTaskNum;
+    }
+
+    public setCaseTaskNum(caseTaskNum:number){
+        this.caseTaskNum = caseTaskNum;
     }
 
     public getCalendarid():string {

@@ -5,11 +5,17 @@ export interface IDatabaseHandler{
 
     getPreferences(id:String):{};
 
-    getLogElements(queryArguments:String[]);
+    getPrivileges(userID:string):Promise<any>;
+    
+    getLogElements(queryArguments:Map<string,any>);
 
-    insertLogElement(logArray: LogElement[]);
+    insertLogElement(logArray: LogElement[]): Promise<any>;
+    
+    updateLogElement(logArray: LogElement[]): Promise<boolean>;
 
-    deleteLogElements(logIDs: number[]);
+    insertFromGraph(logArray: LogElement[]): Promise<any>;
+
+    deleteLogElements(logIDs: number[], userID:string): Promise<boolean>;
 
     insertTimerRun(runArray: TimerRun[]);
 
@@ -17,12 +23,14 @@ export interface IDatabaseHandler{
 
     deleteTimerRun(runIDs:number[]): string;
 
-    getLastGraphMailLookup(userID:string):string;
+    getLastGraphMailLookup(userID:string):Promise<string>;
 
     setLastGraphMailLookup(userID:string, timestamp:string);
 
-    getLastGraphCalendarLookup(userID:string):string;
+    getLastGraphCalendarLookup(userID:string):Promise<string>;
 
     setLastGraphCalendarLookup(userID:string, timestamp:string);
+
+    isUserInDatabase(userID:string): Promise<boolean>;
 
 }

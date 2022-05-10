@@ -1,0 +1,74 @@
+.Sidebar {
+  background-color:#C4C4C4;
+  width: 15%;
+  height: 100vh;
+  align-content: center;  
+}
+
+.Main-view {
+  background-color: white;
+  width: 85%;
+  height: 100vh;
+  box-shadow: inset 0 0 10px 0px;
+  display: flex;
+  justify-content: center;
+}
+
+#signOutButton {
+  width: 250px;
+  margin: 15px;
+  color: white;
+  background-color: rgb(210, 84, 84);
+  border-color: transparent;
+}
+
+.Nav-button {
+  background-color: transparent;
+  border-color: transparent;
+  font-size: x-large;
+  color: rgb(62, 62, 62);
+  font-family: 'Roboto', sans-serif;
+  margin-top: 5vh;
+  height: 5vh;
+}
+
+
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 40s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
