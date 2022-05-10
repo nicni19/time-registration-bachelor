@@ -50,10 +50,10 @@ class UserBox extends React.Component<UserBoxProps>{
     render(){
         if(this.props.isLoggedIn){
             return(
-                <div style={{backgroundColor:"#41444a",margin:"15px",height:"auto",paddingBottom:"10px",paddingTop:"12px"}}>
+                <div style={{backgroundColor:"#8f8f8f",margin:"15px",height:"auto",paddingBottom:"10px",paddingTop:"12px",borderRadius:"5px"}}>
                     <img ref={this.pictureRef} style={{width:100,height:100,borderRadius:"50%",border:"2px solid #71ad23",marginBottom:"-1vh"}}></img>
-                    <p ref={this.nameRef} style={{fontSize:"large",color:"white",marginBottom:"-0.7vh"}}>[Username]</p>
-                    <p ref={this.emailRef} style={{fontSize:"small",color:"white",overflowX:"hidden"}}>[Email]</p>
+                    <p ref={this.nameRef} style={{fontSize:"large",color:"#242424",marginBottom:"-0.7vh"}}>[Username]</p>
+                    <p ref={this.emailRef} style={{fontSize:"small",color:"#363636",overflowX:"hidden"}}>[Email]</p>
                     <button className="sign-out-button" onClick={()=>{this.props.logout()}}>Sign Out</button>
                 </div>
             )

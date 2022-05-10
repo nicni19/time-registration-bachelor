@@ -112,7 +112,7 @@ export class LogElementComponent extends React.Component<LogElementComponentProp
           <div id="elementShell" className="Element-shell">
             <textarea ref={this.descriptionRef} className="Log-element-generic" style={{width:"24%",overflowY:"hidden",maxWidth:"24%",minWidth:"24%",resize:"none",maxHeight:"80%",border:"none",outline:"none"}} defaultValue={this.props.logElement.getDescription()}></textarea>
             <input ref={this.startTimestampRef} type="datetime-local" className="Date-picker" defaultValue={this.returnDateString()} style={{maxWidth:"16%",minWidth:"16%",maxHeight:"80%"}}></input>
-            <select ref={this.typeRef} className="Log-element-generic" style={{width:"14%",borderColor:"transparent"}}>
+            <select ref={this.typeRef} className="Log-element-generic" style={{width:"14%",borderColor:"transparent"}} >
               <option value="CalendarEvent">CalendarEvent</option>
               <option value="Mail">Mail</option>
               <option value="Meeting">Meeting</option>
