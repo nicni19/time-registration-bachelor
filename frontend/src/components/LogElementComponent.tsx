@@ -63,6 +63,7 @@ export class LogElementComponent extends React.Component<LogElementComponentProp
     if(this.durationRef.current.innerHTML != this.props.logElement.getDuration() && typeof this.durationRef.innerHTML == 'number'){this.props.logElement.setDuration(this.durationRef.innerHTML)}
     if(this.startTimestampRef.current.value != 0){
       let tempDate = new Date(this.startTimestampRef.current.value)
+      
       this.props.logElement.setStartTimestamp(tempDate.getTime())
     }
     if(this.customerRef.current.value != this.props.logElement.getCustomer()){this.props.logElement.setCustomer(this.customerRef.current.value)}
@@ -91,8 +92,9 @@ export class LogElementComponent extends React.Component<LogElementComponentProp
   }
 
   returnDateString():string {
-    
-    let dateString = new Date(this.props.logElement.getStartTimestamp()).toISOString().split('Z')[0];
+
+    let timeZoneOffset = (new Date()).getTimezoneOffset() * 60000;
+    let dateString = new Date(this.props.logElement.getStartTimestamp() - timeZoneOffset).toISOString().split('Z')[0];
     
     return dateString;
   }
