@@ -188,11 +188,69 @@ export class AzureSQLDatabaseHandler implements IDatabaseHandler{
 
   }
 
+  async getLogElementById(id): Promise<LogElement> {
+    let queryString: string;
+    
+    queryString = this.squel.select().from('log_elements').where("id = @id").toString();
+
+    let logElement: LogElement;
+    return await new Promise((resolve,reject) => {
+      const request : Request = new Request(
+        queryString, (err) => {
+          if(err){
+            console.log(err.message)
+          }
+        }
+      );
+        
+
+        request.addParameter('id', this.TYPES.Int, id);
+
+        this.connectionPool.executeRequest(request);
+        
+        request.on("row", columns => {
+          let startTimestamp:number = parseInt(columns['start_timestamp'].value,10);
+          let duration:number = parseInt(columns['duration'].value,10);
+          
+          logElement = new LogElement(columns['user_id'].value,Type[columns['element_type'].value as keyof typeof Type],
+          columns['element_description'].value,startTimestamp,duration,columns['internal_task'].value,
+          columns['unpaid'].value,columns['rit_num'].value,columns['case_num'].value,columns['case_task_num'].value,columns['customer'].value,
+          columns['edited'].value,columns['book_keep_ready'].value,columns['calendar_id'].value,columns['mail_id'].value,columns['id'].value)
+          
+        });
+
+        request.on('requestCompleted',()=>{
+          resolve(logElement);
+        })
+        
+        //console.log(returnJson);
+    }).then(()=>{return logElement}).catch((err)=>{
+      return err;
+    });
+  }
+
+  isSame(logElementx: LogElement, logElementy: LogElement): boolean {
+    console.log("old", JSON.stringify(logElementy));
+    console.log("new", JSON.stringify(logElementx));
+    return JSON.stringify(logElementx) == JSON.stringify(logElementy);
+  }
+
   async updateLogElement(logArray: LogElement[]): Promise<boolean> {
     let array = []
     console.log(logArray);
 
     for (let i: number = 0; i < logArray.length; i++) {
+      if (logArray[i].getEdited() == false) {
+        let logElement: LogElement = await this.getLogElementById(logArray[i].getId())
+        if (logElement != null) {
+
+        }
+        let isSame:boolean = this.isSame(logArray[i], logElement);
+        if (isSame) {
+          continue;
+        }
+        logArray[i].setEdited(true);
+      }
       array.push({
         user_id: logArray[i].getUserID(),
         element_type: Type[logArray[i].getType().valueOf()],
