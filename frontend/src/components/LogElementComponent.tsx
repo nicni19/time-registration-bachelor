@@ -128,7 +128,7 @@ export class LogElementComponent extends React.Component<LogElementComponentProp
             <input ref={this.internalRef} className="Log-element-checkbox" type="checkbox" checked={this.props.logElement.getInternalTask()} onChange={()=>{this.props.logElement.setInternalTask(!this.props.logElement.getInternalTask()); this.props.updateSpecificComponent(this.props.index)}}></input>
             <input ref={this.unpaidRef} className="Log-element-checkbox" type="checkbox" checked={this.props.logElement.getUnpaid()} onChange={()=>{this.props.logElement.setUnpaid(!this.props.logElement.getUnpaid()); this.forceUpdate(); this.props.updateSpecificComponent(this.props.index)}}></input>
             <input ref={this.bookKeepReadyRef} className="Log-element-checkbox" type="checkbox" checked={this.props.logElement.getBookKeepReady()} onChange={()=>{this.props.logElement.setBookKeepReady(!this.props.logElement.getBookKeepReady()); this.props.updateSpecificComponent(this.props.index)}}></input>
-            <button className="Delete-button" onClick={()=>{this.props.markElementForDeletion(this.props.index)}}><img src={trashcan} style={{height:"100%",width:"200%",marginLeft:"-40%"}}></img></button>
+            <button className="Delete-button" style={{display:"flex",alignItems:"center",justifyContent:"center"}} onClick={()=>{this.props.markElementForDeletion(this.props.index)}}><img src={trashcan} style={{height:"50%",width:"80%",color:"yellow"}}></img></button>
           </div>
     )
   }
