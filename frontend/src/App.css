@@ -1,5 +1,5 @@
 .Sidebar {
-  background-color:#C4C4C4;
+  background-color:#3a404b;
   width: 15%;
   height: 100vh;
   align-content: center;  
@@ -26,7 +26,7 @@
   background-color: transparent;
   border-color: transparent;
   font-size: x-large;
-  color: rgb(62, 62, 62);
+  color: rgb(204, 203, 203);
   font-family: 'Roboto', sans-serif;
   margin-top: 5vh;
   height: 5vh;

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import logo from './logo.svg';
-import heimdalLogo from './public/Heimdal_logo.png'
+import heimdalLogo from './public/Heimdal_logo_ny.png'
+import heimdalLogoGradient from './public/Heimdal_gradient.png'
 import './App.css';
 import {config} from './config.js';
 import {PublicClientApplication} from '@azure/msal-browser';
@@ -89,7 +90,7 @@ class App extends React.Component<{},{error:any,isAuthenticated:boolean,user:any
           </div>
           :
           <header className='App-header'>
-              <img src={heimdalLogo} className="Heimdal-logo" alt="logo" style={{width:"50vw",marginBottom:"2vw"}}/>
+              <img src={heimdalLogoGradient} className="Heimdal-logo" alt="logo" style={{width:"50vw",marginBottom:"2vw"}}/>
               <img src={relateITLogo} alt="logo" style={{width:"25vw"}}/>
               
               <button onClick={()=>{this.login()}} style={{border:"0",background:"transparent",marginTop:"6vw"}}>
