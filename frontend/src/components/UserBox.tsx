@@ -30,11 +30,12 @@ class UserBox extends React.Component<UserBoxProps>{
     }
 
     async componentDidMount(){
-        let url = await this.props.clientHandler.getAccountPhoto();
-        if(await url != undefined || null){
-            //Display user photo
+        try{
+            //Set profile picture
+            let url = await this.props.clientHandler.getAccountPhoto();
             this.pictureRef.current.setAttribute('src',url);
-        }else{
+        }catch(err){
+            //Set default picture if no picture is found
             this.pictureRef.current.setAttribute('src',DefaultPicture)
         }
         let clientInfoArray = await this.props.clientHandler.getNameAndEmail();
@@ -44,10 +45,6 @@ class UserBox extends React.Component<UserBoxProps>{
             //Display email
             this.emailRef.current.innerHTML = clientInfoArray[2];
         } 
-    }
-
-    async test(){
-        this.props.clientHandler.getNameAndEmail();
     }
     
     render(){
