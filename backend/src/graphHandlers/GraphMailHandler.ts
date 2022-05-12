@@ -20,12 +20,10 @@ export class GraphMailHandler implements IGraphHandler {
         } catch (err) {
             return err;
         } finally {
-            databaseHandler.insertFromGraph(logElements)
-            .then(databaseHandler.setLastGraphMailLookup(userID, new Date(Date.now()).toISOString())
-            );
+            let mailSuccess: boolean = await databaseHandler.insertFromGraph(logElements)
+            .then(databaseHandler.setLastGraphMailLookup(userID, new Date(Date.now()).toISOString()));
+            return mailSuccess;
         }
-
-        return true;
     }
 
     async fetchMailEvents(authToken, userID: string): Promise<any> {

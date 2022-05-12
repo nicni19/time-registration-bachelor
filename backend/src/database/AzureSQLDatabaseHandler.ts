@@ -351,7 +351,7 @@ export class AzureSQLDatabaseHandler implements IDatabaseHandler{
     throw new Error('Method not implemented.');
   }
 
-  getTimerRuns(queryArguments: string[]) {
+  getTimerRuns(queryArguments: string[]): TimerRun[] {
     throw new Error('Method not implemented.');
   }
 

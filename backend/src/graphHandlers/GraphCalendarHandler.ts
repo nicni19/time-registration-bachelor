@@ -17,14 +17,15 @@ export class GraphCalendarHandler implements IGraphHandler {
     
     async updateDatabase(databaseHandler: IDatabaseHandler, authToken: string, userID: string): Promise<any>{
         this.lastLookup = await databaseHandler.getLastGraphCalendarLookup(userID);
-        console.log("Calendar");
 
         let logElements: LogElement[] = await this.fetchCalendarEvents(authToken, userID);
         
-        databaseHandler.insertFromGraph(logElements).then(
+        
+        let calendarSuccess: boolean = await databaseHandler.insertFromGraph(logElements).then(
             databaseHandler.setLastGraphCalendarLookup(userID, new Date(Date.now()).toISOString())
         );
-        return logElements;
+
+        return calendarSuccess;
     }
 
     async fetchCalendarEvents(authToken: string, userID: string): Promise<any> {
