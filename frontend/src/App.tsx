@@ -1,12 +1,7 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import heimdalLogo from './public/Heimdal_logo_ny.png'
 import heimdalLogoGradient from './public/Heimdal_gradient.png'
 import './App.css';
-import {config} from './config.js';
-import {PublicClientApplication} from '@azure/msal-browser';
-import { resolve } from 'path';
-import { rejects } from 'assert';
 import UserBox from './components/UserBox';
 import { ClientHandler } from './common/ClientHandler';
 import relateITLogo from './public/RelateIT_logo_big.svg';
@@ -42,7 +37,7 @@ class App extends React.Component<{},{error:any,isAuthenticated:boolean,user:any
     if(loginResult){
       this.setState({isAuthenticated:true}); 
       this.viewsArray.push(<LogView backendAPI={this.backendAPI} userID={this.clientHandler.getUserId()}></LogView>)
-    this.viewsArray.push(<PreferencesView backendAPI={this.backendAPI}></PreferencesView>)
+      this.viewsArray.push(<PreferencesView backendAPI={this.backendAPI}></PreferencesView>)
     }else{
       console.log(loginResult)
       this.setState({
