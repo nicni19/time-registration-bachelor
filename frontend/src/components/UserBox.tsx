@@ -2,6 +2,7 @@ import { stringify } from "querystring";
 import React, { RefObject } from "react";
 import {ClientHandler} from '../common/ClientHandler'
 import './stylesheets/UserBox.css'
+import DefaultPicture from '../public/default_profile_picture.png'
 
 type UserBoxProps = {
     isLoggedIn:boolean;
@@ -30,9 +31,11 @@ class UserBox extends React.Component<UserBoxProps>{
 
     async componentDidMount(){
         let url = await this.props.clientHandler.getAccountPhoto();
-        if(await url != null){
+        if(await url != undefined || null){
             //Display user photo
             this.pictureRef.current.setAttribute('src',url);
+        }else{
+            this.pictureRef.current.setAttribute('src',DefaultPicture)
         }
         let clientInfoArray = await this.props.clientHandler.getNameAndEmail();
         if(await clientInfoArray){
@@ -50,10 +53,10 @@ class UserBox extends React.Component<UserBoxProps>{
     render(){
         if(this.props.isLoggedIn){
             return(
-                <div style={{backgroundColor:"#636363",margin:"15px",height:"auto",paddingBottom:"10px",paddingTop:"12px",borderRadius:"5px"}}>
+                <div id="User-box-shell">
                     <img ref={this.pictureRef} style={{width:100,height:100,borderRadius:"50%",border:"2px solid #71ad23",marginBottom:"-1vh"}}></img>
-                    <p ref={this.nameRef} style={{fontSize:"large",color:"#242424",marginBottom:"-0.7vh"}}>[Username]</p>
-                    <p ref={this.emailRef} style={{fontSize:"small",color:"#363636",overflowX:"hidden"}}>[Email]</p>
+                    <p ref={this.nameRef} id="Name-field">[Username]</p>
+                    <p ref={this.emailRef} id="Email-field">[Email]</p>
                     <button className="sign-out-button" onClick={()=>{this.props.logout()}}>Sign Out</button>
                 </div>
             )

@@ -21,7 +21,7 @@ export class GraphCalendarHandler implements IGraphHandler {
 
         let logElements: LogElement[] = await this.fetchCalendarEvents(authToken, userID);
         
-        databaseHandler.insertFromGraph(logElements).then(
+        await databaseHandler.insertFromGraph(logElements).then(
             databaseHandler.setLastGraphCalendarLookup(userID, new Date(Date.now()).toISOString())
         );
         return logElements;
@@ -45,10 +45,11 @@ export class GraphCalendarHandler implements IGraphHandler {
                 })
 
                 let startTimeString = ((body.value[i].start.dateTime).replace(/-/g,'/'));
-                let startTime = new Date(startTimeString.replace('T', ' ')).getTime();
+                let timeZoneOffset = (new Date()).getTimezoneOffset() * 60000;
+                let startTime = new Date(startTimeString.replace('T', ' ')).getTime() - timeZoneOffset;
                 console.log(startTimeString)
                 console.log(startTime)
-                let endTime = new Date((body.value[i].end.dateTime).replace('T', ' ')).getTime();
+                let endTime = new Date((body.value[i].end.dateTime).replace('T', ' ')).getTime() - timeZoneOffset;
                 let duration: number = endTime - startTime;
                 let description = body.value[i].subject + ': ' + event;
 

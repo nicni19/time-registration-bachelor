@@ -7,6 +7,7 @@
   padding: 0.1vh;
   display: flex;
   align-items: center;
+  justify-content: center;
   overflow-y: hidden;
 }
 
@@ -37,12 +38,12 @@
   border-color: transparent;
   margin-left: 0.5vw;
   margin-right: 0.2vw;
-  background-color: rgb(253, 135, 135);
+  background-color: transparent;
   color: black;
   border-radius: 3px;
 }
 
-.Date-picker {
+.Component-date-picker {
   height: 100%;
   border-color: transparent;
   margin-top: 0.3vh;
