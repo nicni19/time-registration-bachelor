@@ -3,7 +3,7 @@ import { TimerRun } from "../domain/TimerRun";
 
 export interface IDatabaseHandler{
 
-    getPreferences(id:String):{};
+    getPreferences(userid:String):{};
 
     getPrivileges(userID:string):Promise<any>;
     
@@ -19,7 +19,7 @@ export interface IDatabaseHandler{
 
     insertTimerRun(runArray: TimerRun[]);
 
-    getTimerRuns(queryArguments: string[]);
+    getTimerRuns(queryArguments: string[]): TimerRun[];
 
     deleteTimerRun(runIDs:number[]): string;
 

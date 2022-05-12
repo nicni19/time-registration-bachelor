@@ -13,19 +13,13 @@ export class GraphMailHandler implements IGraphHandler {
     
     async updateDatabase(databaseHandler: IDatabaseHandler, authToken: string, userID: string): Promise<boolean> {
         this.lastLookup = await databaseHandler.getLastGraphMailLookup(userID);
-        let logElements: LogElement[]
+        
+        let logElements: LogElement[] = await this.fetchMailEvents(authToken, userID);
+    
+        let mailSuccess: boolean = await databaseHandler.insertFromGraph(logElements)
+        .then(databaseHandler.setLastGraphMailLookup(userID, new Date(Date.now()).toISOString()));
 
-        try {
-            logElements = await this.fetchMailEvents(authToken, userID);
-        } catch (err) {
-            return err;
-        } finally {
-            databaseHandler.insertFromGraph(logElements)
-            .then(databaseHandler.setLastGraphMailLookup(userID, new Date(Date.now()).toISOString())
-            );
-        }
-
-        return true;
+        return mailSuccess;
     }
 
     async fetchMailEvents(authToken, userID: string): Promise<any> {
