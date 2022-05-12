@@ -20,10 +20,8 @@ export class GraphCalendarHandler implements IGraphHandler {
 
         let logElements: LogElement[] = await this.fetchCalendarEvents(authToken, userID);
         
-        
-        let calendarSuccess: boolean = await databaseHandler.insertFromGraph(logElements).then(
-            databaseHandler.setLastGraphCalendarLookup(userID, new Date(Date.now()).toISOString())
-        );
+        let calendarSuccess: boolean = await databaseHandler.insertFromGraph(logElements)
+        .then(databaseHandler.setLastGraphCalendarLookup(userID, new Date(Date.now()).toISOString()));
 
         return calendarSuccess;
     }
