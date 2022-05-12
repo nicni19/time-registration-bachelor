@@ -1,9 +1,37 @@
 .sign-out-button {
-  width: 50%;
-  background-color: rgb(156, 82, 82);
+  width: 80%;
+  background-color: rgb(0, 167, 159);
   border-color: transparent;
   color: white;
   font-family: 'Roboto', sans-serif;
   font-size: large;
   margin-top: 1vh;
+  border-radius: 5px;
+  transition: background-color 0.2s;
+}
+
+.sign-out-button:hover{
+  background-color: rgb(23, 210, 157);
+}
+
+#User-box-shell {
+  background-color: #636363;
+  margin: 15px;
+  height: auto;
+  padding-bottom: 10px;
+  padding-top: 12px;
+  border-radius: 5px;
+}
+
+#Name-field {
+  font-size:large;
+  color: #e1e1e1;
+  margin-bottom: -0.7vh;
+}
+
+#Email-field {
+  font-size: small;
+  color: #aaaaaa;
+  overflow-x: hidden;
+  font-weight: 700;
 }

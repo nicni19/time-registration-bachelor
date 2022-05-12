@@ -141,10 +141,10 @@ export class LogView extends React.Component<LogViewProps>{
       <div id="outerView" className="Outer-view">
         <div style={{height:"8vh",backgroundColor:"transparent",width:"100%",display:"flex"}}>
           <div style={{display:"flex",height:"100%",justifyContent:"flex-start",flexDirection:"row"}}> 
-            <input ref={this.startPickerRef} className="Date-picker" type="date" style={{height:"70%",backgroundColor:"#d1d1d1"}}></input>
-            <input ref={this.endPickerRef} className="Date-picker" type="date" style={{height:"70%",backgroundColor:"#d1d1d1"}}></input>
-            <div style={{width:"3vw",height:"78%",marginTop:"0.3vh",backgroundColor:"#d1d1d1",marginRight:"0.3vw",borderRadius:"3px",display:"flex",alignItems:"center",justifyContent:"center"}} onClick={()=>{this.fetchLogElements()}}><img src={searchIcon} style={{height:"80%",width:"80%"}}></img></div>
-            <div style={{width:"3vw",height:"78%",marginTop:"0.3vh",backgroundColor:"#d1d1d1",marginRight:"0.5vw",borderRadius:"3px",display:"flex",alignItems:"center",justifyContent:"center"}} onClick={()=>{this.insertEmptyElement()}}><img src={newIcon} style={{height:"90%",width:"90%"}}></img></div>
+            <input ref={this.startPickerRef} className="Date-picker" type="date"></input>
+            <input ref={this.endPickerRef} className="Date-picker" type="date"></input>
+            <div className="Log-toolbar-button" onClick={()=>{this.fetchLogElements()}}><img id="Search-icon" src={searchIcon}></img></div>
+            <div className="Log-toolbar-button" onClick={()=>{this.insertEmptyElement()}}><img id="New-icon" src={newIcon}></img></div>
           </div>
         </div>
         <div className="Field-identifier">
