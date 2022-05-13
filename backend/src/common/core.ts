@@ -39,8 +39,10 @@ export class Core{
 
 
     async insertLogElements(json): Promise<boolean>{
-        let newInserted = await this.databaseHandler.insertLogElement(this.convertJSONToLogElements(json).get('New'));
-        let oldUpdated = await this.databaseHandler.updateLogElement(this.convertJSONToLogElements(json).get('Old'));
+        let map = this.convertJSONToLogElements(json);
+
+        let newInserted = await this.databaseHandler.insertLogElement(map.get('New'));
+        let oldUpdated = await this.databaseHandler.updateLogElement(map.get('Old'));
 
         if (newInserted && oldUpdated) {
             return true;
@@ -97,6 +99,8 @@ export class Core{
     }
 
     convertJSONToLogElements(json) {
+        console.log(json);
+        
         let logElements: LogElement[] = [];
         let newLogElements: LogElement[] = [];
 
