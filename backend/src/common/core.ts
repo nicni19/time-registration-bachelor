@@ -1,15 +1,12 @@
 import { IAuthHandler } from './interfaces/IAuthHandler';
-import {IDatabaseHandler} from './interfaces/IDatabaseHandler'
 import { MicrosoftAuthHandler } from './MicrosoftAuthHandler';
 import { GraphCalendarHandler } from '../graphHandlers/GraphCalendarHandler';
 import { GraphMailHandler } from '../graphHandlers/GraphMailHandler';
 import { IGraphHandler } from './interfaces/IGraphHandler';
-import { SQLDatabaseHandler } from '../database/SQLDatabaseHandler'; 
-
-import graphTest from '../graphTest.json';
 import { LogElement } from './domain/LogElement';
 import { AzureSQLDatabaseHandler } from '../database/AzureSQLDatabaseHandler';
 import { Actions } from './domain/Actions';
+import { JsonConverter } from './JsonConverter';
 
 
 export class Core{
@@ -17,6 +14,7 @@ export class Core{
     databaseHandler: AzureSQLDatabaseHandler = new AzureSQLDatabaseHandler();
     authHandler: IAuthHandler = new MicrosoftAuthHandler(this.databaseHandler);
     graphMap = new Map();
+    jsonConverter = new JsonConverter();
 
     mailHandler: IGraphHandler;
     calendarHandler: IGraphHandler;
@@ -39,8 +37,9 @@ export class Core{
 
 
     async insertLogElements(json): Promise<boolean>{
-        let newInserted = await this.databaseHandler.insertLogElement(this.convertJSONToLogElements(json).get('New'));
-        let oldUpdated = await this.databaseHandler.updateLogElement(this.convertJSONToLogElements(json).get('Old'));
+        let logMap = this.jsonConverter.convertJSONToLogElements(json)
+        let newInserted = await this.databaseHandler.insertLogElement(logMap.get('New'));
+        let oldUpdated = await this.databaseHandler.updateLogElement(logMap.get('Old'));
 
         if (newInserted && oldUpdated) {
             return true;
@@ -95,38 +94,5 @@ export class Core{
     async updatePreferences(userID:string,preferences:boolean[]){
         this.databaseHandler.updatePreferences(userID,preferences)
     }
-
-    convertJSONToLogElements(json) {
-        let logElements: LogElement[] = [];
-        let newLogElements: LogElement[] = [];
-
-        for (let i: number = 0; i < json.length; i++) {
-            if (json[i].id != null) {
-                logElements.push(new LogElement(json[i].userID, json[i].type, json[i].description, 
-                    json[i].startTimestamp, json[i].duration, json[i].internalTask, json[i].unpaid,
-                    parseInt(json[i].ritNum, 10), json[i].caseNum, parseInt(json[i].caseTaskNum,10), json[i].customer,
-                    json[i].edited, json[i].bookKeepReady, json[i].calendarid, json[i].mailid,
-                    json[i].id))
-            } else {
-                newLogElements.push(new LogElement(json[i].userID, json[i].type, json[i].description, 
-                    json[i].startTimestamp, json[i].duration, json[i].internalTask, json[i].unpaid,
-                    parseInt(json[i].ritNum, 10), json[i].caseNum, parseInt(json[i].caseTaskNum,10), json[i].customer,
-                    json[i].edited, json[i].bookKeepReady, json[i].calendarid, json[i].mailid,
-                    json[i].id))
-            }
-        }
-        let logMap = new Map();
-        
-        
-        
-        logMap.set('Old', logElements);
-        logMap.set('New', newLogElements);
-
-        return logMap;
-    }
-
-
-
-
 
 }
