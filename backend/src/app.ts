@@ -109,7 +109,7 @@ app.get('/getLogElements/:startDate/:endDate', async (req, res) => {
     await core.graphUpdate(requestJSON.userid as string, token).then( async () => {
       logElements = await core.getLogElements(queryMap);
     });
-    
+    console.log(logElements)
     res.status(200);
     res.send({
       'logElements': logElements
