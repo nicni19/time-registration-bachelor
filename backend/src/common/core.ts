@@ -94,5 +94,4 @@ export class Core{
     async updatePreferences(userID:string,preferences:boolean[]){
         this.databaseHandler.updatePreferences(userID,preferences)
     }
-
 }
