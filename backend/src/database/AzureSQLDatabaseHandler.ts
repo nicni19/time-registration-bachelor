@@ -236,8 +236,6 @@ export class AzureSQLDatabaseHandler implements IDatabaseHandler{
   async updateLogElement(logArray: LogElement[]): Promise<boolean> {
     let array = []
     let idArray: number[] = []
-    console.log("pØLSSLSLSLSLSLSL");
-    
 
     for (let i: number = 0; i < logArray.length; i++) {
       if (logArray[i].getEdited() == false) {
