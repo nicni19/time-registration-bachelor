@@ -55,6 +55,7 @@ export class LogView extends React.Component<LogViewProps>{
       }
     }
     this.globalLogElements = newArray;
+    
   }
 
   //TODO: Indsæt elementet som skal slettes i et separat array -> query til db
@@ -68,7 +69,7 @@ export class LogView extends React.Component<LogViewProps>{
     this.globalLogElements.splice(index,1);
     console.log("Index removed: " + index);
     this.rearrangeElementsArray();
-    this.forceUpdate()
+    this.forceUpdate();
     console.log(this.iDsForDeletion)
   }
 
@@ -164,7 +165,7 @@ export class LogView extends React.Component<LogViewProps>{
         <div ref={this.elementViewRef} id="elementView" className="Element-view">
           {
             this.globalLogElements.map(log =>{
-              return log.render();
+              return <div key={log.props.logElement.getId()} style={{width:"99%",height:"6vh",display:"flex"}}> {log.render()} </div>;
             })
           }
         </div>
