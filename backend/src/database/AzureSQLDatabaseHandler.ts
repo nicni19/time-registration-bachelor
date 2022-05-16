@@ -50,7 +50,7 @@ export class AzureSQLDatabaseHandler implements IDatabaseHandler{
       const request : Request = new Request(
         queryString, (err) => {
           if(err){
-            console.log(err.message)
+            console.log("isUserInDatabase: ", err.message)
           }
         });
         request.addParameter('userid', this.TYPES.VarChar, userID);
@@ -96,7 +96,7 @@ export class AzureSQLDatabaseHandler implements IDatabaseHandler{
       const request : Request = new Request(
         queryString, (err) => {
           if(err){
-            console.log(err.message)
+            console.log("getLogElements: ",err.message)
           }
         }
       );
@@ -170,7 +170,7 @@ export class AzureSQLDatabaseHandler implements IDatabaseHandler{
       const request : Request = new Request(
         queryString, (err) => {
           if(err){
-            console.log(err.message)
+            console.log("insertLogElement: ",err.message)
             success = false;
             reject(false)
           }
@@ -198,7 +198,7 @@ export class AzureSQLDatabaseHandler implements IDatabaseHandler{
       const request : Request = new Request(
         queryString, (err) => {
           if(err){
-            console.log(err.message)
+            console.log("getLogElementById: ", err.message)
           }
         }
       );
@@ -230,14 +230,14 @@ export class AzureSQLDatabaseHandler implements IDatabaseHandler{
   }
 
   isSame(logElementx: LogElement, logElementy: LogElement): boolean {
-    console.log("old", JSON.stringify(logElementy));
-    console.log("new", JSON.stringify(logElementx));
     return JSON.stringify(logElementx) == JSON.stringify(logElementy);
   }
 
   async updateLogElement(logArray: LogElement[]): Promise<boolean> {
     let array = []
-    console.log(logArray);
+    let idArray: number[] = []
+    console.log("pØLSSLSLSLSLSLSL");
+    
 
     for (let i: number = 0; i < logArray.length; i++) {
       if (logArray[i].getEdited() == false) {
@@ -251,6 +251,7 @@ export class AzureSQLDatabaseHandler implements IDatabaseHandler{
         }
         logArray[i].setEdited(true);
       }
+      idArray.push(logArray[i].getId());
       array.push({
         user_id: logArray[i].getUserID(),
         element_type: Type[logArray[i].getType().valueOf()],
@@ -271,12 +272,14 @@ export class AzureSQLDatabaseHandler implements IDatabaseHandler{
     
     }
 
-    return this.updateHelper(0,array,logArray);
+    return this.updateHelper(0,array,idArray);
   }
 
-  async updateHelper(index:number, array,logArray): Promise<boolean> {
+  async updateHelper(index:number, array,idArray): Promise<boolean> {
     let success: boolean;
 
+    console.log(idArray[index]);
+    
     return await new Promise((resolve,reject) => {
       
         let queryString = this.squel.update()
@@ -288,7 +291,7 @@ export class AzureSQLDatabaseHandler implements IDatabaseHandler{
         const request : Request = new Request(
           queryString, (err) => {
             if(err){
-              console.log(err.message)
+              console.log("updateHelper: ", err.message)
               success = false;
               reject(false)
             }
@@ -296,12 +299,12 @@ export class AzureSQLDatabaseHandler implements IDatabaseHandler{
         );
         
 
-        request.addParameter('id', this.TYPES.Int, logArray[index].getId());
+        request.addParameter('id', this.TYPES.Int, idArray[index]);
   
         this.connectionPool.executeRequest(request);
 
         request.on('requestCompleted',()=>{
-          this.updateHelper(index+1,array,logArray);
+          this.updateHelper(index+1,array,idArray);
         })  
         
 
@@ -325,7 +328,7 @@ export class AzureSQLDatabaseHandler implements IDatabaseHandler{
       const request : Request = new Request(
         queryString, (err) => {
           if(err){
-            console.log(err.message)
+            console.log("deleteLogElements: ", err.message)
             success = false;
             reject(false)
           }
@@ -366,7 +369,7 @@ export class AzureSQLDatabaseHandler implements IDatabaseHandler{
       const request : Request = new Request(
         queryString, (err) => {
           if(err){
-            console.log(err.message, "wow")
+            console.log("getLastGraphMailLookup: ", err.message)
           }
         }
       );
@@ -389,7 +392,7 @@ export class AzureSQLDatabaseHandler implements IDatabaseHandler{
     const request : Request = new Request(
       queryString, (err) => {
         if(err){
-          console.log(err.message)
+          console.log("setLastGraphMailLookup: ", err.message)
         }
       }
     );
@@ -404,7 +407,7 @@ export class AzureSQLDatabaseHandler implements IDatabaseHandler{
       const request : Request = new Request(
         queryString, (err) => {
           if(err){
-            console.log(err.message)
+            console.log("getLastGraphCalendarLookup: ", err.message)
           }
         }
       );
@@ -425,7 +428,7 @@ export class AzureSQLDatabaseHandler implements IDatabaseHandler{
     const request : Request = new Request(
       queryString, (err) => {
         if(err){
-          console.log(err.message)
+          console.log("setLastGraphCalendarLookup: ", err.message)
         }
       }
     );
@@ -467,7 +470,9 @@ export class AzureSQLDatabaseHandler implements IDatabaseHandler{
       const request : Request = new Request(
         queryString, (err) => {
           if(err){
-            console.log(err.message)
+            console.log("graphInsert");
+            
+            console.log("insertFromGraph: ", err.message)
           }
         }
       );
@@ -495,7 +500,7 @@ export class AzureSQLDatabaseHandler implements IDatabaseHandler{
       const request : Request = new Request(
         queryString,(err)=>{
           if(err){
-            console.log(err.message)
+            console.log("getPreferences: ", err.message)
           }
         }
       )
@@ -524,7 +529,7 @@ export class AzureSQLDatabaseHandler implements IDatabaseHandler{
     const request : Request = new Request(
       queryString, (err) => {
         if(err){
-          console.log(err.message)
+          console.log("updatePreferences: ", err.message)
         }
       }
     );
@@ -544,7 +549,7 @@ export class AzureSQLDatabaseHandler implements IDatabaseHandler{
       const request : Request = new Request(
         queryString, (err) => {
           if(err){
-            console.log(err.message)
+            console.log("getPrivileges: ", err.message)
           }
         }
       )
