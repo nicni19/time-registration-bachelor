@@ -13,14 +13,14 @@ CREATE TABLE log_elements (
     duration bigint,
     internal_task BIT,
     unpaid BIT,
-    rit_num int,
+    rit_num varchar(10),
     case_num varchar(10),
     case_task_num int,
     customer varchar(100),
     edited BIT NOT NULL,
     book_keep_ready BIT NOT NULL,
-    calendar_id varchar(200),
-    mail_id varchar(200)
+    calendar_id varchar(200) unique,
+    mail_id varchar(200) unique
 );
 
 CREATE TABLE temp_log_elements (
@@ -32,14 +32,14 @@ CREATE TABLE temp_log_elements (
     duration bigint,
     internal_task BIT,
     unpaid BIT,
-    rit_num int,
+    rit_num varchar(10),
     case_num varchar(10),
     case_task_num int,
     customer varchar(100),
     edited BIT NOT NULL,
     book_keep_ready BIT NOT NULL,
-    calendar_id varchar(200),
-    mail_id varchar(200)
+    calendar_id varchar(200) unique,
+    mail_id varchar(200) unique
 );
 
 CREATE TABLE preferences (
