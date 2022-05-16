@@ -25,7 +25,7 @@ export class JsonConverter{
     
     logMap.set('Old', logElements);
     logMap.set('New', newLogElements);
-
+  
     return logMap;
   }
 }
