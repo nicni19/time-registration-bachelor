@@ -131,12 +131,6 @@ export class LogView extends React.Component<LogViewProps>{
     })
   }
 
-  testChangeDescription(){
-    this.globalLogElements[0].props.logElement.setDescription("Heej!!")
-    //this.globalLogElements[0].updateLogElementState();
-    this.forceUpdate();
-  }
-
   render(){
     return(
       <div id="outerView" className="Outer-view">

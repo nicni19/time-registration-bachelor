@@ -68,7 +68,7 @@ export class LogElementComponent extends React.Component<LogElementComponentProp
     }
     if(this.customerRef.current.value != this.props.logElement.getCustomer()){this.props.logElement.setCustomer(this.customerRef.current.value)}
     if(this.durationRef.current.value != 0){this.props.logElement.setDuration(Math.abs(this.durationRef.current.value) * 1000 * 60 * 60)}
-    this.props.logElement.setType(Type[this.typeRef.current.value as keyof typeof Type])
+    this.props.logElement.setType(parseInt(this.typeRef.current.value))
     this.props.logElement.setRitNum(this.ritNumRef.current.innerHTML)
     this.props.logElement.setCaseNum(this.caseNumRef.current.innerHTML)
     this.props.logElement.setCaseTaskNum(this.caseTaskNumRef.current.innerHTML)
@@ -79,7 +79,6 @@ export class LogElementComponent extends React.Component<LogElementComponentProp
   //Type[..].value as keyof typeof Type
   printLogElement(){
     console.log(this.props.logElement)
-    console.log(Type[this.typeRef.current.value as keyof typeof Type])
   }
 
   convertStartTimestamp():string{
@@ -111,14 +110,14 @@ export class LogElementComponent extends React.Component<LogElementComponentProp
 
   render(){
     return(
-          <div id="elementShell" className="Element-shell">
+          <div id="elementShell" className="Element-shell" onClick={()=>{this.printLogElement()}}>
             <textarea ref={this.descriptionRef} className="Log-element-generic" style={{width:"24%",overflowY:"hidden",maxWidth:"24%",minWidth:"24%",resize:"none",maxHeight:"80%",border:"none",outline:"none"}} defaultValue={this.props.logElement.getDescription()}></textarea>
             <input ref={this.startTimestampRef} type="datetime-local" className="Component-date-picker" defaultValue={this.returnDateString()} style={{maxWidth:"16%",minWidth:"16%",maxHeight:"80%"}}></input>
-            <select ref={this.typeRef} className="Log-element-generic" style={{width:"14%",borderColor:"transparent"}} >
-              <option value="CalendarEvent">CalendarEvent</option>
-              <option value="Mail">Mail</option>
-              <option value="Meeting">Meeting</option>
-              <option value="Call">Call</option>
+            <select ref={this.typeRef} className="Log-element-generic" defaultValue={this.props.logElement.getType()} style={{width:"14%",borderColor:"transparent"}} >
+              <option value={0}>CalendarEvent</option>
+              <option value={1}>Mail</option>
+              <option value={2}>Meeting</option>
+              <option value={3}>Call</option>
             </select>
             <input ref={this.durationRef} className="Log-element-generic" onKeyPress={(event) => {if(!/[0-9,\.]/.test(event.key)){event.preventDefault();}}} style={{width:"3%",maxHeight:"75%",borderColor:"transparent"}} defaultValue={this.returnHours()}></input>
             <textarea ref={this.customerRef} className="Log-element-generic" style={{width:"15%",maxHeight:"80%",resize:"none",border:"none",outline:"none"}} defaultValue={this.props.logElement.getCustomer()}></textarea>
