@@ -1,5 +1,6 @@
 import React from "react";
 import { BackendAPI } from "../common/BackendAPI";
+import "./stylesheets/PreferenceView.css"
 
 type PreferencesViewProps = {
   backendAPI:BackendAPI;

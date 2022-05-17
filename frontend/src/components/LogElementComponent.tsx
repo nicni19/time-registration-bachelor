@@ -103,11 +103,6 @@ export class LogElementComponent extends React.Component<LogElementComponentProp
     return hours;
   }
 
-  /*
-  <div style={{width:"1%", backgroundColor:"green",height:"100%"}} onClick={()=>{this.updateLogElementState()}}></div>
-  <div style={{width:"1%", backgroundColor:"red",height:"100%"}} onClick={()=>{this.printLogElement()}}></div>
-  */
-
   render(){
     return(
           <div id="elementShell" className="Element-shell" onClick={()=>{this.printLogElement()}}>
@@ -121,9 +116,9 @@ export class LogElementComponent extends React.Component<LogElementComponentProp
             </select>
             <input ref={this.durationRef} className="Log-element-generic" onKeyPress={(event) => {if(!/[0-9,\.]/.test(event.key)){event.preventDefault();}}} style={{width:"3%",maxHeight:"75%",borderColor:"transparent"}} defaultValue={this.returnHours()}></input>
             <textarea ref={this.customerRef} className="Log-element-generic" style={{width:"15%",maxHeight:"80%",resize:"none",border:"none",outline:"none"}} defaultValue={this.props.logElement.getCustomer()}></textarea>
-            <input ref={this.ritNumRef} className="Log-element-generic" maxLength={10} onKeyPress={(event) => {if(!/[0-9,R,r,I,i,T,t,-]/.test(event.key)){event.preventDefault();}}} style={{width:"5%"}} defaultValue={this.props.logElement.getRitNum()}></input>
-            <input ref={this.caseNumRef} className="Log-element-generic" maxLength={10} style={{width:"5%"}} defaultValue={this.props.logElement.getCaseNum()}></input>
-            <input ref={this.caseTaskNumRef} className="Log-element-generic" maxLength={10} onKeyPress={(event) => {if(!/[0-9]/.test(event.key)){event.preventDefault();}}} style={{width:"5%"}} defaultValue={this.props.logElement.getCaseTaskNum()}></input>
+            <input ref={this.ritNumRef} id="Rit-num-input" className="Log-element-generic" maxLength={10} onKeyPress={(event) => {if(!/[0-9,R,r,I,i,T,t,-]/.test(event.key)){event.preventDefault();}}} style={{width:"5%"}} defaultValue={this.props.logElement.getRitNum()}></input>
+            <input ref={this.caseNumRef} id="Case-num-input" className="Log-element-generic" maxLength={10} style={{width:"5%"}} defaultValue={this.props.logElement.getCaseNum()}></input>
+            <input ref={this.caseTaskNumRef} id="Case-task-num-input" className="Log-element-generic" maxLength={10} onKeyPress={(event) => {if(!/[0-9]/.test(event.key)){event.preventDefault();}}} style={{width:"5%"}} defaultValue={this.props.logElement.getCaseTaskNum()}></input>
             <input ref={this.internalRef} className="Log-element-checkbox" type="checkbox" checked={this.props.logElement.getInternalTask()} onChange={()=>{this.props.logElement.setInternalTask(!this.props.logElement.getInternalTask()); this.props.updateSpecificComponent(this.props.index)}}></input>
             <input ref={this.unpaidRef} className="Log-element-checkbox" type="checkbox" checked={this.props.logElement.getUnpaid()} onChange={()=>{this.props.logElement.setUnpaid(!this.props.logElement.getUnpaid()); this.forceUpdate(); this.props.updateSpecificComponent(this.props.index)}}></input>
             <input ref={this.bookKeepReadyRef} className="Log-element-checkbox" type="checkbox" checked={this.props.logElement.getBookKeepReady()} onChange={()=>{this.props.logElement.setBookKeepReady(!this.props.logElement.getBookKeepReady()); this.props.updateSpecificComponent(this.props.index)}}></input>
