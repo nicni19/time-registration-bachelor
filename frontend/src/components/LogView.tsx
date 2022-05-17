@@ -87,7 +87,10 @@ export class LogView extends React.Component<LogViewProps>{
     this.iDsForDeletion = []
     this.forceUpdate();
     let startStamp:string = this.startPickerRef.current.value;
-    let endStamp:string = this.endPickerRef.current.value;
+    let endDate:number = new Date(this.endPickerRef.current.value).valueOf();
+    let endStamp:string = new Date(endDate + 86400000).toISOString().split('T')[0];
+    console.log("end ",endStamp);
+    
 
     let elements:any = await this.props.backendAPI.getLogElements(startStamp,endStamp);
     if(elements){
