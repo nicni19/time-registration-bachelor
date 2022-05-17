@@ -65,7 +65,7 @@ export class ClientHandler{
         });
     }
 
-    async backendDoesUserExsist(userId:string){
+    async backendDoesUserExsist(userId:string):Promise<JSON>{
         let token = await this.getSilentAccessToken();
         return await fetch('http://localhost:3000/doesCurrentUserExist',{
             method: 'GET',

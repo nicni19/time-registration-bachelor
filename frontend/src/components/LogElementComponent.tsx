@@ -120,7 +120,7 @@ export class LogElementComponent extends React.Component<LogElementComponentProp
               <option value="Meeting">Meeting</option>
               <option value="Call">Call</option>
             </select>
-            <input ref={this.durationRef} className="Log-element-generic" onKeyPress={(event) => {if(!/[0-9,\.]/.test(event.key)){event.preventDefault();}}} style={{width:"3%",maxHeight:"80%",borderColor:"transparent"}} defaultValue={this.returnHours()}></input>
+            <input ref={this.durationRef} className="Log-element-generic" onKeyPress={(event) => {if(!/[0-9,\.]/.test(event.key)){event.preventDefault();}}} style={{width:"3%",maxHeight:"75%",borderColor:"transparent"}} defaultValue={this.returnHours()}></input>
             <textarea ref={this.customerRef} className="Log-element-generic" style={{width:"15%",maxHeight:"80%",resize:"none",border:"none",outline:"none"}} defaultValue={this.props.logElement.getCustomer()}></textarea>
             <div ref={this.ritNumRef} className="Log-element-generic" contentEditable="true" style={{width:"5%"}}>{this.props.logElement.getRitNum()}</div>
             <div ref={this.caseNumRef} className="Log-element-generic" contentEditable="true" style={{width:"5%"}}>{this.props.logElement.getCaseNum()}</div>

@@ -165,7 +165,7 @@ export class LogView extends React.Component<LogViewProps>{
         <div ref={this.elementViewRef} id="elementView" className="Element-view">
           {
             this.globalLogElements.map(log =>{
-              return <div key={log.props.logElement.getId()} style={{width:"99%",height:"6vh",display:"flex"}}> {log.render()} </div>;
+              return <div id="Element-shell" key={log.props.logElement.getId()}> {log.render()} </div>;
             })
           }
         </div>

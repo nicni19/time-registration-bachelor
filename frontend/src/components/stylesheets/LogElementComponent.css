@@ -1,5 +1,5 @@
 .Element-shell {
-  width: 99%;
+  width: 100%;
   min-height: 6vh;
   max-height: 6vh;
   background-color: #d6d6d6;
@@ -46,7 +46,7 @@
 .Component-date-picker {
   height: 100%;
   border-color: transparent;
-  margin-top: 0.3vh;
+  border-radius: 3px;
   margin-right: 0.3vw;
   background-color: white;
   font-family: 'Roboto', sans-serif;

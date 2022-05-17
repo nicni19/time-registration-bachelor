@@ -1,0 +1,15 @@
+#Update-preferences-button {
+  width: 75%;
+  height: 5vh;
+  background-color: #73b36b;
+  margin-top: 10vh;
+  border-color: transparent;
+  font-family: "Roboto', sans-serif";
+  font-size: large;
+  border-radius: 8px;
+  transition: background-color 0.2s;
+}
+
+#Update-preferences-button:hover{
+  background-color: #7de86e;
+}
