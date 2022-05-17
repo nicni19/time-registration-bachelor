@@ -69,9 +69,9 @@ export class LogElementComponent extends React.Component<LogElementComponentProp
     if(this.customerRef.current.value != this.props.logElement.getCustomer()){this.props.logElement.setCustomer(this.customerRef.current.value)}
     if(this.durationRef.current.value != 0){this.props.logElement.setDuration(Math.abs(this.durationRef.current.value) * 1000 * 60 * 60)}
     this.props.logElement.setType(Type[this.typeRef.current.value as keyof typeof Type])
-    this.props.logElement.setRitNum(this.ritNumRef.current.innerHTML)
-    this.props.logElement.setCaseNum(this.caseNumRef.current.innerHTML)
-    this.props.logElement.setCaseTaskNum(this.caseTaskNumRef.current.innerHTML)
+    this.props.logElement.setRitNum(this.ritNumRef.current.value.toUpperCase())
+    this.props.logElement.setCaseNum(this.caseNumRef.current.value)
+    this.props.logElement.setCaseTaskNum(this.caseTaskNumRef.current.value)
     this.props.logElement.setInternalTask(this.internalRef.current.checked);
     this.props.logElement.setUnpaid(this.unpaidRef.current.checked);
     this.props.logElement.setBookKeepReady(this.bookKeepReadyRef.current.checked);
@@ -122,9 +122,9 @@ export class LogElementComponent extends React.Component<LogElementComponentProp
             </select>
             <input ref={this.durationRef} className="Log-element-generic" onKeyPress={(event) => {if(!/[0-9,\.]/.test(event.key)){event.preventDefault();}}} style={{width:"3%",maxHeight:"80%",borderColor:"transparent"}} defaultValue={this.returnHours()}></input>
             <textarea ref={this.customerRef} className="Log-element-generic" style={{width:"15%",maxHeight:"80%",resize:"none",border:"none",outline:"none"}} defaultValue={this.props.logElement.getCustomer()}></textarea>
-            <div ref={this.ritNumRef} className="Log-element-generic" contentEditable="true" style={{width:"5%"}}>{this.props.logElement.getRitNum()}</div>
-            <div ref={this.caseNumRef} className="Log-element-generic" contentEditable="true" style={{width:"5%"}}>{this.props.logElement.getCaseNum()}</div>
-            <div ref={this.caseTaskNumRef} className="Log-element-generic" contentEditable="true" style={{width:"5%"}}>{this.props.logElement.getCaseTaskNum()}</div>
+            <input ref={this.ritNumRef} className="Log-element-generic" maxLength={10} onKeyPress={(event) => {if(!/[0-9,R,r,I,i,T,t,-]/.test(event.key)){event.preventDefault();}}} style={{width:"5%"}} defaultValue={this.props.logElement.getRitNum()}></input>
+            <input ref={this.caseNumRef} className="Log-element-generic" maxLength={10} style={{width:"5%"}} defaultValue={this.props.logElement.getCaseNum()}></input>
+            <input ref={this.caseTaskNumRef} className="Log-element-generic" maxLength={10} onKeyPress={(event) => {if(!/[0-9]/.test(event.key)){event.preventDefault();}}} style={{width:"5%"}} defaultValue={this.props.logElement.getCaseTaskNum()}></input>
             <input ref={this.internalRef} className="Log-element-checkbox" type="checkbox" checked={this.props.logElement.getInternalTask()} onChange={()=>{this.props.logElement.setInternalTask(!this.props.logElement.getInternalTask()); this.props.updateSpecificComponent(this.props.index)}}></input>
             <input ref={this.unpaidRef} className="Log-element-checkbox" type="checkbox" checked={this.props.logElement.getUnpaid()} onChange={()=>{this.props.logElement.setUnpaid(!this.props.logElement.getUnpaid()); this.forceUpdate(); this.props.updateSpecificComponent(this.props.index)}}></input>
             <input ref={this.bookKeepReadyRef} className="Log-element-checkbox" type="checkbox" checked={this.props.logElement.getBookKeepReady()} onChange={()=>{this.props.logElement.setBookKeepReady(!this.props.logElement.getBookKeepReady()); this.props.updateSpecificComponent(this.props.index)}}></input>
