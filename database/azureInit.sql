@@ -104,7 +104,7 @@ INSERT INTO users(id,last_mail_lookup,last_calendar_lookup) VALUES ('6fc4dcd488b
 INSERT INTO log_elements(user_id,element_description,start_timestamp,duration,internal_task,unpaid,edited,book_keep_ready)
 VALUES ('6fc4dcd488b119e7','This is the description of the element',1648797418621,22,1,1,1,0);
 
-CREATE   PROCEDURE GraphInsert @id int
+CREATE or ALTER   PROCEDURE GraphInsert @id int
 AS 
 BEGIN
 	DECLARE
@@ -115,7 +115,7 @@ BEGIN
     @duration bigint,
     @internal_task bit,
     @unpaid bit,
-    @rit_num int,
+    @rit_num varchar(10),
     @case_num varchar(10),
     @case_task_num int,
 	@customer varchar(100),
