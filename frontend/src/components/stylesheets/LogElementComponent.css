@@ -51,3 +51,18 @@
   background-color: white;
   font-family: 'Roboto', sans-serif;
 }
+
+#Rit-num-input {
+  border-color: transparent;
+  max-height: 75%;
+}
+
+#Case-num-input {
+  border-color: transparent;
+  max-height: 75%;
+}
+
+#Case-task-num-input {
+  border-color: transparent;
+  max-height: 75%;
+}
