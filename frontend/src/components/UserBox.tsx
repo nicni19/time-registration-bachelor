@@ -20,9 +20,7 @@ class UserBox extends React.Component<UserBoxProps>{
     
     constructor(props:any){
         super(props)
-        this.state = {
-            url:null
-        }
+
         this.infoBoxRef = React.createRef();
         this.pictureRef = React.createRef();
         this.nameRef = React.createRef();
