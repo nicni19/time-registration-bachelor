@@ -13,11 +13,11 @@ export class LogElement{
     private unpaid:boolean;
     private edited:boolean;
     private bookKeepReady:boolean;
-    private ritNum:number;
+    private ritNum:string;
     private caseNum:string;
     private caseTaskNum:number;
-    private calendarid: string;
-    private mailid: string;
+    private calendarid: string | null;
+    private mailid: string | null;
 
     constructor( 
         userID: string, 
@@ -27,14 +27,14 @@ export class LogElement{
         duration: number, 
         internalTask: boolean, 
         unpaid: boolean,
-        ritNum: number, 
+        ritNum: string, 
         caseNum: string, 
         caseTaskNum: number,
         customer: string,
         edited:boolean,
         bookKeepReady:boolean, 
-        calendarid: string,
-        mailid: string,
+        calendarid: string | null,
+        mailid: string | null,
         id?: number,
     ) {
         this.id = id
@@ -144,11 +144,11 @@ export class LogElement{
         this.bookKeepReady = bookKeepReady;
     }
 
-    public getRitNum():number{
+    public getRitNum():string{
         return this.ritNum;
     }
 
-    public setRitNum(rit:number){
+    public setRitNum(rit:string){
         this.ritNum = rit;
     }
 
@@ -168,13 +168,13 @@ export class LogElement{
         this.caseTaskNum = caseTaskNum;
     }
 
-    public getCalendarid():string {
+    public getCalendarid():string | null {
         return this.calendarid;
     }
     public setCalendarid(value: string) {
         this.calendarid = value;
     }
-    public getMailid(): string {
+    public getMailid(): string | null {
         return this.mailid;
     }
     public setMailid(value: string) {

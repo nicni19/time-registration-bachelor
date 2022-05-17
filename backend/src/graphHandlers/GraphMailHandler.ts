@@ -40,7 +40,7 @@ export class GraphMailHandler implements IGraphHandler {
                 console.log(body.value[i].subject)
                 let description = "Reciever: " + body.value[i].toRecipients[0].emailAddress.address + ", Subject: " + body.value[i].subject;
 
-                let logElement: LogElement = new LogElement(userID, Type.Mail, description, startTime, null, null, null, null, null, null, null, false, false, null, body.value[i].id)
+                let logElement: LogElement = new LogElement(userID, Type.Mail, description, startTime, 0, false, false, "", "", 0, "", false, false, null, body.value[i].id)
                 logElements.push(logElement);
                 
             }
