@@ -74,7 +74,7 @@ export class LogView extends React.Component<LogViewProps>{
   }
 
   insertEmptyElement(){
-    let newLogElement = new LogElement(this.props.userID,0,"",Date.now(),0,false,false,0,"",0,"",false,false,"","");
+    let newLogElement = new LogElement(this.props.userID,0,"",Date.now(),0,false,false,"","",0,"",false,false,null,null);
     let newLogElementComponent = new LogElementComponent({logElement:newLogElement,index:0,markElementForDeletion:this.markElementForDeletion,updateSpecificComponent:this.updateSpecificComponent});
     this.updateAllComponents()
     this.globalLogElements.push(newLogElementComponent)
