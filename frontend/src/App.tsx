@@ -23,21 +23,22 @@ class App extends React.Component<{},{error:any,isAuthenticated:boolean,user:any
     this.state = {
       error:null,
       //CHANGE TO FALSE ON PRODUCTION!
-      isAuthenticated:false,
+      isAuthenticated:true,
       user:{}
     };
     this.logout = this.logout.bind(this)
     this.login = this.login.bind(this)
     this.viewsArray = []
     this.currentView = 0;
+    this.viewsArray.push(<LogView backendAPI={this.backendAPI} userID={this.clientHandler.getUserId()}></LogView>)
+    this.viewsArray.push(<PreferencesView backendAPI={this.backendAPI}></PreferencesView>)
   }
   
   async login(){
     let loginResult = await this.clientHandler.login();
     if(loginResult){
       this.setState({isAuthenticated:true}); 
-      this.viewsArray.push(<LogView backendAPI={this.backendAPI} userID={this.clientHandler.getUserId()}></LogView>)
-      this.viewsArray.push(<PreferencesView backendAPI={this.backendAPI}></PreferencesView>)
+      
     }else{
       console.log(loginResult)
       this.setState({

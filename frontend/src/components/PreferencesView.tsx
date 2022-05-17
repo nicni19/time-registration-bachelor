@@ -77,7 +77,7 @@ export class PreferencesView extends React.Component<PreferencesViewProps,{mail_
               <input ref={this.calendarEnabledRef} id="calendarCheckbox" type="checkbox" style={{transform:"scale(4)",marginRight:"2vw",marginTop:"20%"}} defaultChecked={false} onChange={()=>{this.setState({calendar_enabled:(!this.state.calendar_enabled)})}}></input>
             </div>
           </div>
-          <button onClick={()=>{this.updatePreferences()}} style={{width:"75%",height:"5vh",backgroundColor:"#73b36b",marginTop:"10vh",borderColor:"transparent",fontFamily:"Roboto', sans-serif",fontSize:"large",borderRadius:"8px"}} >Update preferences</button>
+          <button id="Update-preferences-button" onClick={()=>{this.updatePreferences()}}>Update preferences</button>
         </div>
         }
         
