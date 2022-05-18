@@ -55,6 +55,7 @@ export class LogView extends React.Component<LogViewProps>{
       }
     }
     this.globalLogElements = newArray;
+    
   }
 
   //TODO: Indsæt elementet som skal slettes i et separat array -> query til db
@@ -68,12 +69,12 @@ export class LogView extends React.Component<LogViewProps>{
     this.globalLogElements.splice(index,1);
     console.log("Index removed: " + index);
     this.rearrangeElementsArray();
-    this.forceUpdate()
+    this.forceUpdate();
     console.log(this.iDsForDeletion)
   }
 
   insertEmptyElement(){
-    let newLogElement = new LogElement(this.props.userID,0,"",Date.now(),0,false,false,0,"",0,"",false,false,"","");
+    let newLogElement = new LogElement(this.props.userID,0,"",Date.now(),0,false,false,"","",0,"",false,false,null,null);
     let newLogElementComponent = new LogElementComponent({logElement:newLogElement,index:0,markElementForDeletion:this.markElementForDeletion,updateSpecificComponent:this.updateSpecificComponent});
     this.updateAllComponents()
     this.globalLogElements.push(newLogElementComponent)
@@ -86,7 +87,10 @@ export class LogView extends React.Component<LogViewProps>{
     this.iDsForDeletion = []
     this.forceUpdate();
     let startStamp:string = this.startPickerRef.current.value;
-    let endStamp:string = this.endPickerRef.current.value;
+    let endDate:number = new Date(this.endPickerRef.current.value).valueOf();
+    let endStamp:string = new Date(endDate + 86400000).toISOString().split('T')[0];
+    console.log("end ",endStamp);
+    
 
     let elements:any = await this.props.backendAPI.getLogElements(startStamp,endStamp);
     if(elements){
@@ -130,41 +134,34 @@ export class LogView extends React.Component<LogViewProps>{
     })
   }
 
-  testChangeDescription(){
-    this.globalLogElements[0].props.logElement.setDescription("Heej!!")
-    //this.globalLogElements[0].updateLogElementState();
-    this.forceUpdate();
-  }
-
   render(){
     return(
       <div id="outerView" className="Outer-view">
         <div style={{height:"8vh",backgroundColor:"transparent",width:"100%",display:"flex"}}>
           <div style={{display:"flex",height:"100%",justifyContent:"flex-start",flexDirection:"row"}}> 
-            <input ref={this.startPickerRef} className="Date-picker" type="date" style={{height:"70%",backgroundColor:"#d1d1d1"}}></input>
-            <input ref={this.endPickerRef} className="Date-picker" type="date" style={{height:"70%",backgroundColor:"#d1d1d1"}}></input>
-            <div style={{width:"3vw",height:"78%",marginTop:"0.3vh",backgroundColor:"#d1d1d1",marginRight:"0.3vw",borderRadius:"3px",display:"flex",alignItems:"center",justifyContent:"center"}} onClick={()=>{this.fetchLogElements()}}><img src={searchIcon} style={{height:"80%",width:"80%"}}></img></div>
-            <div style={{width:"3vw",height:"78%",marginTop:"0.3vh",backgroundColor:"#d1d1d1",marginRight:"0.5vw",borderRadius:"3px",display:"flex",alignItems:"center",justifyContent:"center"}} onClick={()=>{this.insertEmptyElement()}}><img src={newIcon} style={{height:"90%",width:"90%"}}></img></div>
+            <input ref={this.startPickerRef} className="Date-picker" type="date"></input>
+            <input ref={this.endPickerRef} className="Date-picker" type="date"></input>
+            <div className="Log-toolbar-button" onClick={()=>{this.fetchLogElements()}}><img id="Search-icon" src={searchIcon}></img></div>
+            <div className="Log-toolbar-button" onClick={()=>{this.insertEmptyElement()}}><img id="New-icon" src={newIcon}></img></div>
           </div>
         </div>
         <div className="Field-identifier">
           <p className="Identifier-generic" style={{width:"25%",borderRightWidth:"0.1vh"}}>Description</p>
-          <p className="Identifier-generic" style={{width:"16%",borderRightWidth:"0.1vh"}}>Start time</p>
-          <p className="Identifier-generic" style={{width:"12.5%",borderRightWidth:"0.1vh"}}>Type</p>
+          <p className="Identifier-generic" style={{width:"17%",borderRightWidth:"0.1vh"}}>Start time</p>
+          <p className="Identifier-generic" style={{width:"12%",borderRightWidth:"0.1vh"}}>Type</p>
           <p className="Identifier-generic" style={{width:"3.5%",borderRightWidth:"0.1vh"}}>Dur.</p>
           <p className="Identifier-generic" style={{width:"14.5%",borderRightWidth:"0.1vh"}}>Customer</p>
           <p className="Identifier-generic" style={{width:"5%",borderRightWidth:"0.1vh"}}>Rit num</p>
           <p className="Identifier-generic" style={{width:"5%",borderRightWidth:"0.1vh"}}>Case num</p>
           <p className="Identifier-generic" style={{width:"5%",borderRightWidth:"0.1vh",marginRight:"0.3vw"}}>Case task</p>
-          <p className="Identifier-generic" style={{width:"3%",borderRightWidth:"0.1vh"}}>Int.</p>
-          <p className="Identifier-generic" style={{width:"3%",borderRightWidth:"0.1vh",marginLeft:"-0.2vw"}}>Up.</p>
-          <p className="Identifier-generic" style={{width:"3%",borderRightWidth:"0.1vh",marginLeft:"-0.2vw"}}>Ready</p>
-          <p className="Identifier-generic" style={{width:"4%",borderRightWidth:"0.1vh"}}>DELETE</p>
+          <p className="Identifier-generic" style={{width:"4%",borderRightWidth:"0.1vh"}}>Int.</p>
+          <p className="Identifier-generic" style={{width:"4%",borderRightWidth:"0.1vh",marginLeft:"-0.1vw"}}>Up.</p>
+          <p className="Identifier-generic" style={{width:"4%",borderRightWidth:"0.1vh",marginLeft:"0.2vw"}}>Ready</p>
         </div>
         <div ref={this.elementViewRef} id="elementView" className="Element-view">
           {
             this.globalLogElements.map(log =>{
-              return log.render();
+              return <div id="Element-shell" key={log.props.logElement.getId()}> {log.render()} </div>;
             })
           }
         </div>

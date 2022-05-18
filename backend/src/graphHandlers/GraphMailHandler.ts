@@ -13,19 +13,13 @@ export class GraphMailHandler implements IGraphHandler {
     
     async updateDatabase(databaseHandler: IDatabaseHandler, authToken: string, userID: string): Promise<boolean> {
         this.lastLookup = await databaseHandler.getLastGraphMailLookup(userID);
-        let logElements: LogElement[]
+        
+        let logElements: LogElement[] = await this.fetchMailEvents(authToken, userID);
+    
+        let mailSuccess: boolean = await databaseHandler.insertFromGraph(logElements)
+        .then(databaseHandler.setLastGraphMailLookup(userID, new Date(Date.now()).toISOString()));
 
-        try {
-            logElements = await this.fetchMailEvents(authToken, userID);
-        } catch (err) {
-            return err;
-        } finally {
-            databaseHandler.insertFromGraph(logElements)
-            .then(databaseHandler.setLastGraphMailLookup(userID, new Date(Date.now()).toISOString())
-            );
-        }
-
-        return true;
+        return mailSuccess;
     }
 
     async fetchMailEvents(authToken, userID: string): Promise<any> {
@@ -46,7 +40,7 @@ export class GraphMailHandler implements IGraphHandler {
                 console.log(body.value[i].subject)
                 let description = "Reciever: " + body.value[i].toRecipients[0].emailAddress.address + ", Subject: " + body.value[i].subject;
 
-                let logElement: LogElement = new LogElement(userID, Type.Mail, description, startTime, null, null, null, null, null, null, null, false, false, null, body.value[i].id)
+                let logElement: LogElement = new LogElement(userID, Type.Mail, description, startTime, 0, false, false, "", "", 0, "", false, false, null, body.value[i].id)
                 logElements.push(logElement);
                 
             }

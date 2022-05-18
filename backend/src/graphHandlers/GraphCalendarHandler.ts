@@ -17,14 +17,13 @@ export class GraphCalendarHandler implements IGraphHandler {
     
     async updateDatabase(databaseHandler: IDatabaseHandler, authToken: string, userID: string): Promise<any>{
         this.lastLookup = await databaseHandler.getLastGraphCalendarLookup(userID);
-        console.log("Calendar");
 
         let logElements: LogElement[] = await this.fetchCalendarEvents(authToken, userID);
         
-        databaseHandler.insertFromGraph(logElements).then(
-            databaseHandler.setLastGraphCalendarLookup(userID, new Date(Date.now()).toISOString())
-        );
-        return logElements;
+        let calendarSuccess: boolean = await databaseHandler.insertFromGraph(logElements)
+        .then(databaseHandler.setLastGraphCalendarLookup(userID, new Date(Date.now()).toISOString()));
+
+        return calendarSuccess;
     }
 
     async fetchCalendarEvents(authToken: string, userID: string): Promise<any> {
@@ -45,14 +44,15 @@ export class GraphCalendarHandler implements IGraphHandler {
                 })
 
                 let startTimeString = ((body.value[i].start.dateTime).replace(/-/g,'/'));
-                let startTime = new Date(startTimeString.replace('T', ' ')).getTime();
+                let timeZoneOffset = (new Date()).getTimezoneOffset() * 60000;
+                let startTime = new Date(startTimeString.replace('T', ' ')).getTime() - timeZoneOffset;
                 console.log(startTimeString)
                 console.log(startTime)
-                let endTime = new Date((body.value[i].end.dateTime).replace('T', ' ')).getTime();
+                let endTime = new Date((body.value[i].end.dateTime).replace('T', ' ')).getTime() - timeZoneOffset;
                 let duration: number = endTime - startTime;
                 let description = body.value[i].subject + ': ' + event;
 
-                let logElement: LogElement = new LogElement(userID, Type.CalendarEvent, description, startTime, duration, null, null, null, null, null, null, false, false, body.value[i].id, null);
+                let logElement: LogElement = new LogElement(userID, Type.CalendarEvent, description, startTime, duration, false, false, "","",0,"", false, false, body.value[i].id, null);
                 logElements.push(logElement);
 
             }

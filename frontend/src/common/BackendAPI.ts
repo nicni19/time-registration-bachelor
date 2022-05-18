@@ -87,7 +87,7 @@ export class BackendAPI{
   })
   }
 
-  async getPreferences(){
+  async getPreferences():Promise<JSON>{
     return new Promise<JSON>(async(resolve,reject)=>{
 
 

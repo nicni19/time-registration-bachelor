@@ -13,7 +13,7 @@ export class LogElement{
     private unpaid:boolean;
     private edited:boolean;
     private bookKeepReady:boolean;
-    private ritNum:number;
+    private ritNum:string;
     private caseNum:string;
     private caseTaskNum:number;
     private calendarid: string;
@@ -27,7 +27,7 @@ export class LogElement{
         duration: number, 
         internalTask: boolean, 
         unpaid: boolean,
-        ritNum: number, 
+        ritNum: string, 
         caseNum: string, 
         caseTaskNum: number,
         customer: string,
@@ -144,11 +144,11 @@ export class LogElement{
         this.bookKeepReady = bookKeepReady;
     }
 
-    public getRitNum():number{
+    public getRitNum():string{
         return this.ritNum;
     }
 
-    public setRitNum(rit:number){
+    public setRitNum(rit:string){
         this.ritNum = rit;
     }
 

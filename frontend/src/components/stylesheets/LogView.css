@@ -9,6 +9,14 @@
   overflow-x: hidden;
 }
 
+#Element-shell {
+  width: 100%;
+  height: 6vh;
+  display: flex;
+  margin-left: 1vw;
+  margin-bottom: 0.5vh;
+}
+
 .Outer-view {
   height: 96vh;
   width: 96%;
@@ -41,25 +49,67 @@
   margin-top: 0.7vh;
   border-color: transparent;
   font-family: 'Roboto', sans-serif;
+  font-weight: 700;
+  transition: background-color 0.2s;
+}
+
+.Commit-button:hover {
+  background-color: rgb(130, 216, 130);
 }
 
 .Date-picker {
   border-color: transparent;
+  margin-top: 0.3vh;
+  margin-right: 0.3vw;
   font-family: 'Roboto', sans-serif;
   border-radius: 3px;
+  background-color: #d1d1d1;
+  height: 70%;
+  transition: background-color 0.2s;
+}
+
+.Date-picker:hover {
+  background-color: #45b9d6;
+}
+
+.Log-toolbar-button {
+  width: 3vw;
+  height: 78%;
+  margin-top: 0.3vh;
+  background-color: #d1d1d1;
+  margin-right: 0.3vw;
+  border-radius: 3px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.5s;
+}
+
+#Search-icon {
+  height: 50%;
+  width: 50%;
+}
+
+#New-icon {
+  height: 60%;
+  width: 60%;
+}
+
+.Log-toolbar-button:hover {
+  background-color: #79ba31;
 }
 
 ::-webkit-scrollbar {
-  width: 10px;
+  width: 7px;
   }
 
   /* Track */
   ::-webkit-scrollbar-track {
-  box-shadow: inset 0 0 5px grey;
+  box-shadow: inset 0 0 0px grey;
   }
 
   /* Handle */
   ::-webkit-scrollbar-thumb {
-  background: rgb(101, 118, 101);
+  background: #0c647d;
   border-radius: 5px;
   }

@@ -36,9 +36,14 @@ export class ConnectionPool {
       
       let conAmount = this.connections.length;
       if (conAmount > this.minCon) {
-        for (let i: number = 0; i < conAmount-this.minCon; i++) {
-          let connection = await this.connections.pop();
+        for (let i: number = 0; i < conAmount-this.minCon-1; i++) {
+          let connection = await this.getFreeConnection();
           connection.getConnection().close();
+        }
+        for (let i: number = 0; i < this.connections.length; i++) {
+          if (this.connections[i].getConnection().state.name == "Final") {
+            this.connections.splice(i,1);
+          }
         }
       }
       console.log("Connections after: ",this.connections.length);
@@ -69,7 +74,6 @@ export class ConnectionPool {
       let connection = null;
 
       for (let i: number = 0; i < this.connections.length; i++) {
-
         if (!this.connections[i].getIsLocked() && this.connections[i].getConnection().state.name == "LoggedIn") {
           connection = this.connections[i];
           connection.setIsLocked(true);

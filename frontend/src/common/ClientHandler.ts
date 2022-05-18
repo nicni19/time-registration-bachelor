@@ -65,7 +65,7 @@ export class ClientHandler{
         });
     }
 
-    async backendDoesUserExsist(userId:string){
+    async backendDoesUserExsist(userId:string):Promise<JSON>{
         let token = await this.getSilentAccessToken();
         return await fetch('http://localhost:3000/doesCurrentUserExist',{
             method: 'GET',
@@ -109,9 +109,7 @@ export class ClientHandler{
     }
     
     async getAccountPhoto():Promise<string>{
-      let id:string = "";
       let returnval:any;
-      let responseJson:any = {};
       return await new Promise(async(resolve,reject) =>{
         console.log("AccessToken (Graph): " + this.globalID)      
         returnval = await fetch('https://graph.microsoft.com/v1.0/me/photo/$value',{
@@ -120,8 +118,15 @@ export class ClientHandler{
               'Content-Type': 'image/jpeg',
               'Authorization': 'Bearer ' + await this.getSilentAccessToken()
           }
-          
-        }).then(response => response.blob()).then(data=>{resolve(URL.createObjectURL(data))});
+        }).then(response => response.blob()).then(data=>{
+          if(data.size > 1000){
+            resolve(URL.createObjectURL(data))
+          }else{
+            reject()
+          }
+        }).catch((err)=>{
+            reject()
+        });
       });
     }
 

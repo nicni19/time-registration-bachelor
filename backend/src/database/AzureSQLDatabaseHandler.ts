@@ -50,7 +50,7 @@ export class AzureSQLDatabaseHandler implements IDatabaseHandler{
       const request : Request = new Request(
         queryString, (err) => {
           if(err){
-            console.log(err.message)
+            console.log("isUserInDatabase: ", err.message)
           }
         });
         request.addParameter('userid', this.TYPES.VarChar, userID);
@@ -96,7 +96,7 @@ export class AzureSQLDatabaseHandler implements IDatabaseHandler{
       const request : Request = new Request(
         queryString, (err) => {
           if(err){
-            console.log(err.message)
+            console.log("getLogElements: ",err.message)
           }
         }
       );
@@ -170,7 +170,7 @@ export class AzureSQLDatabaseHandler implements IDatabaseHandler{
       const request : Request = new Request(
         queryString, (err) => {
           if(err){
-            console.log(err.message)
+            console.log("insertLogElement: ",err.message)
             success = false;
             reject(false)
           }
@@ -188,11 +188,68 @@ export class AzureSQLDatabaseHandler implements IDatabaseHandler{
 
   }
 
+  async getLogElementById(id): Promise<LogElement> {
+    let queryString: string;
+    
+    queryString = this.squel.select().from('log_elements').where("id = @id").toString();
+
+    let logElement: LogElement;
+    return await new Promise((resolve,reject) => {
+      const request : Request = new Request(
+        queryString, (err) => {
+          if(err){
+            console.log("getLogElementById: ", err.message)
+          }
+        }
+      );
+        
+
+        request.addParameter('id', this.TYPES.Int, id);
+
+        this.connectionPool.executeRequest(request);
+        
+        request.on("row", columns => {
+          let startTimestamp:number = parseInt(columns['start_timestamp'].value,10);
+          let duration:number = parseInt(columns['duration'].value,10);
+          
+          logElement = new LogElement(columns['user_id'].value,Type[columns['element_type'].value as keyof typeof Type],
+          columns['element_description'].value,startTimestamp,duration,columns['internal_task'].value,
+          columns['unpaid'].value,columns['rit_num'].value,columns['case_num'].value,columns['case_task_num'].value,columns['customer'].value,
+          columns['edited'].value,columns['book_keep_ready'].value,columns['calendar_id'].value,columns['mail_id'].value,columns['id'].value)
+          
+        });
+
+        request.on('requestCompleted',()=>{
+          resolve(logElement);
+        })
+        
+        //console.log(returnJson);
+    }).then(()=>{return logElement}).catch((err)=>{
+      return err;
+    });
+  }
+
+  isSame(logElementx: LogElement, logElementy: LogElement): boolean {
+    return JSON.stringify(logElementx) == JSON.stringify(logElementy);
+  }
+
   async updateLogElement(logArray: LogElement[]): Promise<boolean> {
     let array = []
-    console.log(logArray);
+    let idArray: number[] = []
 
     for (let i: number = 0; i < logArray.length; i++) {
+      if (logArray[i].getEdited() == false) {
+        let logElement: LogElement = await this.getLogElementById(logArray[i].getId())
+        if (logElement != null) {
+
+        }
+        let isSame:boolean = this.isSame(logArray[i], logElement);
+        if (isSame) {
+          continue;
+        }
+        logArray[i].setEdited(true);
+      }
+      idArray.push(logArray[i].getId());
       array.push({
         user_id: logArray[i].getUserID(),
         element_type: Type[logArray[i].getType().valueOf()],
@@ -213,12 +270,14 @@ export class AzureSQLDatabaseHandler implements IDatabaseHandler{
     
     }
 
-    return this.updateHelper(0,array,logArray);
+    return this.updateHelper(0,array,idArray);
   }
 
-  async updateHelper(index:number, array,logArray): Promise<boolean> {
+  async updateHelper(index:number, array,idArray): Promise<boolean> {
     let success: boolean;
 
+    console.log(idArray[index]);
+    
     return await new Promise((resolve,reject) => {
       
         let queryString = this.squel.update()
@@ -230,7 +289,7 @@ export class AzureSQLDatabaseHandler implements IDatabaseHandler{
         const request : Request = new Request(
           queryString, (err) => {
             if(err){
-              console.log(err.message)
+              console.log("updateHelper: ", err.message)
               success = false;
               reject(false)
             }
@@ -238,12 +297,12 @@ export class AzureSQLDatabaseHandler implements IDatabaseHandler{
         );
         
 
-        request.addParameter('id', this.TYPES.Int, logArray[index].getId());
+        request.addParameter('id', this.TYPES.Int, idArray[index]);
   
         this.connectionPool.executeRequest(request);
 
         request.on('requestCompleted',()=>{
-          this.updateHelper(index+1,array,logArray);
+          this.updateHelper(index+1,array,idArray);
         })  
         
 
@@ -267,7 +326,7 @@ export class AzureSQLDatabaseHandler implements IDatabaseHandler{
       const request : Request = new Request(
         queryString, (err) => {
           if(err){
-            console.log(err.message)
+            console.log("deleteLogElements: ", err.message)
             success = false;
             reject(false)
           }
@@ -293,7 +352,7 @@ export class AzureSQLDatabaseHandler implements IDatabaseHandler{
     throw new Error('Method not implemented.');
   }
 
-  getTimerRuns(queryArguments: string[]) {
+  getTimerRuns(queryArguments: string[]): TimerRun[] {
     throw new Error('Method not implemented.');
   }
 
@@ -308,7 +367,7 @@ export class AzureSQLDatabaseHandler implements IDatabaseHandler{
       const request : Request = new Request(
         queryString, (err) => {
           if(err){
-            console.log(err.message, "wow")
+            console.log("getLastGraphMailLookup: ", err.message)
           }
         }
       );
@@ -331,7 +390,7 @@ export class AzureSQLDatabaseHandler implements IDatabaseHandler{
     const request : Request = new Request(
       queryString, (err) => {
         if(err){
-          console.log(err.message)
+          console.log("setLastGraphMailLookup: ", err.message)
         }
       }
     );
@@ -346,7 +405,7 @@ export class AzureSQLDatabaseHandler implements IDatabaseHandler{
       const request : Request = new Request(
         queryString, (err) => {
           if(err){
-            console.log(err.message)
+            console.log("getLastGraphCalendarLookup: ", err.message)
           }
         }
       );
@@ -367,7 +426,7 @@ export class AzureSQLDatabaseHandler implements IDatabaseHandler{
     const request : Request = new Request(
       queryString, (err) => {
         if(err){
-          console.log(err.message)
+          console.log("setLastGraphCalendarLookup: ", err.message)
         }
       }
     );
@@ -409,7 +468,9 @@ export class AzureSQLDatabaseHandler implements IDatabaseHandler{
       const request : Request = new Request(
         queryString, (err) => {
           if(err){
-            console.log(err.message)
+            console.log("graphInsert");
+            
+            console.log("insertFromGraph: ", err.message)
           }
         }
       );
@@ -437,7 +498,7 @@ export class AzureSQLDatabaseHandler implements IDatabaseHandler{
       const request : Request = new Request(
         queryString,(err)=>{
           if(err){
-            console.log(err.message)
+            console.log("getPreferences: ", err.message)
           }
         }
       )
@@ -466,7 +527,7 @@ export class AzureSQLDatabaseHandler implements IDatabaseHandler{
     const request : Request = new Request(
       queryString, (err) => {
         if(err){
-          console.log(err.message)
+          console.log("updatePreferences: ", err.message)
         }
       }
     );
@@ -486,7 +547,7 @@ export class AzureSQLDatabaseHandler implements IDatabaseHandler{
       const request : Request = new Request(
         queryString, (err) => {
           if(err){
-            console.log(err.message)
+            console.log("getPrivileges: ", err.message)
           }
         }
       )

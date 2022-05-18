@@ -1,11 +1,7 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
-import heimdalLogo from './public/Heimdal_logo.png'
+import heimdalLogo from './public/Heimdal_logo_ny.png'
+import heimdalLogoGradient from './public/Heimdal_gradient.png'
 import './App.css';
-import {config} from './config.js';
-import {PublicClientApplication} from '@azure/msal-browser';
-import { resolve } from 'path';
-import { rejects } from 'assert';
 import UserBox from './components/UserBox';
 import { ClientHandler } from './common/ClientHandler';
 import relateITLogo from './public/RelateIT_logo_big.svg';
@@ -34,16 +30,14 @@ class App extends React.Component<{},{error:any,isAuthenticated:boolean,user:any
     this.login = this.login.bind(this)
     this.viewsArray = []
     this.currentView = 0;
-    //Inserts the views into the view array. Buttons change between these views!
-    this.viewsArray.push(<LogView backendAPI={this.backendAPI} userID={this.clientHandler.getUserId()}></LogView>)
-    this.viewsArray.push(<PreferencesView backendAPI={this.backendAPI}></PreferencesView>)
   }
   
   async login(){
     let loginResult = await this.clientHandler.login();
     if(loginResult){
       this.setState({isAuthenticated:true}); 
-      
+      this.viewsArray.push(<LogView backendAPI={this.backendAPI} userID={this.clientHandler.getUserId()}></LogView>)
+      this.viewsArray.push(<PreferencesView backendAPI={this.backendAPI}></PreferencesView>)
     }else{
       console.log(loginResult)
       this.setState({
@@ -89,11 +83,11 @@ class App extends React.Component<{},{error:any,isAuthenticated:boolean,user:any
           </div>
           :
           <header className='App-header'>
-              <img src={heimdalLogo} className="Heimdal-logo" alt="logo" style={{width:"50vw",marginBottom:"2vw"}}/>
+              <img src={heimdalLogoGradient} className="Heimdal-logo" alt="logo" style={{width:"50vw",marginBottom:"2vw"}}/>
               <img src={relateITLogo} alt="logo" style={{width:"25vw"}}/>
               
               <button onClick={()=>{this.login()}} style={{border:"0",background:"transparent",marginTop:"6vw"}}>
-                  <img src={msLoginLogo}></img>
+                  <img style={{width:"12vw",height:"6vh"}} src={msLoginLogo}></img>
               </button>
           </header>
         }
