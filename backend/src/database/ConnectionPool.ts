@@ -36,7 +36,7 @@ export class ConnectionPool {
       
       let conAmount = this.connections.length;
       if (conAmount > this.minCon) {
-        for (let i: number = 0; i < conAmount-this.minCon; i++) {
+        for (let i: number = 0; i < conAmount-this.minCon-1; i++) {
           let connection = await this.getFreeConnection();
           connection.getConnection().close();
         }
