@@ -87,7 +87,7 @@ class App extends React.Component<{},{error:any,isAuthenticated:boolean,user:any
               <img src={relateITLogo} alt="logo" style={{width:"25vw"}}/>
               
               <button onClick={()=>{this.login()}} style={{border:"0",background:"transparent",marginTop:"6vw"}}>
-                  <img src={msLoginLogo}></img>
+                  <img style={{width:"12vw",height:"6vh"}} src={msLoginLogo}></img>
               </button>
           </header>
         }
