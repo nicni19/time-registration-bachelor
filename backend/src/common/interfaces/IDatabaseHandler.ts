@@ -33,4 +33,6 @@ export interface IDatabaseHandler{
 
     isUserInDatabase(userID:string): Promise<boolean>;
 
+    updatePreferences(userID:string,preferences:boolean[]);
+
 }
