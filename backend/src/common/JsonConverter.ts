@@ -1,5 +1,6 @@
 import { LogElement } from "./domain/LogElement";
 
+//Converts JSON objects to the custom LogElement datatype
 export class JsonConverter{
 
   convertJSONToLogElements(json) {

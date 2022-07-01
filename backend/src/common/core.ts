@@ -7,22 +7,23 @@ import { LogElement } from './domain/LogElement';
 import { AzureSQLDatabaseHandler } from '../database/AzureSQLDatabaseHandler';
 import { Actions } from './domain/Actions';
 import { JsonConverter } from './JsonConverter';
+import { IDatabaseHandler } from './interfaces/IDatabaseHandler';
 
-
+/**
+ * The main class of the backend service, used by the API to perform the actions on the different endpoints.
+ * 
+ */
 export class Core{
     
-    databaseHandler: AzureSQLDatabaseHandler = new AzureSQLDatabaseHandler();
+    databaseHandler: IDatabaseHandler = new AzureSQLDatabaseHandler();
     authHandler: IAuthHandler = new MicrosoftAuthHandler(this.databaseHandler);
-    graphMap = new Map();
     jsonConverter = new JsonConverter();
 
     mailHandler: IGraphHandler;
     calendarHandler: IGraphHandler;
     
+    //Instantiates the Graph Handlers to be used
     constructor(){
-        this.graphMap.set('mail', new GraphMailHandler as IGraphHandler);
-        this.graphMap.set('calendar', new GraphCalendarHandler as IGraphHandler);
-
         this.mailHandler = new GraphMailHandler as IGraphHandler;
         this.calendarHandler = new GraphCalendarHandler as IGraphHandler;
     };
@@ -56,8 +57,15 @@ export class Core{
         return this.databaseHandler.getLogElements(queryMap);
     }
 
+    /**
+     * Fetches the user preferences from the database and uses these to determine if lookup on
+     * Outlook mail / calendar should be performed
+     * @param userID Microsoft user ID
+     * @param authToken Microsoft access token
+     * @returns returns true if successful
+     */
     async graphUpdate(userID: string, authToken: string): Promise<boolean> {
-        //Todo: Get preferences from database
+        
         let prefJson = await this.getPreferences(userID);
         let prefArray = [];
 

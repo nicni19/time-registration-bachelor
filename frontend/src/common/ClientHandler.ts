@@ -19,6 +19,11 @@ export class ClientHandler{
           });
     }
 
+    /**
+     * Uses the publicClientApplication object from the MSAL library to display a login pop-up to the user.
+     * If authenticated successfully, the users Graph ID is fetched which is then used to authenticate the user towards the backend service.
+     * @returns A boolean value signaling whether or not the user was successfully authenticated.
+     */
     async login():Promise<boolean>{
       const loginRequest = {scopes: config.scopes}
       let accountId = "";
@@ -29,11 +34,10 @@ export class ClientHandler{
             accountId = loginResponse.account.homeAccountId;
             // Display signed-in user content, call API, etc.
         }).then(async()=>{
-            //TODO: Find en pænere måde 
+            //The Graph relevant ID is extracted from the "homeAccountID" as the Graph ID is a subset of the AccountID
             let idArray = accountId.split("-");
             accountId = idArray[3] + idArray[4];
             accountId = accountId.split(".")[0];
-            //console.log("New id: " + accountId);
             this.globalID = accountId;
             
             if(await this.backendDoesUserExsist(accountId)){
@@ -54,7 +58,7 @@ export class ClientHandler{
     getUserId():string{
       return this.globalID;
     }
-
+    
     async logout():Promise<boolean>{
         return new Promise((resolve,reject)=>{
           this.publicClientApplication.logoutPopup().then(()=>{resolve(true)})
@@ -65,6 +69,11 @@ export class ClientHandler{
         });
     }
 
+    /**
+     * Authenticates the user towards the backend system based on the user ID.
+     * @param userId The users ID / Microsoft Graph ID
+     * @returns If true, a user with the corresponding ID exsists in the system database
+     */
     async backendDoesUserExsist(userId:string):Promise<JSON>{
         let token = await this.getSilentAccessToken();
         return await fetch('http://localhost:3000/doesCurrentUserExist',{
@@ -78,13 +87,17 @@ export class ClientHandler{
         }).then(response => response.json()).then(data=>{return data.userFound})
     }
 
+    /**
+     * Uses the publicClientApplication object of the MSAL library to get an access token based on the defined scope (privilages) in the
+     * config file.
+     * @returns A Microsoft Graph access token
+     */
     async getSilentAccessToken():Promise<string>{
         return await new Promise(async(resolve,reject)=>{
           let accessToken = "";
           let account = this.publicClientApplication.getAllAccounts()[0];
           this.publicClientApplication.acquireTokenSilent({scopes:config.scopes,account}).then((accessTokenResponse)=>{
             accessToken = accessTokenResponse.accessToken;
-            //console.log("Access Token: " + accessToken);
             resolve(accessToken)
           }).then(()=>{return accessToken}).catch((error)=>{console.log(error)})
         });
@@ -130,7 +143,7 @@ export class ClientHandler{
       });
     }
 
-    //Ikke rigtigt brugbar længere, brug i stedet accountID fra login-metoden
+    //Legacy code. No longer in use.
     async getGraphUserID(accessToken:string):Promise<string>{
       let id:string = "";
       let returnval:any;

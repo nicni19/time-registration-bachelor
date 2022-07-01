@@ -7,14 +7,27 @@ import { Type } from "../common/domain/Type"
 const request = require('request');
 const { htmlToText } = require('html-to-text');
 
-
+/**
+ * Implementation of the IGraphHandler interface.
+ * This class handles the integration with Outlook calendar through Graph.
+ */
 export class GraphCalendarHandler implements IGraphHandler {
     graphUrl: string;
-    lastLookup: string;
+    lastLookup: string; //A datetime string of the last lookup on the current users Calendar
 
     constructor(){
     }
     
+    /**
+     * Fetches the users lastLookup using the databaseHandler. The lastLookup value is used in the fetchCalendarEvents method.
+     * The fetchCalendarEvents method is called with the user ID and access token, fetching all new calendar events of the user.
+     * Then it tries to insert these into the database. If it succeeds, a lastLookup value is set in the database.
+     * Finally it returns a boolean signifying if it failed or succeeded. 
+     * @param databaseHandler Object for sending data to the database
+     * @param authToken A Microsoft access token
+     * @param userID A Microsoft user ID 
+     * @returns True on success
+     */
     async updateDatabase(databaseHandler: IDatabaseHandler, authToken: string, userID: string): Promise<any>{
         this.lastLookup = await databaseHandler.getLastGraphCalendarLookup(userID);
 
@@ -26,6 +39,14 @@ export class GraphCalendarHandler implements IGraphHandler {
         return calendarSuccess;
     }
 
+    /**
+     * Makes an HTTP GET request on Graph using the lastLookup to only fetch new events. 
+     * It loops through all events from Graph and inserts the relevant data into a LogElement.
+     * Each LogElement is then inserted into the LogElement array. 
+     * @param authToken A Microsoft access token
+     * @param userID A Microsoft user ID
+     * @returns a LogElement array
+     */
     async fetchCalendarEvents(authToken: string, userID: string): Promise<any> {
         let logElements: LogElement[] = [];
         console.log(this.lastLookup);

@@ -1,13 +1,16 @@
 import * as azureConfig from "./config/azureconfig.json"
-import { request } from 'express';
 import { Connection, Request } from 'tedious'
 import { LogElement } from '../common/domain/LogElement';
 import { TimerRun } from '../common/domain/TimerRun';
 import { IDatabaseHandler } from '../common/interfaces/IDatabaseHandler';
 import { Type } from "../common/domain/Type";
 import { ConnectionPool } from "./ConnectionPool";
-//import { squel } from 'sequel';
 
+/**
+ * Concrete implementation of the IDatabaseHandler interface.
+ * Used to interact with a Microsoft SQL Server database based on the credentials found in
+ * the config folder -> azureconfig.json
+ */
 export class AzureSQLDatabaseHandler implements IDatabaseHandler{
 
   azureConfig = require('./config/azureconfig.json');
