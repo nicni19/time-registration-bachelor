@@ -32,6 +32,11 @@ class App extends React.Component<{},{error:any,isAuthenticated:boolean,user:any
     this.currentView = 0;
   }
   
+  /**
+   * Begins the login flow. Result based on return value from the clientHandler's login method.
+   * If the value = true, the "isAuthenticated" prop is set to true and the LogView and PreferenceView is added to the
+   * array containing the views available to the user. If false, an alert is displayed to the user.
+   */
   async login(){
     let loginResult = await this.clientHandler.login();
     if(loginResult){
@@ -57,6 +62,10 @@ class App extends React.Component<{},{error:any,isAuthenticated:boolean,user:any
     }
   }
 
+  /**
+   * Used to control which view to display in the main view
+   * @param view
+   */
   changeView(view:number){
     if(view != this.currentView){
       this.currentView = view;
