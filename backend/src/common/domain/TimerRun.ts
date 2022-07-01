@@ -1,3 +1,7 @@
+/**
+ * Data class which represents a single timer run.
+ * Currently not in use, as the timer functionality is not implemented.
+ */
 export class TimerRun{
     id:number;
     userID:string;

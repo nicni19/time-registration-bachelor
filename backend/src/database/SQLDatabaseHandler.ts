@@ -2,11 +2,9 @@ import { LogElement } from "../common/domain/LogElement";
 import { TimerRun } from "../common/domain/TimerRun";
 import { IDatabaseHandler } from "../common/interfaces/IDatabaseHandler";
 
-//let conf = require('./config/mysqlconifg.js');
-//let mysql = require('mysql');
-
-let con;
-
+/**
+ * Leftover from the first iteration of the system. No longer in use.
+ */
 export class SQLDatabaseHandler{ 
 
     

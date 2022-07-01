@@ -1,5 +1,9 @@
 import { Type } from "./Type";
 
+/**
+ * Data class which represents a single log element. Stores the relevant data to be displayed in the frontend and values
+ * related to the Graph interaction logic.
+ */
 export class LogElement{
     
     private id:number;
@@ -11,13 +15,13 @@ export class LogElement{
     private duration:number;
     private internalTask:boolean;
     private unpaid:boolean;
-    private edited:boolean;
+    private edited:boolean; //Used to control wether we prioritize element changes made from the frontend vs. changes in Outlook
     private bookKeepReady:boolean;
     private ritNum:string;
     private caseNum:string;
     private caseTaskNum:number;
-    private calendarid: string;
-    private mailid: string;
+    private calendarid: string; //If element source is Outlook (calendar event), it's ID is stored here
+    private mailid: string; //If element source is Outlook (mail), it's ID is stored here
 
     constructor( 
         userID: string, 
