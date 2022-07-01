@@ -4,15 +4,16 @@ import { Actions } from './common/domain/Actions';
 import { LogElement } from './common/domain/LogElement';
 const app = express();
 const port = 3000;
-const request = require('request');
-const { htmlToText } = require('html-to-text');
 const cors = require('cors');
 app.use(express.json());
 app.use(cors());
 
 const core: Core = new Core();
-let lastLookup: string = '202022-01-16T01:03:21.347Z';
 
+/**
+ * This endpoint takes a user ID as a parameter, in the form of a JSON variable called userid.
+ * This is placed before the authentication middleware as it is used for frontend authentication.
+ */
 app.get('/doesCurrentUserExist', async (req, res) => {
   res.setHeader('Content-Type', 'application/json');
   let responseJSON = JSON.parse(JSON.stringify(req.headers))
@@ -29,8 +30,11 @@ app.get('/doesCurrentUserExist', async (req, res) => {
 
 });
 
+/**
+ * This method is a middleware function denoted by "app.use". It is run before every endpoint placed after it in the code.
+ * It is used for authentication and authorization of incoming requests. 
+ */
 app.use(async (req,res,next)=>{
-  //TODO: Undooo jank
   let requestAuthenticated:boolean = false;
   let requestJSON = JSON.parse(JSON.stringify(req.headers));
 
@@ -53,6 +57,10 @@ app.use(async (req,res,next)=>{
   }
 });
 
+/**
+ * This endpoint fetches the preferences of a user by their ID.
+ * These preferences denote whether or not the system should fetch their mails and calendar events
+ */
 app.get('/getPreferences',async (req,res)=>{
   res.setHeader('Content-Type', 'application/json');
   let requestJSON = JSON.parse(JSON.stringify(req.headers));
@@ -61,6 +69,10 @@ app.get('/getPreferences',async (req,res)=>{
   res.send(await core.getPreferences(requestJSON.userid))
 });
 
+/**
+ * This endpoint sets the preferences of a user by their ID.
+ * It expects a boolean array with two values. One for mail and one for calendar.
+ */
 app.post('/setPreferences',async(req,res)=>{
   console.log(req.body.preferences)
   let requestJSON = JSON.parse(JSON.stringify(req.headers))
@@ -68,6 +80,10 @@ app.post('/setPreferences',async(req,res)=>{
   core.updatePreferences(requestJSON.userid,[req.body.preferences[0],req.body.preferences[1]])
 });
 
+/**
+ * This endpoint fetches all log elements for a given user filtered on a date interval.
+ * The date interval is decided by the startDate and the endDate url variables
+ */
 app.get('/getLogElements/:startDate/:endDate', async (req, res) => {
   res.setHeader('Content-Type', 'application/json');
   let startDate: Date;
@@ -84,6 +100,7 @@ app.get('/getLogElements/:startDate/:endDate', async (req, res) => {
       startDate = new Date(req.params.startDate.replace('T', ' '));
       endDate = new Date(req.params.endDate.replace('T', ' '));
       
+      //Checks if dates are valid
       if (isNaN(startDate.valueOf()) || isNaN(endDate.valueOf())) {
         throw "Parameters are not correct date strings. Format should be like this: '2022-04-04T00:00:00.0000000'." 
         + " URL should be /getLogElements/'startDate'/'endDate'";
@@ -106,6 +123,7 @@ app.get('/getLogElements/:startDate/:endDate', async (req, res) => {
     queryMap.set("startTime",startDate);
     queryMap.set("endTime",endDate);
 
+    //Calls the graph handlers and fetches the users log elements from the database
     await core.graphUpdate(requestJSON.userid as string, token).then( async () => {
       logElements = await core.getLogElements(queryMap);
     });
@@ -119,6 +137,9 @@ app.get('/getLogElements/:startDate/:endDate', async (req, res) => {
   }
 });
 
+/**
+ * Fetches all log elements relating to the user ID. 
+ */
 app.get('/getLogElements', async (req, res) => {
   res.setHeader('Content-Type', 'application/json');
   
@@ -146,6 +167,11 @@ app.get('/getLogElements', async (req, res) => {
   }
 });
 
+/**
+ * This endpoint is used to insert log elements into the system.
+ * It expects a log element array in the JSON body. 
+ * The format of log element can be seen in the {@link LogElement} domain class.
+ */
 app.post('/insertLogElements', (req, res) => {
   
   if (core.insertLogElements(req.body.logElements)) {
@@ -161,6 +187,11 @@ app.post('/insertLogElements', (req, res) => {
   }
 });
 
+/**
+ * This endpoint takes an array of log element ID's.
+ * Using these ID's and the users ID it deletes the log elements relating to these ID's.
+ * In order for a log element to be deleted, it must be owned by the user with the designated user ID.
+ */
 app.post('/deleteLogElements', async (req, res) => {
   let responseJSON = JSON.parse(JSON.stringify(req.headers));
 

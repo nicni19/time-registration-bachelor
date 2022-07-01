@@ -1,6 +1,8 @@
 import { Connection, Request } from 'tedious'
 
-
+/**
+ * Wrapper class containing a connection object to the MS SQL Server database.
+ */
 export class DBConnection {
   connection;
   config;

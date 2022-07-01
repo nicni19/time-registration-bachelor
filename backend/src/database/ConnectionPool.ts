@@ -2,6 +2,10 @@ import * as azureConfig from "./config/azureconfig.json"
 import { DBConnection } from "./DBConnection";
 import { Request } from 'tedious'
 
+/**
+ * An implementation of the Object Pool Pattern.
+ * Used to get connection objects for interaction with the MS SQL Server database.
+ */
 export class ConnectionPool {
     connections = [];
     minCon: number;

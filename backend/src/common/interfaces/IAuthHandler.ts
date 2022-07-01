@@ -11,7 +11,6 @@ export interface IAuthHandler{
      */
     authenticate(userID:string,authToken?:string):Promise<boolean>;
 
-    //TODO: Få specificeret hvordan at dette kommer til at virke. Alt for tvetydigt pt. :(
     /**
      * Authorizes wether or not a user is allowed to perform a certain action
      * @param userID - The user's ID
